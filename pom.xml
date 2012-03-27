@@ -82,7 +82,7 @@
 		-->
 		
 		<module>modules/petals-bc-restproxy</module>
-		<module>modules/petals-bc-soapproxy</module>
+		<!--<module>modules/petals-bc-soapproxy</module>-->
 		<module>modules/petals-messaging</module>
 		<module>modules/petals-generator-commons</module>
 		<module>modules/petals-generator-wscommons</module>
