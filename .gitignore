@@ -3,5 +3,6 @@ target
 .project
 .checkstyle
 .classpath
+.checkstyle-rules.xml
 */.checkstyle-rules.xml
 modules/petals-generator-bpel/test/
