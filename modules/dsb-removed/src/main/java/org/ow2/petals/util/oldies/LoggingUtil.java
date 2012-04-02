@@ -114,6 +114,12 @@ public class LoggingUtil implements org.ow2.petals.kernel.api.log.Logger {
             this.log.log(BasicLevel.LEVEL_DEBUG, this.name + classAndMethod() + " " + message);
         }
     }
+    
+    public void debug(String pattern, Object... params) {
+        if ((this.log != null) && this.log.isLoggable(BasicLevel.DEBUG)) {
+            this.log.log(BasicLevel.LEVEL_DEBUG, this.name + classAndMethod() + " " + String.format(pattern, params));
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -124,6 +130,16 @@ public class LoggingUtil implements org.ow2.petals.kernel.api.log.Logger {
                 this.log.log(BasicLevel.LEVEL_INFO, this.name + classAndMethod() + " " + message);
             } else {
                 this.log.log(BasicLevel.LEVEL_INFO, this.name + message);
+            }
+        }
+    }
+    
+    public void info(String pattern, Object... params) {
+        if ((this.log != null) && this.log.isLoggable(BasicLevel.INFO)) {
+            if (this.log.isLoggable(BasicLevel.DEBUG)) {
+                this.log.log(BasicLevel.LEVEL_INFO, this.name + classAndMethod() + " " + String.format(pattern, params));
+            } else {
+                this.log.log(BasicLevel.LEVEL_INFO, this.name + String.format(pattern, params));
             }
         }
     }
