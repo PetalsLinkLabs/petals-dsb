@@ -47,7 +47,7 @@ public class BusinessPubSubTest extends TestCase {
     static final String LOCAL_SUBSCRIBER_ENDPOINT = "http://localhost:9998/test/integration/Listener";
 
     public static final QName BUSINESS_TOPIC = new QName(
-            "http://www.petalslink.org/integration/test/1.0", "BusinessIntegrationTopic", "tns");
+            "http://www.petalslink.org/integration/test/1.0", "BusinessIntegrationTopic", "itg");
 
     public static final String DIALECT = "http://docs.oasis-open.org/wsn/t-1/TopicExpression/Concrete";
 
