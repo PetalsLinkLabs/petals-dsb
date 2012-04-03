@@ -6,10 +6,10 @@
   <component definition="org.petalslink.dsb.kernel.esmanagement.AdminManagement" name="ESAdminManagement"/>
   <component definition="org.petalslink.dsb.kernel.esmanagement.UserManagement" name="ESUserManagement"/>
 
-<!--
-  <binding client="ExecutionEnvironmentManager.endpoint" server="this.registry"/>
-  <binding client="ExecutionEnvironmentManager.configuration" server="this.configuration"/>
-  <binding client="ExecutionEnvironmentManager.dsbconfiguration" server="this.dsbconfiguration"/>
--->
+  <component definition="org.petalslink.dsb.kernel.esmanagement.listener.RegistryListener" name="ESManagementRegistryListener"/>
+
+  <binding client="ESAdminManagement.endpoint" server="this.registry"/>
+  <binding client="ESAdminManagement.configuration" server="this.configuration"/>
+  <binding client="ESAdminManagement.dsbconfiguration" server="this.dsbconfiguration"/>
 
 </definition>

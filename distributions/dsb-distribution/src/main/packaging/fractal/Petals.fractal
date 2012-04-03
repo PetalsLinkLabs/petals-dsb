@@ -164,8 +164,13 @@
   <binding client="Notification.configuration" server="ConfigurationServiceImpl.service"/>
   
   <!-- Resource API -->
+  <!-- Deprecated, use Management API -->
   <binding client="ResourceAPI.configuration" server="ConfigurationServiceImpl.service"/>
   <binding client="ResourceAPI.dsbconfiguration" server="DSBManagement.dsbconfiguration"/>
   <binding client="ResourceAPI.registry" server="JBI-Messaging.endpoint"/>
-  
+
+  <binding client="ManagementAPI.configuration" server="ConfigurationServiceImpl.service"/>
+  <binding client="ManagementAPI.dsbconfiguration" server="DSBManagement.dsbconfiguration"/>
+  <binding client="ManagementAPI.registry" server="JBI-Messaging.endpoint"/>
+
 </definition>

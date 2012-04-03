@@ -54,7 +54,7 @@ import esstar.petalslink.com.service.management.user._1_0.UserManagementExceptio
 @Provides(interfaces = { @Interface(name = "service", signature = esstar.petalslink.com.service.management.user._1_0.UserManagement.class) })
 public class UserManagement implements
         esstar.petalslink.com.service.management.user._1_0.UserManagement {
-    
+
     @Monolog(name = "logger")
     private Logger logger;
 
@@ -69,8 +69,6 @@ public class UserManagement implements
     protected void stop() {
     }
 
-
-
     /*
      * (non-Javadoc)
      * 
@@ -79,6 +77,10 @@ public class UserManagement implements
      * (esstar.petalslink.com.data.management.user._1.Bind)
      */
     public BindResponse bind(Bind bind) throws UserManagementException {
+        if (log.isDebugEnabled()) {
+            log.debug("Bind service to the bus, external address %s and WSDL %s",
+                    bind.getExternalAddress(), bind.getWsdl().getUrl().getValue());
+        }
         return null;
     }
 
@@ -90,7 +92,10 @@ public class UserManagement implements
      * (esstar.petalslink.com.data.management.user._1.Deploy)
      */
     public DeployResponse deploy(Deploy deploy) throws UserManagementException {
-        return null;
+        if (log.isDebugEnabled()) {
+            log.debug("Deploying resource into the DSB");
+        }
+        throw new UserManagementException("Not implemented");
     }
 
     /*
@@ -101,8 +106,10 @@ public class UserManagement implements
      * (javax.xml.namespace.QName, java.lang.String)
      */
     public String expose(QName service, String endpoint) throws UserManagementException {
-        // TODO Auto-generated method stub
-        return null;
+        if (log.isDebugEnabled()) {
+            log.debug("Expose service %s endpoint %s", service, endpoint);
+        }
+        throw new UserManagementException("Not implemented");
     }
 
     /*
@@ -111,11 +118,14 @@ public class UserManagement implements
      * @see esstar.petalslink.com.service.management.user._1_0.UserManagement#
      * getResourceProperty(javax.xml.namespace.QName)
      */
-    public GetResourcePropertyResponse getResourceProperty(QName arg0)
+    public GetResourcePropertyResponse getResourceProperty(QName name)
             throws ResourceUnavailableFault, InvalidResourcePropertyQNameFault,
             ResourceUnknownFault {
-        // TODO Auto-generated method stub
-        return null;
+        if (log.isDebugEnabled()) {
+            log.debug("Get resouce property %s", name);
+        }
+
+        return NotificationProxy.getResourceProperty(name);
     }
 
     /*
@@ -126,7 +136,9 @@ public class UserManagement implements
      * (com.ebmwebsourcing.wsstar.jaxb.notification.base.Notify)
      */
     public void notify(Notify notify) {
-
+        if (log.isDebugEnabled()) {
+            log.debug("Business notify...");
+        }
     }
 
     /*
@@ -137,7 +149,10 @@ public class UserManagement implements
      * (esstar.petalslink.com.data.management.user._1.Proxify)
      */
     public ProxifyResponse proxify(Proxify proxify) throws UserManagementException {
-        return null;
+        if (log.isDebugEnabled()) {
+            log.debug("Proxify service %s", proxify.getWsdl().getUrl().getValue());
+        }
+        throw new UserManagementException("Not implemented, bind should do the same...");
     }
 
     /*
@@ -153,8 +168,10 @@ public class UserManagement implements
             UnacceptableInitialTerminationTimeFault, UnrecognizedPolicyRequestFault,
             TopicNotSupportedFault, InvalidProducerPropertiesExpressionFault, ResourceUnknownFault,
             InvalidMessageContentExpressionFault {
-        // TODO Auto-generated method stub
-        return null;
+        if (log.isDebugEnabled()) {
+            log.debug("User management subscribe");
+        }
+        return NotificationProxy.subscribe(subscribe);
     }
 
     /*
@@ -166,7 +183,10 @@ public class UserManagement implements
      */
     public UnsubscribeResponse unsubscribe(Unsubscribe unsubscribe)
             throws UnableToDestroySubscriptionFault, ResourceUnknownFault {
-        return null;
+        if (log.isDebugEnabled()) {
+            log.debug("User management unsubscribe");
+        }
+        return NotificationProxy.unsubscribe(unsubscribe);
     }
 
 }

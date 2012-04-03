@@ -2,11 +2,7 @@
     "classpath://org/objectweb/fractal/adl/xml/standard.dtd">
 
 <definition name="ManagementAPIType">
-	
-  <!--
   <interface signature="org.ow2.petals.kernel.configuration.ConfigurationService" role="client" name="configuration"/>
   <interface signature="org.petalslink.dsb.kernel.api.DSBConfigurationService" role="client" name="dsbconfiguration"/>
-
   <interface signature="org.ow2.petals.jbi.messaging.registry.EndpointRegistry" role="client" name="registry"/>
-  -->
 </definition>
