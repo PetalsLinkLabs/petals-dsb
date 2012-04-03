@@ -40,7 +40,7 @@ public class RegistryListenerImpl implements RegistryListener {
     @Monolog(name = "logger")
     private Logger logger;
 
-    protected org.ow2.petals.kernel.api.log.Logger log;
+    protected LoggingUtil log;
 
     @LifeCycle(on = LifeCycleType.START)
     protected void start() {
@@ -68,9 +68,11 @@ public class RegistryListenerImpl implements RegistryListener {
 
         // let's say to the monitoring platform that there is something new...
         if (this.log.isInfoEnabled()) {
-            this.log.info("Notifying monitoring Bus that endpoint has been registered : "
-                    + endpoint);
+            this.log.info(
+                    "Notifying monitoring Bus that endpoint has been registered, Service %s, Endpoint %s, Interface %s",
+                    endpoint.getServiceName(), endpoint.getEndpointName(), endpoint.getInterfaces());
         }
+        
         MonitoringAdminClient client = getClient();
         if (client == null) {
             log.warning("Can not get any client to send message to monitoring layer");
