@@ -60,6 +60,8 @@
   <binding client="this.ws-jbiart" server="JBIArtefactsWebServiceImpl.webservice"/>
   <binding client="this.ws-serviceinfo" server="ServiceInformationImpl.webservice"/>
   <binding client="this.ws-dsbinformation" server="DSBInformationServiceImpl.webservice"/>
+  <binding client="this.ws-soapbinder" server="SOAPServiceBinderImpl.webservice"/>
+  <binding client="this.ws-soapexposer" server="SOAPServiceExposerImpl.webservice"/>
   
   <!-- Connect to consume -->
   <binding client="ArtifactRepositoryWebServiceImpl.artifactrepository" server="this.artifactrepository"/>
@@ -122,34 +124,6 @@
   <binding client="WebServiceManagerImpl.wsexposer" server="WebServiceExposerImpl.service"/>
   <binding client="WebServiceManagerImpl.wsregistry" server="WebServiceRegistryImpl.service"/>
   <binding client="WebServiceExposerImpl.configuration" server="this.configuration"/>
-  
-  <!-- Give the list of all components to be exposed as web services, the manager will expose them at startup -->
-  <!--  TODO : This should be done automatically by configuration or introspection... -->
-  <!-- DONE! -->
-  <!-- 
-  <binding client="WebServiceManagerImpl.webservice-artifactrepository" server="ArtifactRepositoryWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-endpoint" server="EndpointWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-topology" server="TopologyWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-information" server="InformationWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-runtime" server="RuntimeWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-jbiartefacts" server="JBIArtefactsWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-installation" server="InstallationWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-deployment" server="DeploymentWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-sastateservice" server="ServiceAssemblyStateWebServiceImpl.service"/>  
-  -->
-  
-  <!-- SOA4All -->
-  <!-- 
-  <binding client="WebServiceManagerImpl.webservice-hello" server="HelloWebServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-monitoring" server="MonitoringServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-binder" server="ServiceBinderImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-jndibrowser" server="JNDIBrowserServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-serviceinformation" server="ServiceInformationImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-dsbinformation" server="DSBInformationServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-exposer" server="ExposerServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-servicepoller" server="NewServicePollerServiceImpl.service"/>
-  <binding client="WebServiceManagerImpl.webservice-remotechecker" server="RemoteCheckerServiceImpl.service"/>
-  -->
   
   <controller desc="composite"/>
 </definition>

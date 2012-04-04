@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
@@ -47,8 +48,11 @@ import org.ow2.petals.util.oldies.LoggingUtil;
 import org.petalslink.dsb.api.ServiceEndpoint;
 import org.petalslink.dsb.jbi.Adapter;
 import org.petalslink.dsb.kernel.api.DSBConfigurationService;
+import org.petalslink.dsb.ws.api.DSBInformationService;
+import org.petalslink.dsb.ws.api.DSBWebServiceException;
 import org.petalslink.dsb.ws.api.SOAPServiceBinder;
 import org.petalslink.dsb.ws.api.SOAPServiceExposer;
+import org.petalslink.dsb.ws.api.ServiceInformation;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -103,6 +107,12 @@ public class AdminManagement implements
 
     @Requires(name = "soapexposer", signature = SOAPServiceExposer.class, contingency = Contingency.OPTIONAL)
     private SOAPServiceExposer exposer;
+
+    @Requires(name = "dsbinfo", signature = DSBInformationService.class, contingency = Contingency.OPTIONAL)
+    private DSBInformationService infoService;
+
+    @Requires(name = "serviceinfo", signature = ServiceInformation.class, contingency = Contingency.OPTIONAL)
+    private ServiceInformation serviceInformation;
 
     @Monolog(name = "logger")
     private Logger logger;
@@ -163,23 +173,34 @@ public class AdminManagement implements
             GetAdditionalContent getAdditionalContent) throws AdminManagementException {
         GetAdditionalContentResponse response = new GetAdditionalContentResponse();
 
-        ServiceEndpoint se = getEndpoint(getAdditionalContent.getResourceIdentifier().getId());
-        if (se == null) {
-            throw new AdminManagementException(String.format(
-                    "Impossible to find endpoint corresponding to this qname: %s",
-                    getAdditionalContent.getResourceIdentifier().getId()));
+        if (getAdditionalContent == null || getAdditionalContent.getResourceIdentifier() == null) {
+            throw new AdminManagementException("Null parameter");
         }
 
-        String relativePath = getAdditionalContent.getId();
-        Document doc = getDescription(se.getDescription());
+        if (getAdditionalContent.getResourceIdentifier().getResourceType() != null
+                && getAdditionalContent.getResourceIdentifier().getResourceType()
+                        .equals("endpoint")) {
+            ServiceEndpoint se = getEndpoint(getAdditionalContent.getResourceIdentifier().getId());
+            if (se == null) {
+                throw new AdminManagementException(String.format(
+                        "Impossible to find endpoint corresponding to this qname: %s",
+                        getAdditionalContent.getResourceIdentifier().getId()));
+            }
 
-        Document importDesc = getImport(doc, relativePath);
-        if (importDesc == null) {
-            throw new AdminManagementException(String.format(
-                    "Impossible to find import corresponding to %s on endpoint %s", relativePath,
-                    getAdditionalContent.getResourceIdentifier().getId()));
+            String relativePath = getAdditionalContent.getId();
+            Document doc = getDescription(se.getDescription());
+
+            Document importDesc = getImport(doc, relativePath);
+            if (importDesc == null) {
+                throw new AdminManagementException(String.format(
+                        "Impossible to find import corresponding to %s on endpoint %s",
+                        relativePath, getAdditionalContent.getResourceIdentifier().getId()));
+            }
+            response.setAny(importDesc.getDocumentElement());
+        } else {
+            throw new AdminManagementException(String.format("Unknown resource type %s",
+                    getAdditionalContent.getResourceIdentifier().getResourceType()));
         }
-        response.setAny(importDesc.getDocumentElement());
         return response;
     }
 
@@ -276,14 +297,42 @@ public class AdminManagement implements
         GetResourceIdentifiersResponse response = new GetResourceIdentifiersResponse();
 
         try {
-            List<ServiceEndpoint> endpoints = getEndpoints();
 
+            // internal endpoints
+            List<ServiceEndpoint> endpoints = getEndpoints();
             for (ServiceEndpoint serviceEndpoint : endpoints) {
                 EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
                 id.setId(ResourceIdBuilder.getId(serviceEndpoint));
                 id.setResourceType("endpoint");
                 response.getResourceIdentifier().add(id);
             }
+
+            // business services
+            if (serviceInformation != null) {
+                Set<String> urls = serviceInformation.getExposedWebServices();
+                for (String url : urls) {
+                    EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
+                    id.setId(url);
+                    id.setResourceType("businessws");
+                    response.getResourceIdentifier().add(id);
+                }
+            }
+
+            // kernel service
+            if (infoService != null) {
+                try {
+                    List<String> kernelServices = infoService.getWebServices();
+                    for (String url : kernelServices) {
+                        EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
+                        id.setId(url);
+                        id.setResourceType("kernelws");
+                        response.getResourceIdentifier().add(id);
+                    }
+                } catch (DSBWebServiceException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } catch (RegistryException e) {
             throw new AdminManagementException(
                     "Error while trying to get endpoints from infrastructure", e);

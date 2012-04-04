@@ -169,8 +169,13 @@
   <binding client="ResourceAPI.dsbconfiguration" server="DSBManagement.dsbconfiguration"/>
   <binding client="ResourceAPI.registry" server="JBI-Messaging.endpoint"/>
 
+  <!-- ESManagement API -->
   <binding client="ManagementAPI.configuration" server="ConfigurationServiceImpl.service"/>
   <binding client="ManagementAPI.dsbconfiguration" server="DSBManagement.dsbconfiguration"/>
   <binding client="ManagementAPI.registry" server="JBI-Messaging.endpoint"/>
+  <binding client="ManagementAPI.dsbinfo" server="Tools.ws-dsbinformation"/>
+  <binding client="ManagementAPI.serviceinfo" server="Tools.ws-serviceinfo"/>
+  <binding client="ManagementAPI.binder" server="Tools.ws-soapbinder"/>
+  <binding client="ManagementAPI.exposer" server="Tools.ws-soapexposer"/>
 
 </definition>

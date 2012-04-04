@@ -5,4 +5,8 @@
   <interface signature="org.ow2.petals.kernel.configuration.ConfigurationService" role="client" name="configuration"/>
   <interface signature="org.petalslink.dsb.kernel.api.DSBConfigurationService" role="client" name="dsbconfiguration"/>
   <interface signature="org.ow2.petals.jbi.messaging.registry.EndpointRegistry" role="client" name="registry"/>
+  <interface signature="org.petalslink.dsb.ws.api.DSBInformationService" role="client" name="dsbinfo"/>
+  <interface signature="org.petalslink.dsb.ws.api.ServiceInformation" role="client" name="serviceinfo"/>
+  <interface signature="org.petalslink.dsb.ws.api.SOAPServiceBinder" role="client" name="binder"/>
+  <interface signature="org.petalslink.dsb.ws.api.SOAPServiceExposer" role="client" name="exposer"/>
 </definition>

@@ -11,5 +11,11 @@
   <binding client="ESAdminManagement.endpoint" server="this.registry"/>
   <binding client="ESAdminManagement.configuration" server="this.configuration"/>
   <binding client="ESAdminManagement.dsbconfiguration" server="this.dsbconfiguration"/>
+  <binding client="ESAdminManagement.dsbinfo" server="this.dsbinfo"/>
+  <binding client="ESAdminManagement.serviceinfo" server="this.serviceinfo"/>
+
+  <binding client="ESUserManagement.soapbinder" server="this.binder"/>
+  <binding client="ESUserManagement.soapexposer" server="this.exposer"/>
+  <binding client="ESUserManagement.endpoint" server="this.registry"/>
 
 </definition>

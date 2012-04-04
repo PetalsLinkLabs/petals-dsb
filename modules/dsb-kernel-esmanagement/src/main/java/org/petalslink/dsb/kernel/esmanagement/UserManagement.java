@@ -35,7 +35,6 @@ import org.objectweb.util.monolog.api.Logger;
 import org.ow2.petals.jbi.messaging.registry.EndpointRegistry;
 import org.ow2.petals.jbi.messaging.registry.RegistryException;
 import org.ow2.petals.util.oldies.LoggingUtil;
-import org.petalslink.dsb.jbi.Adapter;
 import org.petalslink.dsb.ws.api.DSBWebServiceException;
 import org.petalslink.dsb.ws.api.SOAPServiceBinder;
 import org.petalslink.dsb.ws.api.SOAPServiceExposer;

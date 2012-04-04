@@ -32,5 +32,7 @@
   <interface signature="org.ow2.petals.kernel.ws.api.JBIArtefactsService" role="server" name="ws-jbiart"/>
   <interface signature="org.petalslink.dsb.ws.api.ServiceInformation" role="server" name="ws-serviceinfo"/>
   <interface signature="org.petalslink.dsb.ws.api.DSBInformationService" role="server" name="ws-dsbinformation"/>
+  <interface signature="org.petalslink.dsb.ws.api.SOAPServiceBinder" role="server" name="ws-soapbinder"/>
+  <interface signature="org.petalslink.dsb.ws.api.SOAPServiceExposer" role="server" name="ws-soapexposer"/>
   
 </definition>
