@@ -3,6 +3,8 @@
  */
 package org.petalslink.dsb.kernel.esmanagement;
 
+import java.util.List;
+
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
@@ -26,9 +28,18 @@ import org.objectweb.fractal.fraclet.annotation.annotations.Interface;
 import org.objectweb.fractal.fraclet.annotation.annotations.LifeCycle;
 import org.objectweb.fractal.fraclet.annotation.annotations.Monolog;
 import org.objectweb.fractal.fraclet.annotation.annotations.Provides;
+import org.objectweb.fractal.fraclet.annotation.annotations.Requires;
+import org.objectweb.fractal.fraclet.annotation.annotations.type.Contingency;
 import org.objectweb.fractal.fraclet.annotation.annotations.type.LifeCycleType;
 import org.objectweb.util.monolog.api.Logger;
+import org.ow2.petals.jbi.messaging.registry.EndpointRegistry;
+import org.ow2.petals.jbi.messaging.registry.RegistryException;
 import org.ow2.petals.util.oldies.LoggingUtil;
+import org.petalslink.dsb.jbi.Adapter;
+import org.petalslink.dsb.ws.api.DSBWebServiceException;
+import org.petalslink.dsb.ws.api.SOAPServiceBinder;
+import org.petalslink.dsb.ws.api.SOAPServiceExposer;
+import org.petalslink.dsb.ws.api.ServiceEndpoint;
 
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.Notify;
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.Subscribe;
@@ -60,6 +71,15 @@ public class UserManagement implements
 
     private LoggingUtil log;
 
+    @Requires(name = "soapbinder", signature = SOAPServiceBinder.class, contingency = Contingency.OPTIONAL)
+    private SOAPServiceBinder binder;
+
+    @Requires(name = "soapexposer", signature = SOAPServiceExposer.class, contingency = Contingency.OPTIONAL)
+    private SOAPServiceExposer exposer;
+
+    @Requires(name = "endpoint", signature = EndpointRegistry.class)
+    private EndpointRegistry endpointRegistry;
+
     @LifeCycle(on = LifeCycleType.START)
     protected void start() {
         this.log = new LoggingUtil(this.logger);
@@ -81,7 +101,39 @@ public class UserManagement implements
             log.debug("Bind service to the bus, external address %s and WSDL %s",
                     bind.getExternalAddress(), bind.getWsdl().getUrl().getValue());
         }
-        return null;
+
+        if (binder == null) {
+            throw new UserManagementException("Can not find any valid binder to bind service");
+        }
+
+        BindResponse response = new BindResponse();
+
+        if (bind != null && bind.getWsdl() != null && bind.getWsdl().getUrl() != null
+                && bind.getWsdl().getUrl().getValue() != null) {
+            try {
+                List<ServiceEndpoint> endpoints = binder.bindWebService(bind.getWsdl().getUrl()
+                        .getValue());
+                if (endpoints != null) {
+                    for (ServiceEndpoint serviceEndpoint : endpoints) {
+                        if (log.isDebugEnabled()) {
+                            log.debug(
+                                    "Service is bound, new endpoint %s, service %s, interface %s",
+                                    serviceEndpoint.getEndpoint(), serviceEndpoint.getService(),
+                                    serviceEndpoint.getItf());
+                        }
+                        // the current API does not handle more than one
+                        // endpoint per bind but the DSB can do it...
+                        response.setEndpointName(serviceEndpoint.getEndpoint());
+                    }
+                }
+            } catch (DSBWebServiceException e) {
+                log.warning("Got a problem while binding webservice", e);
+                throw new UserManagementException("Got a problem while binding webservice", e);
+            }
+        } else {
+            throw new UserManagementException("Bad parameters");
+        }
+        return response;
     }
 
     /*
@@ -109,7 +161,36 @@ public class UserManagement implements
         if (log.isDebugEnabled()) {
             log.debug("Expose service %s endpoint %s", service, endpoint);
         }
-        throw new UserManagementException("Not implemented");
+
+        if (service == null || endpoint == null) {
+            throw new UserManagementException(String.format(
+                    "Null paramater service=%s, endpoint=%s", service, endpoint));
+        }
+
+        if (this.exposer == null) {
+            throw new UserManagementException("Can not find any exposer to expose service");
+        }
+
+        // retrieve the endpoint from the given references
+        try {
+            org.ow2.petals.jbi.messaging.endpoint.ServiceEndpoint se = this.endpointRegistry
+                    .getEndpoint(service, endpoint);
+            if (se != null) {
+                ServiceEndpoint expose = new ServiceEndpoint();
+                this.exposer.expose(expose);
+            } else {
+                throw new UserManagementException(String.format(
+                        "Can not get any valid endpoint for endpoint name %s and service %s",
+                        endpoint, service));
+            }
+        } catch (RegistryException e) {
+            log.warning("Got a problem while exposing service", e);
+            throw new UserManagementException("Got a problem while exposing service", e);
+        } catch (DSBWebServiceException e) {
+            log.warning("Got a problem while exposing service", e);
+            throw new UserManagementException("Got a problem while exposing service", e);
+        }
+        return "http://TODO";
     }
 
     /*
@@ -152,7 +233,57 @@ public class UserManagement implements
         if (log.isDebugEnabled()) {
             log.debug("Proxify service %s", proxify.getWsdl().getUrl().getValue());
         }
-        throw new UserManagementException("Not implemented, bind should do the same...");
+
+        if (proxify == null) {
+            throw new UserManagementException("Not implemented, bind should do the same...");
+        }
+
+        if (binder == null) {
+            throw new UserManagementException("Can not find any valid binder to bind service");
+        }
+
+        if (exposer == null) {
+            throw new UserManagementException("Can not find any valid exposer to expose service");
+        }
+
+        ProxifyResponse response = null;
+        if (proxify != null && proxify.getWsdl() != null && proxify.getWsdl().getUrl() != null
+                && proxify.getWsdl().getUrl().getValue() != null) {
+            response = new ProxifyResponse();
+
+            List<ServiceEndpoint> endpoints = null;
+            try {
+                endpoints = binder.bindWebService(proxify.getWsdl().getUrl().getValue());
+            } catch (DSBWebServiceException e) {
+                log.warning("Got a problem while bindind webservice, proxify fails", e);
+                throw new UserManagementException(
+                        "Got a problem while proxifying webservice, proxify fails", e);
+            }
+
+            if (endpoints != null) {
+                for (ServiceEndpoint serviceEndpoint : endpoints) {
+                    try {
+                        boolean result = exposer.expose(serviceEndpoint);
+                    } catch (DSBWebServiceException e) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Got a problem while exposing webservice, trying next endpoint if any...");
+                        } else {
+                            log.warning(
+                                    "Got a problem while exposing webservice, trying next endpoint if any...",
+                                    e);
+                        }
+                    }
+                }
+            }
+
+            response.setExternalAddress("http://TODO");
+
+        } else {
+            throw new UserManagementException("Null parameter");
+        }
+
+        return response;
+
     }
 
     /*

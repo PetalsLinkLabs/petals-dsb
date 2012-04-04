@@ -34,6 +34,7 @@ import org.objectweb.fractal.fraclet.annotation.annotations.LifeCycle;
 import org.objectweb.fractal.fraclet.annotation.annotations.Monolog;
 import org.objectweb.fractal.fraclet.annotation.annotations.Provides;
 import org.objectweb.fractal.fraclet.annotation.annotations.Requires;
+import org.objectweb.fractal.fraclet.annotation.annotations.type.Contingency;
 import org.objectweb.fractal.fraclet.annotation.annotations.type.LifeCycleType;
 import org.objectweb.util.monolog.api.Logger;
 import org.ow2.easywsdl.extensions.wsdl4complexwsdl.WSDL4ComplexWsdlFactory;
@@ -46,6 +47,8 @@ import org.ow2.petals.util.oldies.LoggingUtil;
 import org.petalslink.dsb.api.ServiceEndpoint;
 import org.petalslink.dsb.jbi.Adapter;
 import org.petalslink.dsb.kernel.api.DSBConfigurationService;
+import org.petalslink.dsb.ws.api.SOAPServiceBinder;
+import org.petalslink.dsb.ws.api.SOAPServiceExposer;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -94,6 +97,12 @@ public class AdminManagement implements
 
     @Requires(name = "dsbconfiguration", signature = DSBConfigurationService.class)
     private DSBConfigurationService dsbConfigurationService;
+
+    @Requires(name = "soapbinder", signature = SOAPServiceBinder.class, contingency = Contingency.OPTIONAL)
+    private SOAPServiceBinder binder;
+
+    @Requires(name = "soapexposer", signature = SOAPServiceExposer.class, contingency = Contingency.OPTIONAL)
+    private SOAPServiceExposer exposer;
 
     @Monolog(name = "logger")
     private Logger logger;
@@ -249,7 +258,7 @@ public class AdminManagement implements
                         "PausableSubscriptionManager"));
         itfUnSubscribeProducer.setEndpointAddress(getProducerEndpoint());
         info.getInterfaceConnector().add(itfUnSubscribeProducer);
-        
+
         // TODO : add all kernel web services here...
 
         return result;
@@ -266,19 +275,18 @@ public class AdminManagement implements
             GetResourceIdentifiers getResourceIdentifiers) throws AdminManagementException {
         GetResourceIdentifiersResponse response = new GetResourceIdentifiersResponse();
 
-        // get all the endpoints
-        List<ServiceEndpoint> endpoints = null;
         try {
-            endpoints = getEndpoints();
+            List<ServiceEndpoint> endpoints = getEndpoints();
+
+            for (ServiceEndpoint serviceEndpoint : endpoints) {
+                EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
+                id.setId(ResourceIdBuilder.getId(serviceEndpoint));
+                id.setResourceType("endpoint");
+                response.getResourceIdentifier().add(id);
+            }
         } catch (RegistryException e) {
             throw new AdminManagementException(
                     "Error while trying to get endpoints from infrastructure", e);
-        }
-        for (ServiceEndpoint serviceEndpoint : endpoints) {
-            EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
-            id.setId(ResourceIdBuilder.getId(serviceEndpoint));
-            id.setResourceType("endpoint");
-            response.getResourceIdentifier().add(id);
         }
         return response;
     }
@@ -421,7 +429,7 @@ public class AdminManagement implements
                 .getEndpoints();
 
         for (org.ow2.petals.jbi.messaging.endpoint.ServiceEndpoint serviceEndpoint : endpoints) {
-            ServiceEndpoint se = Adapter.createServiceEndpointFromJBI(serviceEndpoint);
+            ServiceEndpoint se = Adapter.createDSBServiceEndpoint(serviceEndpoint);
             result.add(se);
         }
 
