@@ -56,6 +56,10 @@ public class RegistryListener implements org.petalslink.dsb.kernel.api.messaging
     @LifeCycle(on = LifeCycleType.START)
     protected void start() {
         this.log = new LoggingUtil(this.logger);
+        if (log.isDebugEnabled()) {
+            log.debug("Starting the esmanagement registry listener");
+        }
+        
         try {
             context = SOAJAXBContext.getInstance();
             context.addOtherObjectFactory(easybox.esstar.petalslink.com.management.model.datatype._1.ObjectFactory.class);
@@ -65,6 +69,9 @@ public class RegistryListener implements org.petalslink.dsb.kernel.api.messaging
 
     @LifeCycle(on = LifeCycleType.STOP)
     protected void stop() {
+        if (log.isDebugEnabled()) {
+            log.debug("Stopping the esmanagement registry listener");
+        }
     }
 
     /*
@@ -76,7 +83,7 @@ public class RegistryListener implements org.petalslink.dsb.kernel.api.messaging
      */
     public void onRegister(ServiceEndpoint endpoint) throws DSBException {
         if (log.isDebugEnabled()) {
-            log.debug("A new endpoint has been registered, send a notification to the engine");
+            log.debug("esmanagement endpoint registry listener, send a notification to the engine...");
         }
 
         EJaxbResourceIdentifier rid = new EJaxbResourceIdentifier();
@@ -87,11 +94,15 @@ public class RegistryListener implements org.petalslink.dsb.kernel.api.messaging
         try {
             payload = SOAJAXBContext.getInstance().unmarshallAnyElement(rid);
         } catch (SOAException e) {
+            if (log.isWarnEnabled()) {
+                log.warning("Can not create the notification body in esmanagement registry listener module");
+            }
             throw new DSBException(e);
         }
 
         if (log.isDebugEnabled()) {
             try {
+                log.debug("Message to send to the notification engine from esmanagement listener");
                 log.debug(XMLHelper.createStringFromDOMDocument(payload));
             } catch (TransformerException e) {
             }
@@ -99,19 +110,31 @@ public class RegistryListener implements org.petalslink.dsb.kernel.api.messaging
 
         NotificationCenter notificationCenter = NotificationCenter.get();
         if (notificationCenter == null) {
+            if (log.isWarnEnabled()) {
+                log.warning("Not able to find the notification center to send the notification");
+            }
             throw new DSBException(
                     "Can not get the notification center to send new resource notification...");
         }
 
         NotificationSender sender = notificationCenter.getSender();
         if (sender == null) {
+            if (log.isWarnEnabled()) {
+                log.warning("Not able to find the notification sender to send the notification");
+            }
             throw new DSBException(
                     "Can not get the notification sender from the notification center...");
         }
 
         try {
+            if (log.isDebugEnabled()) {
+                log.debug("Sending the notification to topic %s", topicUsed);
+            }
             sender.notify(payload, topicUsed, dialect);
         } catch (NotificationException e) {
+            if (log.isWarnEnabled()) {
+                log.warning("Can not send the notification", e);
+            }
             throw new DSBException(e);
         }
     }
@@ -124,6 +147,9 @@ public class RegistryListener implements org.petalslink.dsb.kernel.api.messaging
      * (org.petalslink.dsb.api.ServiceEndpoint)
      */
     public void onUnregister(ServiceEndpoint endpoint) throws DSBException {
+        if (log.isDebugEnabled()) {
+            log.debug("Unregistering an endpoint in esmanagement listener");
+        }
     }
 
     /*
