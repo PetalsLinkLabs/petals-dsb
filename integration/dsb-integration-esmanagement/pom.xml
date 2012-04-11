@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
@@ -9,33 +9,33 @@
 		<relativePath>../../dsb-parent/pom.xml</relativePath>
 	</parent>
 
-  <groupId>org.petalsling.dsb</groupId>
-  <artifactId>dsb-integration-esmanagement</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>org.petalsling.dsb</groupId>
+	<artifactId>dsb-integration-esmanagement</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>dsb-integration-esmanagement</name>
+	<name>dsb-integration-esmanagement</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>
-		    <artifactId>management-model</artifactId>
-		    <version>v2012-02-13</version>
+			<groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>
+			<artifactId>management-model</artifactId>
+			<version>v2012-02-13</version>
 			<scope>test</scope>
 		</dependency>
-		
- 		<dependency>
+
+		<dependency>
 			<groupId>org.petalslink.dsb</groupId>
 			<artifactId>dsb-kernel-wsapi</artifactId>
 			<version>${project.version}</version>
@@ -64,9 +64,24 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-integration-commons</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- EasierGov dependency, to launch it from tests... -->
+		<dependency>
+			<artifactId>gov-ws-distribution</artifactId>
+			<groupId>com.ebmwebsourcing.easiergov</groupId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>11.0.1</version>
 		</dependency>
-  </dependencies>
+	</dependencies>
 </project>
