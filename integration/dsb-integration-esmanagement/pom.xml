@@ -74,7 +74,14 @@
 		<dependency>
 			<artifactId>gov-ws-distribution</artifactId>
 			<groupId>com.ebmwebsourcing.easiergov</groupId>
-			<version>1.0-SNAPSHOT</version>
+			<version>v2012-02-13</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<artifactId>gov-ws-client</artifactId>
+			<groupId>com.ebmwebsourcing.easiergov</groupId>
+			<version>v2012-02-13</version>
 			<scope>test</scope>
 		</dependency>
 

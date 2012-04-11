@@ -34,6 +34,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.ow2.petals</groupId>
+			<artifactId>petals-kernel-wsapi</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.petalslink.dsb</groupId>
 			<artifactId>dsb-cxfutils</artifactId>
 			<version>${project.version}</version>

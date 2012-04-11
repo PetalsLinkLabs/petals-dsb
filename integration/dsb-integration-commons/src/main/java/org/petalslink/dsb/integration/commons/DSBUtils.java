@@ -6,6 +6,8 @@ package org.petalslink.dsb.integration.commons;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.ow2.petals.kernel.ws.api.PEtALSWebServiceException;
+import org.ow2.petals.kernel.ws.api.RuntimeService;
 import org.petalslink.dsb.cxf.CXFHelper;
 import org.petalslink.dsb.ws.api.StatusService;
 
@@ -23,7 +25,9 @@ public class DSBUtils {
      * @param timeUnit
      */
     public static final boolean waitStart(String baseURL, long timeout, TimeUnit timeUnit) {
-        final StatusService client = CXFHelper.getClient(baseURL, StatusService.class);
+        String url = getBaseURL(baseURL);
+
+        final StatusService client = CXFHelper.getClient(url, StatusService.class);
 
         final CountDownLatch latch = new CountDownLatch(1);
         Thread t = new Thread(new Runnable() {
@@ -53,7 +57,7 @@ public class DSBUtils {
             }
         });
         t.start();
-        
+
         try {
             boolean out = latch.await(timeout, timeUnit);
             if (out) {
@@ -65,7 +69,27 @@ public class DSBUtils {
             }
         } catch (InterruptedException e) {
         }
-        
         return false;
+    }
+
+    /**
+     * Stops the container...
+     * 
+     * @param baseURL
+     * @return
+     */
+    public static final void stopContainer(String baseURL) {
+        String url = getBaseURL(baseURL);
+
+        RuntimeService client = CXFHelper.getClient(url, RuntimeService.class);
+        try {
+            client.shutdownContainer();
+        } catch (PEtALSWebServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static final String getBaseURL(String baseURL) {
+        return baseURL == null ? Constants.BASE_URL : baseURL;
     }
 }
