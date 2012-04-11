@@ -42,6 +42,7 @@
 
   <component definition="org.petalslink.dsb.kernel.ws.RESTServiceBinderServiceImpl" name="RESTServiceBinderImpl"/>
   <component definition="org.petalslink.dsb.kernel.ws.SOAPServiceBinderServiceImpl" name="SOAPServiceBinderImpl"/>
+  <component definition="org.petalslink.dsb.kernel.ws.StatusServiceImpl" name="StatusServiceImpl"/>
 
   <!-- DSB/JBI stuff -->
   <component definition="org.petalslink.dsb.kernel.ws.jbi.ServiceArtefactsInformationServiceImpl" name="ServiceUnitInformationServiceImpl"/>
