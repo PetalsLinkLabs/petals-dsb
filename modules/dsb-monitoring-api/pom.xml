@@ -15,7 +15,7 @@
 
 	<name>dsb-monitoring-api</name>
 	
-	<description>The DSB Monitoring API</description>
+	<description>The DSB Monitoring API, abstract everything and should be able to generate reports for any monitoring layer...</description>
 
 	<dependencies>
 		<dependency>

@@ -14,6 +14,7 @@
 	<packaging>jar</packaging>
 
 	<name>dsb-monitoring-easierbsm-jaxws</name>
+	<description>NB : Must use com.ebmwebsourcing.easyesb.ws-binding-rawreport instead sicne it is the root definition of raw report</description>
 
 	<dependencies>
 		<dependency>

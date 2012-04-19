@@ -32,6 +32,7 @@
 		<module>dsb-integration-commons</module>
 		<module>dsb-integration-esmanagement</module>
 		<module>dsb-integration-wsapi</module>
+    <module>dsb-integration-easierbsm</module>
   </modules>
 
 	<build>

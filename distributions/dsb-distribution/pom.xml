@@ -52,9 +52,16 @@
 		</dependency>
 
 		<!-- EasierBSM based Monitoring -->
+		<!--  Oldies -->
 		<dependency>
 			<groupId>org.petalslink.dsb</groupId>
 			<artifactId>dsb-kernel-easierbsmservice</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-eaiserbsm-wsnconnector</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

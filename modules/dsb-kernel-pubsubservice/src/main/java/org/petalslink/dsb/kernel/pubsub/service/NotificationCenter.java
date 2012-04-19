@@ -29,11 +29,11 @@ public class NotificationCenter {
     private NotificationCenter() {
     }
 
-    protected void setNotifificationSender(NotificationSender sender) {
+    public void setNotifificationSender(NotificationSender sender) {
         this.sender = sender;
     }
     
-    protected void setNotificationManager(NotificationManager manager) {
+    public void setNotificationManager(NotificationManager manager) {
         this.manager = manager;
     }
 

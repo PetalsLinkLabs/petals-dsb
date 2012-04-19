@@ -45,7 +45,9 @@ import org.ow2.petals.jbi.messaging.registry.EndpointRegistry;
 import org.ow2.petals.jbi.messaging.registry.RegistryException;
 import org.ow2.petals.kernel.configuration.ConfigurationService;
 import org.ow2.petals.util.oldies.LoggingUtil;
+import org.petalslink.dsb.api.ResourceConstants;
 import org.petalslink.dsb.api.ServiceEndpoint;
+import org.petalslink.dsb.api.util.ResourceIdBuilder;
 import org.petalslink.dsb.jbi.Adapter;
 import org.petalslink.dsb.kernel.api.DSBConfigurationService;
 import org.petalslink.dsb.ws.api.DSBInformationService;
@@ -303,7 +305,7 @@ public class AdminManagement implements
             for (ServiceEndpoint serviceEndpoint : endpoints) {
                 EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
                 id.setId(ResourceIdBuilder.getId(serviceEndpoint));
-                id.setResourceType("endpoint");
+                id.setResourceType(ResourceConstants.ENDPOINT);
                 response.getResourceIdentifier().add(id);
             }
 
@@ -313,7 +315,7 @@ public class AdminManagement implements
                 for (String url : urls) {
                     EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
                     id.setId(url);
-                    id.setResourceType("businessws");
+                    id.setResourceType(ResourceConstants.BUSINESS_WS);
                     response.getResourceIdentifier().add(id);
                 }
             }
@@ -325,7 +327,7 @@ public class AdminManagement implements
                     for (String url : kernelServices) {
                         EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
                         id.setId(url);
-                        id.setResourceType("kernelws");
+                        id.setResourceType(ResourceConstants.KERNEL_WS);
                         response.getResourceIdentifier().add(id);
                     }
                 } catch (DSBWebServiceException e) {

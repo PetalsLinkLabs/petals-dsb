@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.petalslink.dsb.kernel.esmanagement;
+package org.petalslink.dsb.api.util;
 
 import javax.xml.namespace.QName;
 

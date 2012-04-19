@@ -14,7 +14,7 @@
 	<artifactId>dsb-monitoring-easierbsm-admin-jaxws</artifactId>
 	<packaging>jar</packaging>
 
-	<name>dsb-monitoring-easierbsm-admin-jaxws</name>
+	<name>DEPRECATED :: dsb-monitoring-easierbsm-admin-jaxws</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

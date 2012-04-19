@@ -9,7 +9,7 @@
 		<relativePath>../../dsb-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.petalsling.dsb</groupId>
+	<groupId>org.petalslink.dsb</groupId>
 	<artifactId>dsb-integration-esmanagement</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>

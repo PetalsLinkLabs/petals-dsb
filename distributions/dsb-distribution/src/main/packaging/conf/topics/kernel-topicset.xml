@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wstop:TopicSet xmlns:wstop="http://docs.oasis-open.org/wsn/t-1">
-	<!-- DSB topics -->
+	<!-- DSB kernel topics which are created at bootstrap and available for pub/sub-->
 	<tns:DSBTopic xmlns:tns="http://www.petalslink.org/resources/event/1.0"
 		wstop:topic="true" />
 	<tns:MonitoringTopic xmlns:tns="http://www.petalslink.org/resources/event/1.0"
 		wstop:topic="true" />
 	<tns:CreationResourcesTopic
 		xmlns:tns="http://www.petalslink.org/resources/event/1.0" wstop:topic="true" />
+	<tns:RawReportTopic
+		xmlns:tns="http://www.petalslink.org/rawreport/1.0" wstop:topic="true" />		
 </wstop:TopicSet>

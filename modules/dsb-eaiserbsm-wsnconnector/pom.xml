@@ -10,42 +10,74 @@
 	</parent>
 
 	<groupId>org.petalslink.dsb</groupId>
-	<artifactId>dsb-kernel-easierbsmservice</artifactId>
+	<artifactId>dsb-eaiserbsm-wsnconnector</artifactId>
 	<packaging>jar</packaging>
 
-	<name>DEPRECATED :: dsb-kernel-easierbsmservice</name>
+	<name>dsb-eaiserbsm-wsnconnector</name>
+	<description>EasierBSM WSN connector ie send reports to EasierBSM using the notification layer</description>
 
 	<dependencies>
-			<!--  CHA2012 : Fix API changes -->
-		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
-			<artifactId>dsb-removed</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
-		<!--  END API CHANGES -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.ow2.petals</groupId>
-			<artifactId>petals-kernel</artifactId>
-			<scope>provided</scope>
-		</dependency>
 
-		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
-			<artifactId>dsb-eaiserbsm-connector</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.petalslink.dsb</groupId>
 			<artifactId>dsb-monitoring-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-kernel</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-kernel-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-kernel-pubsubservice</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- FIXME : This dependency is temporary, we need to know which dependency 
+			to use for the rawreports since there are many... -->
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-monitoring-easierbsm-jaxws</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-jaxbutils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>
+			<artifactId>management-model</artifactId>
+			<version>v2012-02-13</version>
+		</dependency>
+
+		<!-- BSM : Need to import only the data definition and not all its dependencies 
+			to not break all... -->
+
+
 	</dependencies>
 
 	<build>

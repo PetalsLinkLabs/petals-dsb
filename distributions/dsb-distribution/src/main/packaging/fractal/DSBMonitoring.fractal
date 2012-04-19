@@ -17,7 +17,9 @@
 	<component definition="org.petalslink.dsb.kernel.pubsubmonitoring.service.PubSubMonitoringService" name="PubSubMonitoringService"/>
 	
 	<!-- Implementation dependent -->
-	<component definition="org.petalslink.dsb.kernel.service.easierbsm.EasierBSMClientFactory" name="DSBMonitoringClientFactory"/>
+	<!-- This is the old BSM implementation (2011) -->
+	<!-- <component definition="org.petalslink.dsb.kernel.service.easierbsm.EasierBSMClientFactory" name="DSBMonitoringClientFactory"/>-->
+	<component definition="org.petalslink.dsb.easierbsm.wsnconnector.EasierBSMClientFactoryWSNBased" name="DSBMonitoringClientFactory"/>
 	
 	<!-- BINDINGS -->
 	<!-- Common part -->
