@@ -104,6 +104,9 @@ public class CXFWebServiceExposerImpl implements WebServiceExposer {
             throw new WebServiceException("Can not create a web service from null things...");
         }
         
+        if (this.log.isDebugEnabled()) {
+            this.log.debug("### Expose Service " + bean.name + " for component " + bean.componentName);
+        }
         if (isAlreadyRegistered(bean)) {
             throw new WebServiceException(String.format(
                     "The service provided by component %s is already registered",
@@ -173,10 +176,8 @@ public class CXFWebServiceExposerImpl implements WebServiceExposer {
      * @return
      */
     protected boolean isAlreadyRegistered(WebServiceInformationBean bean) {
-        String serviceName = WebServiceHelper.getWebServiceName(bean.getClazz());
-        if (serviceName == null) {
-            serviceName = WebServiceHelper.getWebServiceName(bean.getClazz());
-        }
+        Class<?> wsClass = WebServiceHelper.getWebServiceClass(bean.implem.getClass());
+        String serviceName = WebServiceHelper.getWebServiceName(wsClass);
         return serviceName == null ? false : servers.get(serviceName) != null;
     }
 
