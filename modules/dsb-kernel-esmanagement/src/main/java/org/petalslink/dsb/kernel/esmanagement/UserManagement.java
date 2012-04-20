@@ -5,7 +5,6 @@ package org.petalslink.dsb.kernel.esmanagement;
 
 import java.util.List;
 
-import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
 import org.oasis_open.docs.wsn.bw_2.InvalidFilterFault;
@@ -59,7 +58,6 @@ import esstar.petalslink.com.service.management.user._1_0.UserManagementExceptio
  * @author chamerling
  * 
  */
-@WebService
 @FractalComponent
 @Provides(interfaces = { @Interface(name = "service", signature = esstar.petalslink.com.service.management.user._1_0.UserManagement.class) })
 public class UserManagement implements

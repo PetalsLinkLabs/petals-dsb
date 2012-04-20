@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
 import org.oasis_open.docs.wsn.bw_2.InvalidFilterFault;
@@ -89,7 +88,6 @@ import esstar.petalslink.com.service.management.admin._1_0.AdminManagementExcept
  * @author chamerling
  * 
  */
-@WebService
 @FractalComponent
 @Provides(interfaces = { @Interface(name = "service", signature = esstar.petalslink.com.service.management.admin._1_0.AdminManagement.class) })
 public class AdminManagement implements
