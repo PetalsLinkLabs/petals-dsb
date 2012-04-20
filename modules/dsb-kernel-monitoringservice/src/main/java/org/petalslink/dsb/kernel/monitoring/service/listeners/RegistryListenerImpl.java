@@ -69,10 +69,10 @@ public class RegistryListenerImpl implements RegistryListener {
         // let's say to the monitoring platform that there is something new...
         if (this.log.isInfoEnabled()) {
             this.log.info(
-                    "Notifying monitoring Bus that endpoint has been registered, Service %s, Endpoint %s, Interface %s",
+                    "Notifying monitoring Bus that endpoint has been registered, Service %s, Endpoint %s, Interfaces %s",
                     endpoint.getServiceName(), endpoint.getEndpointName(), endpoint.getInterfaces());
         }
-        
+
         MonitoringAdminClient client = getClient();
         if (client == null) {
             log.warning("Can not get any client to send message to monitoring layer");
@@ -84,9 +84,9 @@ public class RegistryListenerImpl implements RegistryListener {
         } catch (Exception e) {
             final String message = "Can not add monitoring endpoint";
             if (this.log.isDebugEnabled()) {
-                this.log.warning(message, e);                
+                this.log.warning(message, e);
             } else {
-                this.log.warning(message);                                
+                this.log.warning(message);
             }
         }
     }
@@ -112,8 +112,9 @@ public class RegistryListenerImpl implements RegistryListener {
         }
 
         if (this.log.isInfoEnabled()) {
-            this.log.info("Notifying monitoring Bus that endpoint has been unregistered : "
-                    + endpoint);
+            this.log.info(
+                    "Notifying monitoring layer that endpoint has been unregistered : Name %s, Service %s, Interfaces %s",
+                    endpoint.getEndpointName(), endpoint.getServiceName(), endpoint.getInterfaces());
         }
 
         MonitoringAdminClient client = getClient();
@@ -128,8 +129,10 @@ public class RegistryListenerImpl implements RegistryListener {
             this.log.warning("Can not delete monitoring endpoint", e);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.petalslink.dsb.kernel.api.messaging.RegistryListener#getName()
      */
     public String getName() {
