@@ -317,13 +317,15 @@ public class SOAPCaller {
             } catch (final Exception e) {
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING,
-                            "Catch an exception on the WS invocation : " + e.getMessage(), e);
+							"Catch an exception on the WS invocation while invoking service at '"
+									+ address + "' : " + e.getMessage(), e);
                 }
                 exchange.setError(new MessagingException(ExceptionUtil.getExtendedMessage(e)));
             } catch (final Throwable t) {                
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "Catch a throwable on the WS invocation : "
-                            + t.getMessage(), t);
+					logger.log(Level.WARNING,
+							"Catch a throwable on the WS invocation while invoking service at '"
+									+ address + "': " + t.getMessage(), t);
                 }
                 exchange.setError(new MessagingException(ExceptionUtil.getExtendedMessage(new Exception(t))));
             }
