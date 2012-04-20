@@ -3,7 +3,10 @@
  */
 package org.petalslink.dsb.integration.bsm;
 
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
@@ -34,7 +37,7 @@ import com.ebmwebsourcing.wsstar.wsnb.services.INotificationConsumer;
 public class CreateEndpointTestNoBSM extends TestCase {
 
     static String dsbURL = "http://localhost:7600/petals/ws";
-    
+
     static final QName CREATION_TOPIC = new QName("http://www.petalslink.org/resources/event/1.0",
             "CreationResourcesTopic", "bsm");
 
@@ -63,11 +66,13 @@ public class CreateEndpointTestNoBSM extends TestCase {
 
         final AtomicInteger i = new AtomicInteger(0);
 
+        final CountDownLatch latch = new CountDownLatch(1);
+
         // create the local listener
         String address = "http://localhost:7683/dsb/integration/bsm/LocalListener";
         String businessURL = "http://localhost:7684/integration/bsm/business/BSMIntegrationCreateResourceService";
         String dsbSubscribeAddress = dsbURL + "/NotificationProducer";
-        
+
         QName interfaceName = new QName("http://docs.oasis-open.org/wsn/bw-2",
                 "NotificationConsumer");
         QName serviceName = new QName("http://docs.oasis-open.org/wsn/bw-2",
@@ -79,10 +84,19 @@ public class CreateEndpointTestNoBSM extends TestCase {
             public void notify(Notify notify) throws WsnbException {
                 System.out.println(">>>> Got a notify on local service coming from the DSB...");
                 i.incrementAndGet();
+                latch.countDown();
             }
         };
+
+        URL wsdlURL = CreateEndpointTestNoBSM.class
+                .getResource("/NotificationConsumerService.wsdl");
+
+        if (wsdlURL == null) {
+            fail();
+        }
+
         NotificationConsumerService service = new NotificationConsumerService(interfaceName,
-                serviceName, endpointName, "NotificationConsumerService.wsdl", address, consumer);
+                serviceName, endpointName, wsdlURL.getFile(), address, consumer);
         Exposer exposer = new CXFExposer();
 
         Service server = null;
@@ -96,9 +110,9 @@ public class CreateEndpointTestNoBSM extends TestCase {
             System.out.println("Subscribe to receive resource creation notification");
             HTTPProducerClient client = new HTTPProducerClient(dsbSubscribeAddress);
             String id = client.subscribe(CREATION_TOPIC, address);
-            
+
             System.out.println("Subscribed, got ID = " + id);
-            
+
             System.out
                     .println("Bind the service so that we receive a notification on resource creation");
             Service business = CXFHelper.getServiceFromFinalURL(businessURL,
@@ -114,12 +128,13 @@ public class CreateEndpointTestNoBSM extends TestCase {
             // let's bind the service
             SOAPServiceBinder binder = CXFHelper.getClient(dsbURL, SOAPServiceBinder.class);
             List<ServiceEndpoint> endpoints = binder.bindWebService(businessURL + "?wsdl");
-            
+
             System.out.println("We should receive the notification, let's wait....");
-            Thread.sleep(50000);
             
-            assertEquals(1, i.get());
-            
+            boolean wait = latch.await(20, TimeUnit.SECONDS);
+
+            assertTrue(i.get() > 0);
+
         } catch (RuntimeException e) {
             e.printStackTrace();
         } finally {
