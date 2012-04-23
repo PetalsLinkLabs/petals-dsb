@@ -100,7 +100,9 @@ public class MonitoringModuleTwoReportsPerExchange implements SenderModule, Rece
         // skip monitoring on some messages, for example the monitoring ones...
         if (exchange.getMessage("in") != null
                 && exchange.getMessage("in").getProperty(Constants.MESSAGE_SKIP_MONITORING) != null) {
-            log.info("BYPASS for monitoring message...");
+            if (this.log.isDebugEnabled()) {
+                log.debug("BYPASS for monitoring message...");
+            }
             return;
         }
 
@@ -145,7 +147,9 @@ public class MonitoringModuleTwoReportsPerExchange implements SenderModule, Rece
         
         if (exchange.getMessage("in") != null
                 && exchange.getMessage("in").getProperty(Constants.MESSAGE_SKIP_MONITORING) != null) {
-            log.info("BYPASS for monitoring message at receiveExchange...");
+            if (this.log.isDebugEnabled()) {
+                log.debug("BYPASS for monitoring message...");
+            }
             return true;
         }
 
