@@ -45,6 +45,7 @@ import org.ow2.petals.jbi.messaging.routing.module.SenderModule;
 import org.ow2.petals.transport.util.TransportSendContext;
 import org.ow2.petals.util.oldies.LoggingUtil;
 import org.petalslink.dsb.api.DSBException;
+import org.petalslink.dsb.kernel.api.Constants;
 import org.petalslink.dsb.kernel.monitoring.service.ConfigurationService;
 import org.petalslink.dsb.kernel.monitoring.service.time.TimeStamperHandler;
 import org.petalslink.dsb.monitoring.api.MonitoringClient;
@@ -95,6 +96,13 @@ public class MonitoringModuleTwoReportsPerExchange implements SenderModule, Rece
             ComponentContext sourceComponentContext, MessageExchangeWrapper exchange)
             throws RoutingException {
         this.log.call();
+        
+        // skip monitoring on some messages, for example the monitoring ones...
+        if (exchange.getMessage("in") != null
+                && exchange.getMessage("in").getProperty(Constants.MESSAGE_SKIP_MONITORING) != null) {
+            log.info("BYPASS for monitoring message...");
+            return;
+        }
 
         // FIXME : For now, bypass all if the monitoring is not active. Must
         // cache things in a next version and activate/unactivate at runtime...
@@ -132,6 +140,12 @@ public class MonitoringModuleTwoReportsPerExchange implements SenderModule, Rece
             if (this.log.isDebugEnabled()) {
                 this.log.debug("Monitoring is not active, do not report time");
             }
+            return true;
+        }
+        
+        if (exchange.getMessage("in") != null
+                && exchange.getMessage("in").getProperty(Constants.MESSAGE_SKIP_MONITORING) != null) {
+            log.info("BYPASS for monitoring message at receiveExchange...");
             return true;
         }
 

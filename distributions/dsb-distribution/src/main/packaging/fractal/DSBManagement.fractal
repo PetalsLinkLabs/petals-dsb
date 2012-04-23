@@ -44,6 +44,9 @@
 	<component definition="org.petalslink.dsb.kernel.tools.cron.sample.BarJob" name="BarJob"/>
 	-->
 	
+	<!-- The resources -->
+	<component definition="org.petalslink.dsb.kernel.resource.ResourceRegistryImpl" name="ResourceRegistryImpl"/>
+	
 	<!-- *** EXPOSE *** -->
 	<!-- Expose to other components -->
 	<binding client="this.exposer-registry" server="ServiceExposerRegistry.service" />

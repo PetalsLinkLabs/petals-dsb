@@ -50,6 +50,8 @@ public class EasierBSMClient implements MonitoringClient {
     private SOAJAXBContext context;
 
     private ObjectFactory factory = new ObjectFactory();
+    
+    private MonitoringNotificationSender sender;
 
     /**
      * 
@@ -106,7 +108,7 @@ public class EasierBSMClient implements MonitoringClient {
             } catch (TransformerException e) {
             }
         }
-
+        
         NotificationCenter notificationCenter = NotificationCenter.get();
         if (notificationCenter == null) {
             if (logger.isLoggable(Level.WARNING)) {
@@ -116,7 +118,7 @@ public class EasierBSMClient implements MonitoringClient {
                     "Can not get the notification center to send new resource notification...");
         }
 
-        NotificationSender sender = notificationCenter.getSender();
+        NotificationSender sender = getMonitoringNotificationSender();
         if (sender == null) {
             if (logger.isLoggable(Level.WARNING)) {
                 logger.warning("Not able to find the notification sender to send the notification");
@@ -175,6 +177,14 @@ public class EasierBSMClient implements MonitoringClient {
             }
         }
         return result;
+    }
+    
+    private synchronized MonitoringNotificationSender getMonitoringNotificationSender() {
+        if (sender == null) {
+            sender = new MonitoringNotificationSender(NotificationCenter.get().getManager()
+                    .getNotificationProducerEngine());
+        }
+        return sender;
     }
 
 }

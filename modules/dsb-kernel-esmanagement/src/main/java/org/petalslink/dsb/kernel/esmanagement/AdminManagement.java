@@ -179,7 +179,7 @@ public class AdminManagement implements
 
         if (getAdditionalContent.getResourceIdentifier().getResourceType() != null
                 && getAdditionalContent.getResourceIdentifier().getResourceType()
-                        .equals("endpoint")) {
+                        .equals(ResourceConstants.ENDPOINT)) {
             ServiceEndpoint se = getEndpoint(getAdditionalContent.getResourceIdentifier().getId());
             if (se == null) {
                 throw new AdminManagementException(String.format(

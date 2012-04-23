@@ -18,6 +18,8 @@ import org.petalslink.dsb.ws.api.DSBWebServiceException;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse;
 
 /**
+ * A simple monitoring service which uses internally WSN stuff but exposes simple API which is not WSN-based...
+ * 
  * @author chamerling
  * 
  */
@@ -57,6 +59,8 @@ public class PubSubMonitoringService implements org.petalslink.dsb.ws.api.PubSub
                     .subscribe(
                             NotificationHelper.createSubscribe(subscriberEndpoint,
                                     Constants.MONITORING_TOPIC));
+            
+            // FIXME
             result = "registered/TODO";
         } catch (Exception e) {
             throw new DSBWebServiceException(e);
