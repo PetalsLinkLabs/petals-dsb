@@ -14,7 +14,7 @@
 <definition name="Notification" extends="NotificationType">
 
 	<!-- components -->
-	<!-- DSB Kernel facades -->
+	<!-- DSB Kernel facades which are exposed as Web services -->
 	<component name="NotificationProducerService" definition="org.petalslink.dsb.kernel.notification.service.NotificationProducerService" />
 	<component name="NotificationConsumerService" definition="org.petalslink.dsb.kernel.notification.service.NotificationConsumerService" />
 	

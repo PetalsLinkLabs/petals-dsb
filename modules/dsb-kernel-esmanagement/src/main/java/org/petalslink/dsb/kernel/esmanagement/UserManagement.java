@@ -215,8 +215,9 @@ public class UserManagement implements
      */
     public void notify(Notify notify) {
         if (log.isDebugEnabled()) {
-            log.debug("Business notify...");
+            log.debug("User management notify...");
         }
+        NotificationProxy.notify(notify);
     }
 
     /*

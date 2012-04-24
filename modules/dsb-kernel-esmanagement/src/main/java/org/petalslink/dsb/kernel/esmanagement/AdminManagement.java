@@ -366,7 +366,6 @@ public class AdminManagement implements
         if (log.isDebugEnabled()) {
             log.debug("Admin management notify");
         }
-        // TODO: Do it async
         NotificationProxy.notify(notify);
     }
 
@@ -423,6 +422,9 @@ public class AdminManagement implements
      */
     public UnsubscribeResponse unsubscribe(Unsubscribe unsubscribe)
             throws UnableToDestroySubscriptionFault, ResourceUnknownFault {
+        if (log.isDebugEnabled()) {
+            log.debug("Admin management unsubscribe");
+        }
         return NotificationProxy.unsubscribe(unsubscribe);
     }
 
