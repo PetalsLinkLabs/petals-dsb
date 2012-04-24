@@ -82,25 +82,28 @@ public class NotificationProxy {
 
                 System.out.println("IN subscribe "
                         + XMLHelper.createStringFromDOMDocument(subscribeDocument));
+                
+                // got a problem with topic NS: The prefix is added but its NS is not set in the element
 
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Subscribe subs = Wsnb4ServUtils
                         .getWsnbReader().readSubscribe(subscribeDocument);
 
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse resp = notificationCenter
                         .getManager().getNotificationProducerEngine().subscribe(subs);
+                
+                System.out.println("-");
 
                 if (resp != null) {
-
                     Document doc = Wsnb4ServUtils.getWsnbWriter().writeSubscribeResponseAsDOM(resp);
-
                     System.out.println("OUT subscribe response "
-                            + XMLHelper.createStringFromDOMDocument(subscribeDocument));
+                            + XMLHelper.createStringFromDOMDocument(doc));
 
                     res = SOAJAXBContext.getInstance()
                             .marshallAnyType(doc, SubscribeResponse.class);
 
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new TopicNotSupportedFault("Technical Fault", e);
             }
         } else {
@@ -113,7 +116,7 @@ public class NotificationProxy {
     public static UnsubscribeResponse unsubscribe(Unsubscribe unsubscribe)
             throws UnableToDestroySubscriptionFault, ResourceUnknownFault {
         UnsubscribeResponse res = null;
-        
+
         org.petalslink.dsb.kernel.pubsub.service.NotificationCenter notificationCenter = org.petalslink.dsb.kernel.pubsub.service.NotificationCenter
                 .get();
         if (notificationCenter != null) {
@@ -121,7 +124,7 @@ public class NotificationProxy {
             try {
 
                 Document in = SOAJAXBContext.getInstance().unmarshallAnyElement(unsubscribe);
-                
+
                 System.out.println("In unsubscribe request "
                         + XMLHelper.createStringFromDOMDocument(in));
 
@@ -130,17 +133,18 @@ public class NotificationProxy {
 
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.UnsubscribeResponse resp = notificationCenter
                         .getManager().getSubscriptionManagerEngine().unsubscribe(u);
-                
+
                 if (resp != null) {
-                    
-                    Document doc = Wsnb4ServUtils.getWsnbWriter().writeUnsubscribeResponseAsDOM(resp);
+
+                    Document doc = Wsnb4ServUtils.getWsnbWriter().writeUnsubscribeResponseAsDOM(
+                            resp);
 
                     System.out.println("OUT unsubscribe response "
                             + XMLHelper.createStringFromDOMDocument(doc));
 
-                    res = SOAJAXBContext.getInstance()
-                            .marshallAnyType(doc, UnsubscribeResponse.class);
-                    
+                    res = SOAJAXBContext.getInstance().marshallAnyType(doc,
+                            UnsubscribeResponse.class);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -160,21 +164,20 @@ public class NotificationProxy {
             try {
 
                 Document in = SOAJAXBContext.getInstance().unmarshallAnyElement(notify);
-                
-                System.out.println("In notify request "
-                        + XMLHelper.createStringFromDOMDocument(in));
+
+                System.out
+                        .println("In notify request " + XMLHelper.createStringFromDOMDocument(in));
 
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify n = Wsnb4ServUtils
                         .getWsnbReader().readNotify(in);
-                
+
                 notificationCenter.getSender().notify(n);
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            throw new RuntimeException(
-                    "Can not find the notification center to send notify to");
+            throw new RuntimeException("Can not find the notification center to send notify to");
         }
     }
 
@@ -182,7 +185,7 @@ public class NotificationProxy {
             throws ResourceUnavailableFault, InvalidResourcePropertyQNameFault,
             ResourceUnknownFault {
         GetResourcePropertyResponse res = null;
-        
+
         org.petalslink.dsb.kernel.pubsub.service.NotificationCenter notificationCenter = org.petalslink.dsb.kernel.pubsub.service.NotificationCenter
                 .get();
         if (notificationCenter != null) {
@@ -191,17 +194,14 @@ public class NotificationProxy {
                 com.ebmwebsourcing.wsstar.resourceproperties.datatypes.api.abstraction.GetResourcePropertyResponse resp = notificationCenter
                         .getManager().getNotificationProducerEngine().getResourceProperty(name);
                 if (resp != null) {
-                    Document doc = Wsnb4ServUtils.getWsrfrpWriter().writeGetResourcePropertyResponseAsDOM(resp);
+                    Document doc = Wsnb4ServUtils.getWsrfrpWriter()
+                            .writeGetResourcePropertyResponseAsDOM(resp);
 
                     System.out.println("OUT getresourceproperty response "
                             + XMLHelper.createStringFromDOMDocument(doc));
 
-                    res = SOAJAXBContext.getInstance()
-                            .marshallAnyType(doc, GetResourcePropertyResponse.class);
-                    
-                    GetResourcePropertyResponse response = null;
-                    // TODO
-                    return response;
+                    res = SOAJAXBContext.getInstance().marshallAnyType(doc,
+                            GetResourcePropertyResponse.class);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
