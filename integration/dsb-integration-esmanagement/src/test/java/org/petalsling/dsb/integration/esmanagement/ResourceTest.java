@@ -3,13 +3,15 @@
  */
 package org.petalsling.dsb.integration.esmanagement;
 
-import javax.xml.namespace.QName;
-
 import junit.framework.TestCase;
 
+import org.petalslink.dsb.api.ResourceConstants;
 import org.petalslink.dsb.cxf.CXFHelper;
+import org.w3c.dom.Document;
 
-import com.ebmwebsourcing.wsstar.resourceproperties.datatypes.api.abstraction.GetResourcePropertyResponse;
+import com.ebmwebsourcing.easycommons.research.util.SOAException;
+import com.ebmwebsourcing.easycommons.research.util.jaxb.SOAJAXBContext;
+import com.ebmwebsourcing.easycommons.xml.XMLHelper;
 
 import easybox.esstar.petalslink.com.management.model.datatype._1.EJaxbExecutionEnvironmentInformationTypeType;
 import easybox.esstar.petalslink.com.management.model.datatype._1.EJaxbResourceIdentifier;
@@ -31,9 +33,18 @@ public class ResourceTest extends TestCase {
 
     public static final String HELLO_ID = "{http://dsb.petalslink.org/endpoint/identifier/petals-bc-soap/subdomain1/0/}HelloServicePort";
 
-    public static final String ENDPOINT_TYPE = "endpoint";
-
-    private static final QName TOPICS = null;
+    static {
+        try {
+            SOAJAXBContext.getInstance().addOtherObjectFactory(
+                    easybox.esstar.petalslink.com.management.model.datatype._1.ObjectFactory.class,
+                    com.ebmwebsourcing.wsstar.jaxb.notification.base.ObjectFactory.class,
+                    com.ebmwebsourcing.wsstar.jaxb.resource.resourceproperties.ObjectFactory.class,
+                    esstar.petalslink.com.data.management.admin._1.ObjectFactory.class);
+        } catch (SOAException e) {
+            // do nothing
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param name
@@ -76,18 +87,23 @@ public class ResourceTest extends TestCase {
         AdminManagement client = CXFHelper.getClient(baseURL, AdminManagement.class);
         GetContent content = new GetContent();
         EJaxbResourceIdentifier id = new EJaxbResourceIdentifier();
-        id.setResourceType(ENDPOINT_TYPE);
+        id.setResourceType(ResourceConstants.ENDPOINT);
         id.setId(HELLO_ID);
         content.setResourceIdentifier(id);
 
         GetContentResponse response = client.getContent(content);
         assertNotNull(response);
 
-        System.out.println(response.getAny());
+        Document document = SOAJAXBContext.getInstance().unmarshallAnyElement(response);
 
-        assertNotNull(response.getAny());
-
-        // TODO : this is the WSDL as Any, check if it is right...
+        String s = XMLHelper.createStringFromDOMDocument(document);
+        System.out.println(s);
+        
+        // Check that it is the right WSDL, must do it with easyWSDL...
+        assertNotNull(s);
+        assertTrue(s.contains("definitions"));
+        assertTrue(s.contains("sayHello"));
+        assertTrue(s.contains("HelloServicePort"));
     }
 
     public void testGetExecEnv() throws Exception {
@@ -101,15 +117,6 @@ public class ResourceTest extends TestCase {
                 EJaxbExecutionEnvironmentInformationTypeType.ESB);
 
         // TODO: On a controlled test, we can check all the values...
-    }
-
-    public void testGetResourceProperty() throws Exception {
-        AdminManagement client = CXFHelper.getClient(baseURL, AdminManagement.class);
-        com.ebmwebsourcing.wsstar.jaxb.resource.resourceproperties.GetResourcePropertyResponse response = client
-                .getResourceProperty(TOPICS);
-        
-        assertNotNull(response);
-        
     }
 
 }
