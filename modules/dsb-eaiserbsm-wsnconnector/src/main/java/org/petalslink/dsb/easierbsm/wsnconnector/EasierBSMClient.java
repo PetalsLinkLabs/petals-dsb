@@ -51,7 +51,11 @@ public class EasierBSMClient implements MonitoringClient {
 
     private ObjectFactory factory = new ObjectFactory();
     
-    private MonitoringNotificationSender sender;
+    /**
+     * The sender is overrided in order to add monitoring information to message
+     * ie flag to skip to monitor the monitoring message ie infinite loops...
+     */
+    private NotificationSender monitoringNotificationSender;
 
     /**
      * 
@@ -179,12 +183,16 @@ public class EasierBSMClient implements MonitoringClient {
         return result;
     }
     
-    private synchronized MonitoringNotificationSender getMonitoringNotificationSender() {
-        if (sender == null) {
-            sender = new MonitoringNotificationSender(NotificationCenter.get().getManager()
+    private synchronized NotificationSender getMonitoringNotificationSender() {
+        if (monitoringNotificationSender == null) {
+            monitoringNotificationSender = new MonitoringNotificationSender(NotificationCenter.get().getManager()
                     .getNotificationProducerEngine());
         }
-        return sender;
+        return monitoringNotificationSender;
+    }
+    
+    public void setMonitoringNotificationSender(NotificationSender sender) {
+        this.monitoringNotificationSender = sender;
     }
 
 }

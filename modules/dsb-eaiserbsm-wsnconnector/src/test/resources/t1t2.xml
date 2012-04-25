@@ -1,0 +1,47 @@
+<wsnt:Notify xmlns:wsnt="http://docs.oasis-open.org/wsn/b-2">
+  <wsnt:NotificationMessage>
+    <wsnt:SubscriptionReference>
+      <wsa:Address xmlns:wsa="http://www.w3.org/2005/08/addressing">http://localhost:8085/services/DispatcherProviderEndpointClientProxyEndpoint</wsa:Address>
+      <wsa:ReferenceParameters xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+    </wsnt:SubscriptionReference>
+    <wsnt:Topic xmlns:tns="http://www.petalslink.org/rawreport/1.0" Dialect="http://docs.oasis-open.org/wsn/t-1/TopicExpression/Concrete">tns:RawReportTopic</wsnt:Topic>
+    <wsnt:ProducerReference>
+      <wsa:Address xmlns:wsa="http://www.w3.org/2005/08/addressing">http://petals.ow2.org::rawReportEndpoint_EasyBus</wsa:Address>
+      <wsa:ReferenceParameters xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+    </wsnt:ProducerReference>
+    <wsnt:Message>
+      <rawreport:reportList xmlns:admin="http://com.petalslink.easyesb/admin/model/datatype/1.0" xmlns:bsoap11="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:cad="http://com.petalslink.common.alerting.definition/1.0" xmlns:cadsoap="http\
+://com.petalslink.common.alerting.definition.protocol/soap-notification/1.0" xmlns:capnote="http://com.petalslink.common.alerting.protocol.note/1.0" xmlns:exch="http://com.petalslink.easyesb/exchange/1.0" xmlns:ns18="http://docs.oasis-\
+open.org/wsdm/muws2-2.xsd" xmlns:ns19="http://docs.oasis-open.org/wsdm/muws1-2.xsd" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:qml="http://upmc.fr/ns/ws-qml" xmlns:rawreport="http://com.petalslink/esrawreport/1.0\
+" xmlns:soa="http://com.petalslink.easyesb/soa/model/datatype/1.0" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsaddr="http://www.w3.org/2005/08/addressing" xmlns:wsagr="http://schemas.ggf.org/graap/2007/03/ws-agr\
+eement" xmlns:wscap="urn:oasis:names:tc:emergency:cap:1.2" xmlns:wsdl11="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdm="http://docs.oasis-open.org/wsdm/mows-2.xsd">
+        <rawreport:report>
+          <rawreport:exchangeId>d2ae05ee-cde1-426d-9c60-9813285f6129</rawreport:exchangeId>
+          <rawreport:timeStamp>t1</rawreport:timeStamp>
+          <rawreport:dateInGMT>2012-04-24T16:25:12.030+02:00</rawreport:dateInGMT>
+          <rawreport:consumerEndpointAddress>esb://http://www.webserviceX.NET/@StockQuoteSoapClientProxyEndpoint</rawreport:consumerEndpointAddress>
+          <rawreport:serviceQName xmlns="http://www.webserviceX.NET/">StockQuote</rawreport:serviceQName>
+          <rawreport:operationName>{http://www.webserviceX.NET/}isBusy</rawreport:operationName>
+          <rawreport:interfaceQName xmlns:tns="http://www.webserviceX.NET/">tns:StockQuoteSoap</rawreport:interfaceQName>
+          <rawreport:providerEndpointAddress>esb://http://www.webserviceX.NET/::StockQuote@StockQuoteSoap</rawreport:providerEndpointAddress>
+          <rawreport:endpointName>StockQuoteSoap</rawreport:endpointName>
+          <rawreport:contentLength>1899</rawreport:contentLength>
+          <rawreport:doesThisResponseIsAnException>false</rawreport:doesThisResponseIsAnException>
+        </rawreport:report>
+        <rawreport:report>
+          <rawreport:exchangeId>d2ae05ee-cde1-426d-9c60-9813285f6129</rawreport:exchangeId>
+          <rawreport:timeStamp>t2</rawreport:timeStamp>
+          <rawreport:dateInGMT>2012-04-24T16:25:12.046+02:00</rawreport:dateInGMT>
+          <rawreport:consumerEndpointAddress>esb://http://www.webserviceX.NET/@StockQuoteSoapClientProxyEndpoint</rawreport:consumerEndpointAddress>
+          <rawreport:serviceQName xmlns="http://www.webserviceX.NET/">StockQuote</rawreport:serviceQName>
+          <rawreport:operationName>{http://www.webserviceX.NET/}isBusy</rawreport:operationName>
+          <rawreport:interfaceQName xmlns:tns="http://www.webserviceX.NET/">tns:StockQuoteSoap</rawreport:interfaceQName>
+          <rawreport:providerEndpointAddress>esb://http://www.webserviceX.NET/::StockQuote@StockQuoteSoap</rawreport:providerEndpointAddress>
+          <rawreport:endpointName>StockQuoteSoap</rawreport:endpointName>
+          <rawreport:contentLength>1899</rawreport:contentLength>
+          <rawreport:doesThisResponseIsAnException>false</rawreport:doesThisResponseIsAnException>
+        </rawreport:report>
+      </rawreport:reportList>
+    </wsnt:Message>
+  </wsnt:NotificationMessage>
+</wsnt:Notify>

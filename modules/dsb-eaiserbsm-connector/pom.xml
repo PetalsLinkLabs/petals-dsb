@@ -13,7 +13,7 @@
 	<artifactId>dsb-eaiserbsm-connector</artifactId>
 	<packaging>jar</packaging>
 
-	<name>DEPRECATED :: dsb-eaiserbsm-connector</name>
+	<name>DEPRECATED (use dsb-easierbsm-wsnconnector):: dsb-eaiserbsm-connector</name>
 	<description>EasierBSM connector ie send reports to EasierBSM</description>
 
 	<dependencies>
