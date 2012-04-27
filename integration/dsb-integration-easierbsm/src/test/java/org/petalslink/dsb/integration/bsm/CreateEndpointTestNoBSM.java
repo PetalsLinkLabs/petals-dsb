@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
@@ -27,10 +28,19 @@ import org.petalslink.dsb.ws.api.ExposerService;
 import org.petalslink.dsb.ws.api.SOAPServiceBinder;
 import org.petalslink.dsb.ws.api.ServiceEndpoint;
 import org.petalslink.dsb.ws.api.ServiceInformation;
+import org.w3c.dom.Document;
 
+import com.ebmwebsourcing.easycommons.xml.XMLHelper;
+import com.ebmwebsourcing.wsstar.basefaults.datatypes.impl.impl.WsrfbfModelFactoryImpl;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.utils.WsnbException;
+import com.ebmwebsourcing.wsstar.basenotification.datatypes.impl.impl.WsnbModelFactoryImpl;
+import com.ebmwebsourcing.wsstar.resource.datatypes.impl.impl.WsrfrModelFactoryImpl;
+import com.ebmwebsourcing.wsstar.resourcelifetime.datatypes.impl.impl.WsrfrlModelFactoryImpl;
+import com.ebmwebsourcing.wsstar.resourceproperties.datatypes.impl.impl.WsrfrpModelFactoryImpl;
+import com.ebmwebsourcing.wsstar.topics.datatypes.impl.impl.WstopModelFactoryImpl;
 import com.ebmwebsourcing.wsstar.wsnb.services.INotificationConsumer;
+import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
 import com.google.common.collect.Sets;
 
 /**
@@ -46,9 +56,16 @@ public class CreateEndpointTestNoBSM extends TestCase {
 
     static final QName CREATION_TOPIC = new QName("http://www.petalslink.org/resources/event/1.0",
             "CreationResourcesTopic", "bsm");
-    
+
     static final QName REPORTS_TOPIC = new QName("http://www.petalslink.org/rawreport/1.0",
             "RawReportTopic", "bsm");
+
+    static {
+        Wsnb4ServUtils.initModelFactories(new WsrfbfModelFactoryImpl(),
+                new WsrfrModelFactoryImpl(), new WsrfrlModelFactoryImpl(),
+                new WsrfrpModelFactoryImpl(), new WstopModelFactoryImpl(),
+                new WsnbModelFactoryImpl());
+    }
 
     public void testCreateEndpointAndInvoke() throws Exception {
 
@@ -78,7 +95,15 @@ public class CreateEndpointTestNoBSM extends TestCase {
         // expose the service
         INotificationConsumer consumer = new INotificationConsumer() {
             public void notify(Notify notify) throws WsnbException {
-                System.out.println(">>>> Got a notify on local service coming from the DSB for rawreports...");
+                System.out
+                        .println(">>>> Got a notify on local service coming from the DSB for rawreports...");
+
+                Document dom = Wsnb4ServUtils.getWsnbWriter().writeNotifyAsDOM(notify);
+                try {
+                    System.out.println(XMLHelper.createStringFromDOMDocument(dom));
+                } catch (TransformerException e) {
+                }
+
                 i.incrementAndGet();
                 latch.countDown();
             }
@@ -103,8 +128,7 @@ public class CreateEndpointTestNoBSM extends TestCase {
             server.start();
 
             Service business = CXFHelper.getServiceFromFinalURL(businessURL,
-                    BSMIntegrationService.class,
-                    new BSMIntegrationService() {
+                    BSMIntegrationService.class, new BSMIntegrationService() {
                         public String sayHello() {
                             System.out.println("Business service Called!");
                             businessCalled.incrementAndGet();
@@ -113,7 +137,7 @@ public class CreateEndpointTestNoBSM extends TestCase {
                     });
 
             business.start();
-            
+
             System.out.println("Get the currently exposed services (before bind)...");
             ServiceInformation info = CXFHelper.getClient(dsbURL, ServiceInformation.class);
             Set<String> webservices = info.getExposedWebServices();
@@ -121,13 +145,13 @@ public class CreateEndpointTestNoBSM extends TestCase {
                 System.out.printf("Exposed service %s", string);
                 System.out.println();
             }
-            
+
             // let's bind the service
             SOAPServiceBinder binder = CXFHelper.getClient(dsbURL, SOAPServiceBinder.class);
             Set<String> services = binder.getWebServices();
             List<ServiceEndpoint> endpoints = binder.bindWebService(businessURL + "?wsdl");
             Set<String> after = binder.getWebServices();
-            
+
             for (ServiceEndpoint endpoint : endpoints) {
                 System.out.printf("Expose endpoint %s as Web service", endpoint);
                 ExposerService exposerService = CXFHelper.getClient(dsbURL, ExposerService.class);
@@ -139,15 +163,15 @@ public class CreateEndpointTestNoBSM extends TestCase {
             try {
                 TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
-            }            
-            
+            }
+
             // subscribe to rawreports
             System.out.println("Subscribe to receive raw reports notifications");
             HTTPProducerClient client = new HTTPProducerClient(dsbSubscribeAddress);
             String rawid = client.subscribe(REPORTS_TOPIC, address);
 
             System.out.println("Subscribed to rawreports, got ID = " + rawid);
-            
+
             // let's invoke the service and we should receive notifications...
             System.out.println("Get the new service address");
             info = CXFHelper.getClient(dsbURL, ServiceInformation.class);
@@ -164,18 +188,19 @@ public class CreateEndpointTestNoBSM extends TestCase {
                 System.out.printf("New service %s", string);
                 System.out.println();
             }
-            
+
             // let's say that the service to call is the first one...
             if (set.size() == 0) {
                 fail("Can not retrieve the service to call from the DSB API...");
             }
-            
+
             String fullURL = new ArrayList<String>(set).get(0);
-            BSMIntegrationService bsmIntegrationService = CXFHelper.getClientFromFinalURL(fullURL, BSMIntegrationService.class);
-            
+            BSMIntegrationService bsmIntegrationService = CXFHelper.getClientFromFinalURL(fullURL,
+                    BSMIntegrationService.class);
+
             // let's call it, we should receive notifications...
             String out = bsmIntegrationService.sayHello();
-            
+
             System.out.println("Received from business service '" + out + "'");
 
             System.out.println("We should receive the notifications, let's wait....");

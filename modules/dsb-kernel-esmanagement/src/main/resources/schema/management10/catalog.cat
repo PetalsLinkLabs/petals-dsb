@@ -1,0 +1,4 @@
+
+REWRITE_SYSTEM "http://com.petalslink.easyesb/soa/model/datatype/1.0" "classpath:schema/soa10/soa10.xsd"
+
+

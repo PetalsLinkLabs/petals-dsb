@@ -3,6 +3,12 @@
  */
 package org.petalslink.dsb.kernel.esmanagement;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.oasis_open.docs.wsn.bw_2.InvalidFilterFault;
@@ -26,11 +32,12 @@ import com.ebmwebsourcing.easycommons.research.util.SOAException;
 import com.ebmwebsourcing.easycommons.research.util.jaxb.SOAJAXBContext;
 import com.ebmwebsourcing.easycommons.xml.XMLHelper;
 import com.ebmwebsourcing.wsstar.basefaults.datatypes.impl.impl.WsrfbfModelFactoryImpl;
+import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.NotificationMessageHolderType;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.impl.impl.WsnbModelFactoryImpl;
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.Notify;
-import com.ebmwebsourcing.wsstar.jaxb.notification.base.ObjectFactory;
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.Subscribe;
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.SubscribeResponse;
+import com.ebmwebsourcing.wsstar.jaxb.notification.base.TopicExpressionType;
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.Unsubscribe;
 import com.ebmwebsourcing.wsstar.jaxb.notification.base.UnsubscribeResponse;
 import com.ebmwebsourcing.wsstar.jaxb.resource.resourceproperties.GetResourcePropertyResponse;
@@ -45,6 +52,14 @@ import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
  * 
  */
 public class NotificationProxy {
+
+    static final QName CREATION_TOPIC = new QName("http://www.petalslink.org/resources/event/1.0",
+            "CreationResourcesTopic", "bsm");
+
+    static final QName RAWREPORT_TOPIC = new QName("http://www.petalslink.org/rawreport/1.0",
+            "RawReportTopic", "bsm");
+
+    static Map<String, QName> topics;
 
     static {
         try {
@@ -61,6 +76,10 @@ public class NotificationProxy {
                 new WsrfrModelFactoryImpl(), new WsrfrlModelFactoryImpl(),
                 new WsrfrpModelFactoryImpl(), new WstopModelFactoryImpl(),
                 new WsnbModelFactoryImpl());
+
+        topics = new HashMap<String, QName>();
+        topics.put(CREATION_TOPIC.getLocalPart(), CREATION_TOPIC);
+        topics.put(RAWREPORT_TOPIC.getLocalPart(), RAWREPORT_TOPIC);
     }
 
     public static SubscribeResponse subscribe(Subscribe subscribe)
@@ -82,21 +101,25 @@ public class NotificationProxy {
 
                 System.out.println("IN subscribe "
                         + XMLHelper.createStringFromDOMDocument(subscribeDocument));
-                
-                // got a problem with topic NS: The prefix is added but its NS is not set in the element
+
+                // got a problem with topic NS: The prefix is added but its NS
+                // is not set in the element
 
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Subscribe subs = Wsnb4ServUtils
                         .getWsnbReader().readSubscribe(subscribeDocument);
 
+                // FIXME
+                // Dirty ACK, add the NS to the subscribe topic since the way we
+                // manage it is not standard and Java XML bindings does not
+                // support them...
+
+                fixTopic(subs);
+
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse resp = notificationCenter
                         .getManager().getNotificationProducerEngine().subscribe(subs);
-                
-                System.out.println("-");
 
                 if (resp != null) {
                     Document doc = Wsnb4ServUtils.getWsnbWriter().writeSubscribeResponseAsDOM(resp);
-                    System.out.println("OUT subscribe response "
-                            + XMLHelper.createStringFromDOMDocument(doc));
 
                     res = SOAJAXBContext.getInstance()
                             .marshallAnyType(doc, SubscribeResponse.class);
@@ -125,9 +148,6 @@ public class NotificationProxy {
 
                 Document in = SOAJAXBContext.getInstance().unmarshallAnyElement(unsubscribe);
 
-                System.out.println("In unsubscribe request "
-                        + XMLHelper.createStringFromDOMDocument(in));
-
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Unsubscribe u = Wsnb4ServUtils
                         .getWsnbReader().readUnsubscribe(in);
 
@@ -138,9 +158,6 @@ public class NotificationProxy {
 
                     Document doc = Wsnb4ServUtils.getWsnbWriter().writeUnsubscribeResponseAsDOM(
                             resp);
-
-                    System.out.println("OUT unsubscribe response "
-                            + XMLHelper.createStringFromDOMDocument(doc));
 
                     res = SOAJAXBContext.getInstance().marshallAnyType(doc,
                             UnsubscribeResponse.class);
@@ -170,6 +187,8 @@ public class NotificationProxy {
 
                 com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify n = Wsnb4ServUtils
                         .getWsnbReader().readNotify(in);
+                
+                fixTopic(n);
 
                 notificationCenter.getSender().notify(n);
 
@@ -197,9 +216,6 @@ public class NotificationProxy {
                     Document doc = Wsnb4ServUtils.getWsrfrpWriter()
                             .writeGetResourcePropertyResponseAsDOM(resp);
 
-                    System.out.println("OUT getresourceproperty response "
-                            + XMLHelper.createStringFromDOMDocument(doc));
-
                     res = SOAJAXBContext.getInstance().marshallAnyType(doc,
                             GetResourcePropertyResponse.class);
                 }
@@ -211,5 +227,71 @@ public class NotificationProxy {
                     "Can not find the notification center to send getResourceProperty to");
         }
         return res;
+    }
+
+    protected static final String getPrefix(String topicContent) {
+        if (topicContent == null || topicContent.length() == 0) {
+            return "";
+        }
+
+        if (topicContent.indexOf(':') == -1) {
+            return "";
+        }
+
+        return topicContent.substring(0, topicContent.indexOf(':'));
+    }
+
+    protected static final String getLocalPart(String topicContent) {
+        if (topicContent == null || topicContent.length() == 0) {
+            return "";
+        }
+
+        if (topicContent.indexOf(':') == -1) {
+            return topicContent;
+        }
+
+        return topicContent.substring(topicContent.indexOf(':') + 1);
+    }
+
+    protected static void fixTopic(
+            com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Subscribe subs) {
+        com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.TopicExpressionType topic = subs
+                .getFilter().getTopicExpressions().get(0);
+
+        if (topic != null) {
+            String content = topic.getContent();
+            String localPart = getLocalPart(content);
+
+            QName topicQName = topics.get(localPart);
+            if (topicQName != null) {
+                topic.setContent(topicQName.getPrefix() + ":" + topicQName.getLocalPart());
+                topic.addTopicNamespace(topicQName.getPrefix(),
+                        URI.create(topicQName.getNamespaceURI()));
+            }
+        }
+    }
+
+    protected static void fixTopic(
+            com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify notify) {
+        if (notify == null || notify.getNotificationMessage() == null
+                || notify.getNotificationMessage().size() == 0) {
+            return;
+        }
+
+        List<NotificationMessageHolderType> messages = notify.getNotificationMessage();
+        com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.TopicExpressionType topic = messages
+                .get(0).getTopic();
+
+        if (topic != null) {
+            String content = topic.getContent();
+            String localPart = getLocalPart(content);
+
+            QName topicQName = topics.get(localPart);
+            if (topicQName != null) {
+                topic.setContent(topicQName.getPrefix() + ":" + topicQName.getLocalPart());
+                topic.addTopicNamespace(topicQName.getPrefix(),
+                        URI.create(topicQName.getNamespaceURI()));
+            }
+        }
     }
 }

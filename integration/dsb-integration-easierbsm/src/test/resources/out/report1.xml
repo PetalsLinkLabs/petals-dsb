@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsnt:Notify xmlns:wsnt="http://docs.oasis-open.org/wsn/b-2">
+	<wsnt:NotificationMessage>
+		<wsnt:SubscriptionReference>
+			<wsa:Address xmlns:wsa="http://www.w3.org/2005/08/addressing">http://localhost:7685/dsb/integration/bsm/LocalListener</wsa:Address>
+			<wsa:ReferenceParameters xmlns:wsa="http://www.w3.org/2005/08/addressing" />
+		</wsnt:SubscriptionReference>
+		<wsnt:Topic xmlns:bsm="http://www.petalslink.org/rawreport/1.0"
+			Dialect="http://docs.oasis-open.org/wsn/t-1/TopicExpression/Concrete">bsm:RawReportTopic</wsnt:Topic>
+		<wsnt:ProducerReference>
+			<wsa:Address xmlns:wsa="http://www.w3.org/2005/08/addressing">dsb://BSMMonitoringNotifcationSender</wsa:Address>
+			<wsa:ReferenceParameters xmlns:wsa="http://www.w3.org/2005/08/addressing" />
+		</wsnt:ProducerReference>
+		<wsnt:Message>
+			<ns2:reportList xmlns:ns2="http://com.petalslink/esrawreport/1.0"
+				xmlns="http://com.petalslink.esstar/admin/model/datatype/1.0">
+				<ns2:report>
+					<ns2:exchangeId>petals:uid:c4a85760-906c-11e1-b863-e0f847263350</ns2:exchangeId>
+					<ns2:timeStamp>t1</ns2:timeStamp>
+					<ns2:dateInGMT>2012-04-27T15:27:42.947+02:00</ns2:dateInGMT>
+					<ns2:consumerEndpointAddress>null -&gt;null
+						(CONSUMER):subdomain1/0/petals-bc-soap</ns2:consumerEndpointAddress>
+					<ns2:serviceQName
+						xmlns:ns3="http://mocks.bsm.integration.dsb.petalslink.org/">ns3:BSMIntegrationServiceService</ns2:serviceQName>
+					<ns2:operationName>{http://mocks.bsm.integration.dsb.petalslink.org/}sayHello</ns2:operationName>
+					<ns2:interfaceQName
+						xmlns:ns3="http://mocks.bsm.integration.dsb.petalslink.org/">ns3:BSMIntegrationService</ns2:interfaceQName>
+					<ns2:providerEndpointAddress>{http://mocks.bsm.integration.dsb.petalslink.org/}BSMIntegrationServiceService</ns2:providerEndpointAddress>
+					<ns2:endpointName>BSMIntegrationServicePort</ns2:endpointName>
+					<ns2:contentLength>132</ns2:contentLength>
+					<ns2:doesThisResponseIsAnException>false</ns2:doesThisResponseIsAnException>
+				</ns2:report>
+				<ns2:report>
+					<ns2:exchangeId>petals:uid:c4a85760-906c-11e1-b863-e0f847263350</ns2:exchangeId>
+					<ns2:timeStamp>t2</ns2:timeStamp>
+					<ns2:dateInGMT>2012-04-27T15:27:42.965+02:00</ns2:dateInGMT>
+					<ns2:consumerEndpointAddress>null -&gt;null
+						(CONSUMER):subdomain1/0/petals-bc-soap</ns2:consumerEndpointAddress>
+					<ns2:serviceQName
+						xmlns:ns3="http://mocks.bsm.integration.dsb.petalslink.org/">ns3:BSMIntegrationServiceService</ns2:serviceQName>
+					<ns2:operationName>{http://mocks.bsm.integration.dsb.petalslink.org/}sayHello</ns2:operationName>
+					<ns2:interfaceQName
+						xmlns:ns3="http://mocks.bsm.integration.dsb.petalslink.org/">ns3:BSMIntegrationService</ns2:interfaceQName>
+					<ns2:providerEndpointAddress>{http://mocks.bsm.integration.dsb.petalslink.org/}BSMIntegrationServiceService</ns2:providerEndpointAddress>
+					<ns2:endpointName>BSMIntegrationServicePort</ns2:endpointName>
+					<ns2:contentLength>132</ns2:contentLength>
+					<ns2:doesThisResponseIsAnException>false</ns2:doesThisResponseIsAnException>
+				</ns2:report>
+			</ns2:reportList>
+		</wsnt:Message>
+	</wsnt:NotificationMessage>
+</wsnt:Notify>
