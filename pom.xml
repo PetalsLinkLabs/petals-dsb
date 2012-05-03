@@ -22,20 +22,26 @@
 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
+	<parent>
+		<artifactId>petals-parent</artifactId>
+		<groupId>org.petalslink.dsb</groupId>
+		<version>1.0.0</version>
+	</parent>
+	
 	<name>Petals Distributed Service Bus</name>
-	<artifactId>petals-dsb</artifactId>
+	<artifactId>dsb-parent</artifactId>
 	<groupId>org.petalslink.dsb</groupId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>modules/petals-parent</module>
+		<!--<module>modules/petals-parent</module>-->
 		
 		<!-- Commons -->
 		<module>modules/dsb-commons-serviceapi</module>
 		
 		<!-- DSB -->
-		<module>modules/dsb-parent</module>
+		<!--<module>modules/dsb-parent</module>-->
 		<module>modules/dsb-registry</module>
 		<module>modules/dsb-annotations</module>
 		<module>modules/dsb-api</module>
@@ -166,6 +172,57 @@
 		
   </modules>
 
+  <scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
+
+	<licenses>
+		<license>
+			<name>GNU LESSER GENERAL PUBLIC LICENSE Version 2.1</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Christophe Hamerling</name>
+			<id>chamerling</id>
+			<email>christophe.hamerling@petalslink.com</email>
+			<url>http://chamerling.org</url>
+			<organization>PetalsLink</organization>
+			<organizationUrl>
+				http://www.petalslink.com
+			</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+	
+	<properties>
+		<cobertura.version>2.0-beta1</cobertura.version>
+		<site.version>2.3</site.version>
+		<mprojectinfo.version>2.0-beta-3</mprojectinfo.version>
+		<umlgraph.version>4.6</umlgraph.version>
+		<petalsesb.kernel.version>3.2</petalsesb.kernel.version>
+		<petalsesb.kernel.apiversion>2.1.0</petalsesb.kernel.apiversion>
+		<petalsesb.kernel-wsapi.version>1.2.0</petalsesb.kernel-wsapi.version>
+		<petalsesb.launcher.version>1.3.1</petalsesb.launcher.version>
+		<petalsesb.jbi.version>1.1.0</petalsesb.jbi.version>
+		<petalsesb.cdk.version>5.2.0</petalsesb.cdk.version>
+
+		<easywsdl.version>2.4</easywsdl.version>
+		<cxf.version>2.5.0</cxf.version>
+		
+		<labs.wsn.version>v2012-02-13</labs.wsn.version>
+		<labs.easyresources.version>v2011-10-18</labs.easyresources.version>
+		
+		<topDirectoryLocation>.</topDirectoryLocation>
+	</properties>
+	
 	<profiles>
 		<profile>
 			<id>distributions</id>
@@ -175,11 +232,7 @@
 			</modules>
 		</profile>
 	</profiles>
-
-	<build>
-		<defaultGoal>install</defaultGoal>
-	</build>
-	
+		
 	<distributionManagement>
 	 <repository>
 	      <uniqueVersion>false</uniqueVersion>
@@ -201,4 +254,277 @@
 			<url>scp://labs.petalslink.org:/home/www/labs/commons/dsb/sites/${project.version}/</url>
 		</site>
 	</distributionManagement>
+	<repositories>
+			  <repository>
+			      <id>petalslink-public.release</id>
+			      <name>PetalsLink Public Repository</name>
+			      <url>http://maven.petalslink.com/public</url>
+			      <releases>
+			        <enabled>true</enabled>
+			      </releases>
+			      <snapshots>
+			        <enabled>false</enabled>
+			      </snapshots>
+			    </repository>
+			    <repository>
+			      <id>petalslink-public.snapshot</id>
+			      <name>PetalsLink Snapshot Public Repository</name>
+			      <url>http://maven.petalslink.com/public-snapshot</url>
+			      <snapshots>
+			        <enabled>true</enabled>
+			      </snapshots>
+			      <releases>
+			        <enabled>false</enabled>
+			      </releases>
+			    </repository>
+			    <repository>
+			      <id>ebmws-public.snapshot</id>
+			      <url>http://maven.petalslink.com/public-snapshot</url>
+			      <releases>
+			        <enabled>false</enabled>
+			      </releases>
+			      <snapshots>
+			        <enabled>true</enabled>
+			      </snapshots>
+			    </repository>
+			    <repository>
+			      <id>ebmws-public.research</id>
+			      <url>http://maven.petalslink.com/public-research</url>
+			      <releases>
+			        <enabled>true</enabled>
+			      </releases>
+			      <snapshots>
+			        <enabled>false</enabled>
+			      </snapshots>
+			    </repository>
+			    <repository>
+			      <id>petalslink-public.others</id>
+				<url>http://maven.petalslink.com/others</url>
+				<releases>
+					<enabled>true</enabled>
+				</releases>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+			    </repository>
+				<repository>
+				      <id>ow2-public.release</id>
+				      <name>OW2 Public Repository</name>
+				      <url>http://maven.ow2.org/maven2</url>
+				      <releases>
+				        <enabled>true</enabled>
+				      </releases>
+				      <snapshots>
+				        <enabled>false</enabled>
+				      </snapshots>
+				  </repository>
+				<repository>
+				      <id>ow2-public.snapshot</id>
+				      <name>OW2 Snapshot Repository</name>
+				      <url>http://maven.ow2.org/maven2-snapshot</url>
+				      <releases>
+				        <enabled>false</enabled>
+				      </releases>
+				      <snapshots>
+				        <enabled>true</enabled>
+				      </snapshots>
+				    </repository>
+         </repositories>
+		<pluginRepositories>
+		    <pluginRepository>
+		      <id>petalslink-public.snapshot.plugin</id>
+		      <name>PetalsLink plugin Repository</name>
+		      <url>http://maven.petalslink.com/public-snapshot</url>
+		      <releases>
+		        <enabled>false</enabled>
+		      </releases>
+		      <snapshots>
+		        <enabled>true</enabled>
+		      </snapshots>
+		    </pluginRepository>
+			  <pluginRepository>
+			      <id>petalslink-public.release.plugin</id>
+			      <name>PetalsLink plugin release Repository</name>
+			      <url>http://maven.petalslink.com/public</url>
+			      <releases>
+			        <enabled>true</enabled>
+			      </releases>
+			      <snapshots>
+			        <enabled>false</enabled>
+			      </snapshots>
+			    </pluginRepository>
+			  <pluginRepository>
+			      <id>petalslink-public.others.plugin</id>
+			      <name>PetalsLink plugin others Repository</name>
+			      <url>http://maven.petalslink.com/others</url>
+			      <releases>
+			        <enabled>true</enabled>
+			      </releases>
+			      <snapshots>
+			        <enabled>false</enabled>
+			      </snapshots>
+			    </pluginRepository>
+		  </pluginRepositories>
+		
+		<dependencies>
+			<dependency>
+				<groupId>findbugs</groupId>
+				<artifactId>annotations</artifactId>
+				<version>1.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+
+		<dependencyManagement>
+			<dependencies>
+				<!-- DSB depends on Petals ESB Kernel (instead of an API...) -->
+				<dependency>
+					<groupId>org.ow2.petals</groupId>
+					<artifactId>petals-kernel</artifactId>
+					<version>${petalsesb.kernel.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.ow2.petals</groupId>
+					<artifactId>petals-kernel-api</artifactId>
+					<version>${petalsesb.kernel.apiversion}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.ow2.petals</groupId>
+					<artifactId>petals-launcher</artifactId>
+					<version>${petalsesb.launcher.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.ow2.petals</groupId>
+					<artifactId>petals-jbi</artifactId>
+					<version>${petalsesb.jbi.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.ow2.petals</groupId>
+					<artifactId>petals-kernel-wsapi</artifactId>
+					<version>${petalsesb.kernel-wsapi.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.ow2.petals</groupId>
+					<artifactId>petals-cdk-core</artifactId>
+					<version>${petalsesb.cdk.version}</version>
+				</dependency>
+
+				<dependency>
+					<groupId>org.ow2.easywsdl</groupId>
+					<artifactId>easywsdl-ext-wsdl4complexwsdl</artifactId>
+					<version>${easywsdl.version}</version>	
+				</dependency>
+
+				<dependency>
+					<artifactId>easywsdl-wsdl</artifactId>
+					<groupId>org.ow2.easywsdl</groupId>
+					<version>${easywsdl.version}</version>	
+				</dependency>
+
+				<!-- Labs dependencies -->
+				<dependency>
+					<artifactId>wsn-b-services-impl</artifactId>
+					<groupId>com.ebmwebsourcing.deprecated.oasis-ws-basenotification</groupId>
+					<version>${labs.wsn.version}</version>
+				</dependency>
+
+				<dependency>			
+					<artifactId>ws-binding-resources</artifactId>
+					<groupId>com.ebmwebsourcing.easyresources</groupId>
+					<version>${labs.easyresources.version}</version>
+				</dependency>
+
+				<!-- External -->
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<version>3.8.1</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.easymock</groupId>
+					<artifactId>easymock</artifactId>
+					<version>2.2</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.easymock</groupId>
+					<artifactId>easymockclassextension</artifactId>
+					<version>2.2</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+					<version>1.2.13</version>
+				</dependency>
+				<dependency>
+					<groupId>commons-lang</groupId>
+					<artifactId>commons-lang</artifactId>
+					<version>2.1</version>
+				</dependency>
+				<dependency>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+					<version>1.2</version>
+				</dependency>
+				<dependency>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+					<version>1.0.4</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-bundle-minimal</artifactId>
+					<version>${cxf.version}</version>
+				</dependency>
+			</dependencies>
+		</dependencyManagement>
+		<build>
+			<defaultGoal>install</defaultGoal>
+			
+			<pluginManagement>
+				<plugins>
+			        <plugin>
+			          	<groupId>org.apache.maven.plugins</groupId>
+			          	<artifactId>maven-release-plugin</artifactId>
+			          	<version>2.1</version>
+			          	<configuration>
+			            	<autoVersionSubmodules>true</autoVersionSubmodules>
+			          	</configuration>
+			        </plugin>
+					<plugin>
+				          <groupId>org.apache.maven.plugins</groupId>
+				          <artifactId>maven-site-plugin</artifactId>
+				          <version>3.1</version>
+			        </plugin>
+				</plugins>
+			</pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.7</version>
+					<configuration>
+						<addGroupIdToProjectName>true</addGroupIdToProjectName>
+					</configuration>
+				</plugin>
+			</plugins>
+	  	</build>
+		<reporting>
+		    <plugins>
+		      <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-javadoc-plugin</artifactId>
+		        <version>2.7</version>
+		        <configuration>
+		          <links>
+		            <link>http://www.petalslink.com</link>
+		            <link>http://research.petalslink.com</link>
+		            <link>http://ow2.org</link>
+		          </links>
+		        </configuration>
+		      </plugin>
+		    </plugins>
+		  </reporting>
 </project>
