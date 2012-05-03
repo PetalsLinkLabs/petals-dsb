@@ -97,13 +97,6 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- For GMS -->
-		<dependency>
-			<groupId>org.petalslink.gms</groupId>
-			<artifactId>gms-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
 		<!--<dependency> <groupId>eu.soa4all.dsb.petals.transport</groupId> <artifactId>soa4all-petals-federationtransporter</artifactId> 
 			<version>1.0-SNAPSHOT</version> </dependency> -->
 
