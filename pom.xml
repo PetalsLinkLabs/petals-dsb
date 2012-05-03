@@ -225,10 +225,9 @@
 	
 	<profiles>
 		<profile>
-			<id>distributions</id>
+			<id>distribution</id>
 			<modules>
 				<module>distributions/dsb-distribution</module>
-				<module>distributions/dsb-fulldistribution</module>
 			</modules>
 		</profile>
 	</profiles>
