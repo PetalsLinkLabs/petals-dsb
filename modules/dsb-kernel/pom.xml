@@ -189,11 +189,6 @@
 		<!-- <dependency> <groupId>com.ebmwebsourcing.commons</groupId> <artifactId>commons-wsframework-api</artifactId> 
 			<version>1.0-SNAPSHOT</version> </dependency> -->
 		<!-- TODO : REMOVE -->
-		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
-			<artifactId>dsb-petals-oldies</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<!-- For monitoring -->
 		<!-- <artifactId>report.client.petals.module</artifactId> <groupId>org.ow2.petals.monitoring</groupId> 
 			<version>1.0-SNAPSHOT</version> </dependency> -->
