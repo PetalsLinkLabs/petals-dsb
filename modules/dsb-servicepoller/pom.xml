@@ -34,9 +34,4 @@
 			<version>2.0.1</version>
 		</dependency>
 	</dependencies>
-
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-servicepoller</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
 </project>

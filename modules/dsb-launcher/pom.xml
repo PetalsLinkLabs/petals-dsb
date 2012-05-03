@@ -16,11 +16,6 @@
 	<description>This launcher extends the default Petals ESB kernel one and allows developers to specify the main server class and the JARs of the kernel in a configuration file 'launcher.cfg' under the Petals 'conf' directory.
 	A sample is available in src/test/resources folder.</description>
 	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-launcher</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
-	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

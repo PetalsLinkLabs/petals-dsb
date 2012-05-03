@@ -41,12 +41,6 @@
 		</developer>
 	</developers>
 
-	<!-- Source code management -->
-  <scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-bc-soap</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  </scm>
-
 	<properties>
 		<axis2.version>1.4.1</axis2.version>
 		<rampart.version>1.4</rampart.version>

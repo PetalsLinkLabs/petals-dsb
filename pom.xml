@@ -22,14 +22,13 @@
 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-	<name>Petals DSB Builder</name>
-	<artifactId>petals-dsb-builder</artifactId>
+	<name>Petals Distributed Service Bus</name>
+	<artifactId>petals-dsb</artifactId>
 	<groupId>org.petalslink.dsb</groupId>
-	<version>SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		
 		<module>modules/petals-parent</module>
 		
 		<!-- Commons -->
@@ -55,7 +54,6 @@
 		<module>modules/dsb-jbi</module>
 		
 		<module>modules/dsb-router</module>
-		<module>modules/dsb-microkernel</module>
 		
    		<!--<module>modules/dsb-monitoring</module>-->
    		<module>modules/dsb-service-client</module>
@@ -152,13 +150,6 @@
 		
 		<!-- ES Management -->
 		<module>modules/dsb-kernel-esmanagement</module>
-		
-		<!-- Micro kernel -->
-		<module>modules/dsb-ukernel-binding</module>
-		
-		<!-- Independant things, to be moved elsewhere -->
-		<module>modules/gms-core</module>
-   		<module>modules/gms-prototype</module>
 
 		<!-- Utils -->
 		<module>modules/dsb-xmlutils</module>
@@ -170,13 +161,6 @@
 		<module>modules/dsb-cloud-kernel</module>
 		-->
 		
-		<!-- prototypes -->
-		<!--
-		<module>modules/dsb-node-manager</module>
-		-->
-		<!-- samples -->
-		<module>samples/dsb-wsn-sample</module>	
-		
 		<!-- Removed stuff from Petals 3.0 to 3.2 -->
 		<module>modules/dsb-removed</module>	
 		
@@ -184,34 +168,10 @@
 
 	<profiles>
 		<profile>
-			<!-- Need to work on this stuff.... -->
-			<id>federation</id>
-			<modules>
-					<module>modules/dsb-federation-api</module>
-					<module>modules/dsb-federation-core</module>
-					<module>modules/dsb-federation-webserver</module>
-					<module>modules/dsb-federation-xmpp</module>
-					<module>modules/dsb-federation-xmppwebserver</module>
-					<!--<module>modules/dsb-kernel-federationservice</module>-->
-			</modules>
-		</profile>
-			<profile>
-				<id>mocks</id>
-				<modules>
-					<module>mocks/dsb-easierbsm-mock</module>
-				</modules>
-			</profile>
-		<profile>
 			<id>distributions</id>
 			<modules>
 				<module>distributions/dsb-distribution</module>
 				<module>distributions/dsb-fulldistribution</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>integration</id>
-			<modules>
-				<module>integration/dsb-integration-wsapi</module>
 			</modules>
 		</profile>
 	</profiles>
@@ -219,6 +179,7 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 	</build>
+	
 	<distributionManagement>
 	 <repository>
 	      <uniqueVersion>false</uniqueVersion>

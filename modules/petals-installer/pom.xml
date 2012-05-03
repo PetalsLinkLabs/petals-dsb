@@ -21,11 +21,6 @@
 		<petals.group>org.ow2.petals</petals.group>
 		<app.name>Petals ESB Installer</app.name>
 	</properties>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-installer</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

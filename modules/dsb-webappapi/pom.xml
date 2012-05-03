@@ -10,11 +10,6 @@
 	<groupId>org.petalslink.dsb</groupId>
 	<artifactId>dsb-webappapi</artifactId>
 	<name>dsb-webappapi</name>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-webappapi</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

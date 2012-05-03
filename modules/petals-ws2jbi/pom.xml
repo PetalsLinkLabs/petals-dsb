@@ -15,11 +15,6 @@
 	<description>Generate a Service Assembly to expose a Web Service as JBI
 		Service</description>
 		
-	<scm>
-	      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-ws2jbi</connection>
-	      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
-		
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

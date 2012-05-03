@@ -13,11 +13,6 @@
 	<artifactId>petals-bc-rest</artifactId>
 	<packaging>jar</packaging>
 	<name>petals-bc-rest</name>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-bc-rest</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

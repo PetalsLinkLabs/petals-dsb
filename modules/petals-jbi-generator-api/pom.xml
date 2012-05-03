@@ -12,11 +12,6 @@
 	<groupId>org.petalslink.dsb</groupId>
 	<artifactId>petals-jbi-generator-api</artifactId>
 	<name>petals-jbi-generator-api</name>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-jbi-generator-api</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

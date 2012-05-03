@@ -21,11 +21,6 @@
 		<petals.group>org.petalslink.dsb</petals.group>
 		<app.name>DSB Installer</app.name>
 	</properties>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/distributions/dsb-installer</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

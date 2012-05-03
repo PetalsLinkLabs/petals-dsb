@@ -12,11 +12,6 @@
 	<groupId>org.petalslink.dsb</groupId>
 	<artifactId>petals-jbi2ws</artifactId>
 	<name>petals-jbi2ws</name>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-jbi2ws</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

@@ -282,8 +282,4 @@
       </snapshots>
     </repository>
   </repositories>
-  <scm>
-    <connection>scm:svn:https://svn.petalslink.org/svnroot/tags/petals-bc-soap-4.1.0</connection>
-    <developerConnection>scm:svn:https://svn.petalslink.org/svnroot/tags/petals-bc-soap-4.1.0</developerConnection>
-  </scm>
 </project>

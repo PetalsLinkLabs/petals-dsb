@@ -63,11 +63,11 @@
     	<url>http://hudson-master.petalslink.com/</url>
 	</ciManagement>
 	
-  	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-parent</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-	  <url>http://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-parent</url>
-  	</scm>
+	<scm>
+    	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+    	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+    	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+    </scm>
 
   	<issueManagement>
     	<url>http://jira.petalslink.com/browse/COMMONS</url>
@@ -351,28 +351,21 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+		        <plugin>
+		          	<groupId>org.apache.maven.plugins</groupId>
+		          	<artifactId>maven-release-plugin</artifactId>
+		          	<version>2.1</version>
+		          	<configuration>
+		            	<autoVersionSubmodules>true</autoVersionSubmodules>
+		          	</configuration>
+		        </plugin>
 				<plugin>
 			          <groupId>org.apache.maven.plugins</groupId>
 			          <artifactId>maven-site-plugin</artifactId>
-			          <version>2.3</version>
+			          <version>3.1</version>
 		        </plugin>
 			</plugins>
 		</pluginManagement>
-   		<extensions>
-     			<!-- Enabling the use of FTP -->
-     			<!--<extension>
-       			<groupId>org.apache.maven.wagon</groupId>
-        			<artifactId>wagon-ftp</artifactId>
-    	    			<version>1.0-beta-6</version>
-     			</extension>
--->
-			<!-- Maven 3 does not come with the wagon SSH, so add it as extension -->
-			<extension> 
-      			<groupId>org.apache.maven.wagon</groupId> 
-      			<artifactId>wagon-ssh</artifactId> 
-      			<version>1.0-beta-7</version> 
-    		</extension>
-   		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

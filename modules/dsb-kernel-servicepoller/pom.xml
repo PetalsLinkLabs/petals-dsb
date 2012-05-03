@@ -99,9 +99,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-kernel-servicepoller</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
 </project>

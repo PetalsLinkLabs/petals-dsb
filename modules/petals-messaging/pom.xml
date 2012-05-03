@@ -15,11 +15,6 @@
 	<artifactId>petals-messaging</artifactId>
 	<name>petals-messaging</name>
 	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-messaging</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
-	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

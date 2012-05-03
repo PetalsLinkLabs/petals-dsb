@@ -13,11 +13,6 @@
 	<artifactId>petals-generator-restcommons</artifactId>
 	<packaging>jar</packaging>
 	<name>petals-generator-restcommons</name>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-generator-restcommons</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

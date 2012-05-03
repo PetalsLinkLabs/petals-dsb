@@ -15,11 +15,6 @@
 	<properties>
 		<cxf-version>2.2.2</cxf-version>
 	</properties>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-client-servicebinder</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

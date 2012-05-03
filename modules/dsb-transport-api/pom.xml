@@ -14,11 +14,6 @@
 	<packaging>jar</packaging>
 	<name>dsb-transport-api</name>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-transport-api</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

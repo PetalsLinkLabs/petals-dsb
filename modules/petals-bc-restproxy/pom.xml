@@ -15,11 +15,6 @@
 	<packaging>jbi-component</packaging>
 
 	<description>A simple component which proxify REST service calls.</description>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-bc-restproxy</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<developers>
 		<developer>

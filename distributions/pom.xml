@@ -31,7 +31,6 @@
 	<modules>
 		<module>dsb-distribution</module>
 		<!--<module>dsb-fulldistribution</module>-->
-		<!--<module>dsb-installer</module>-->
   </modules>
 
 	<build>

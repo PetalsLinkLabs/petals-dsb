@@ -33,8 +33,4 @@
 		</dependency>
 	</dependencies>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-service-client</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
 </project>

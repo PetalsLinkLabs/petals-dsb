@@ -42,8 +42,4 @@
 		</dependency>
 	</dependencies>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-servicepoller2jbi</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
 </project>

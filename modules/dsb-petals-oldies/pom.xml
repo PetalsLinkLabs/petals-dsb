@@ -15,12 +15,7 @@
 	<name>dsb-petals-oldies</name>
 	
 	<description>Some classes needed for monitoring which are not in the Petals ESB kernel version used...</description>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-petals-oldies</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

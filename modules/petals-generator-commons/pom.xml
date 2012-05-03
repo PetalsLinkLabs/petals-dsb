@@ -14,11 +14,6 @@
 	<packaging>jar</packaging>
 	<name>petals-generator-commons</name>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-generator-commons</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

@@ -14,12 +14,6 @@
 
 	<packaging>jbi-component</packaging>
 
-	<!-- Source code management -->
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-servicepoller-jbise</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<properties>
 		<topDirectoryLocation>../..</topDirectoryLocation>
 	</properties>

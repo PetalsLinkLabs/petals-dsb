@@ -12,11 +12,6 @@
 	<groupId>org.petalslink.dsb</groupId>
 	<artifactId>petals-generator-wscommons</artifactId>
 	<name>petals-generator-wscommons</name>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-generator-wscommons</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

@@ -14,11 +14,6 @@
 	<packaging>jar</packaging>
 	<name>petals-rest2jbi</name>
 	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-rest2jbi</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
-	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

@@ -13,12 +13,6 @@
 	<artifactId>dsb-distribution</artifactId>
 	<name>dsb-distribution</name>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/distributions/dsb-distribution
-		</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

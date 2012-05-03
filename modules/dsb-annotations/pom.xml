@@ -15,11 +15,6 @@
 
   <name>dsb-annotations</name>
 
-  <scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-annotations</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  </scm>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

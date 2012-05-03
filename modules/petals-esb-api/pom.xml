@@ -14,11 +14,6 @@
 	<name>petals-esb-api</name>
 	
 	<description>The Petals ESB Minimal API...</description>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-esb-api</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<dependencies>
 		<dependency>

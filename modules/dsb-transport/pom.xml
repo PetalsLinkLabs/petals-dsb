@@ -14,11 +14,6 @@
 	<packaging>jar</packaging>
 	<name>dsb-transport</name>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-transport</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<dependencies>
 		<!--  CHA2012 : Fix API changes -->
 		<dependency>

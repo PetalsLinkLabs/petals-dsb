@@ -16,11 +16,6 @@
 
 	<description>Extensions to the Petals ESB CDK</description>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/petals-cdk</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

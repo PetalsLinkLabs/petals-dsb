@@ -12,12 +12,6 @@
 	<artifactId>dsb-kernel</artifactId>
 	<name>dsb-kernel</name>
 
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-kernel
-		</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

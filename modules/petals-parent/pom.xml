@@ -70,15 +70,6 @@
 </distributionManagement>
 
 
-	<!-- Source code management -->
-	<!--
-	<scm>
-		<connection>scm:svn:svn://svn.forge.objectweb.org/svnroot/petals/tags/petals-parent-17</connection>
-		<developerConnection>scm:svn:svn+ssh://fgardes@svn.forge.objectweb.org/svnroot/petals/tags/petals-parent-17</developerConnection>
-		<url>http://fisheye.ow2.org/browse/PEtALS/tags/petals-parent-17</url>
-	</scm>
-	-->
-
 	<!-- Continuous integration -->
 	<ciManagement>
 		<system>Bamboo</system>
