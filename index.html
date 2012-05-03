@@ -42,63 +42,7 @@
 <li>To also build the distributions and the installer, add -Pdistributions to your maven command 'mvn install -Pdistributions'</li>
 </ul><h2>Migration notes</h2>
 
-<h3>To Petals 3.2</h3>
 
-<h4>Changes in the DSB code</h4>
-
-<ul>
-<li>
-<em>LoggingUtil</em> has been changed from monolog to Java logger. The API has been broken...</li>
-<li>
-<em>org.ow2.petals.jbi.messaging.exchange.MessageExchange</em> has been replaced by <em>org.ow2.petals.jbi.messaging.exchange.MessageExchangeImpl</em>... <strong>Need an API</strong>!!! Update of all references to <em>org.ow2.petals.jbi.messaging.exchange.MessageExchangeImpl</em>
-</li>
-<li>Update <em>XMLUtil</em>, <em>XMLHelper</em>, <em>Transformers</em> with EBM commons utils</li>
-<li>
-<em>MessageExchange</em> does not contains the location anymore. So hard to use it in <em>org.petalslink.dsb.transport.Adapter</em>
-</li>
-<li>Transporter API <em>sendSync</em> does not return the message exchange anymore but <em>void</em>
-</li>
-<li>NS error for <em>/org.petalslink.dsb.dsb-kernel/src/main/java/org/petalslink/dsb/kernel/ws/api/MasterConnectionService.java</em>. NS updated with dsb NS but will broke master integration... Looks like now there is a real connector in the ESB kernel with <em>org.ow2.petals.ws.DragonConnectionServiceImpl</em>. cf <a href="https://gist.github.com/1885587">https://gist.github.com/1885587</a> for error details.</li>
-<li>The CDK does not support <em>onNotificationMessage</em> on the listener anymore. The DSB CDK must support it (dsb-wsn-jbise component)</li>
-<li>BC SOAP: Add WSAAddressing endpoint, handle null extensions on outgoing listener.</li>
-</ul><h4>Strange stuff, bad design, etc...</h4>
-
-<ul>
-<li>Need to use interfaces in interfaces when available. It is not the case for MessageExchangeImpl!</li>
-<li>Question : ou sont enregistrés les MBeans qui étés dans le PetalsServerIMpl? : MbeanHelper . Il y a eu un update du logger dedans et du router : Pas fait dans le DSB</li>
-</ul><h4>TODOs</h4>
-
-<ul>
-<li>TODO : implement <em>org.petalslink.dsb.transport.Adapter.createJBIMessageWrapper(MessageExchange)</em>
-</li>
-<li>TODO : Do not use MEP of <em>MessageExchanheImpl</em>
-</li>
-<li>TODO : Check launcher which is not use the same way.</li>
-<li>Need to delete <em>/org.petalslink.dsb.dsb-xmlutils/src/main/java/org/petalslink/dsb/xmlutils/XMLHelper.java</em> and use direclty utils</li>
-</ul><h4>New but not used</h4>
-
-<ul>
-<li>
-<em>org.ow2.petals.jbi.messaging.exchange.PersistedMessageExchangeWrapper</em> in TransporterNIO</li>
-<li>
-<em>RouterMonitor</em> and <em>Persistance</em> service are not used for now in the DSB: has been set to optional in the router module. Note that this should be a router module and not a router dependency!</li>
-</ul><h4>Upgrades to do on the ESB side (will be nice)</h4>
-
-<ul>
-<li>API for MessageExchange!</li>
-<li>PetalsServerImpl registers MBeans with Helper : Not accessible!</li>
-</ul><h4>Disappear</h4>
-
-<p><em>org.ow2.petals.jbi.messaging.endpoint.EndpointPropertiesService</em></p>
-
-<h4>Deprecated in the DSB</h4>
-
-<p>And will be cleaned...</p>
-
-<ul>
-<li>Petals Oldies: org.petalslink.dsb:dsb-petals-oldies</li>
-<li>Old monitoring: org.petalslink.dsb:dsb-monitoring</li>
-</ul>
       </section>
     </div>
 
