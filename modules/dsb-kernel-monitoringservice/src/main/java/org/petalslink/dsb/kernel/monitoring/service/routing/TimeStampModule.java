@@ -111,8 +111,8 @@ public class TimeStampModule implements SenderModule, ReceiverModule {
             }
         }
 
-        if ((t != null) && this.log.isInfoEnabled()) {
-            this.log.info(t.toUpperCase() + "timestamp the exchange '" + exchange.getExchangeId() + " with date '"
+        if ((t != null) && this.log.isDebugEnabled()) {
+            this.log.debug(t.toUpperCase() + "timestamp the exchange '" + exchange.getExchangeId() + " with date '"
                     + date + "'");
         }
     }
