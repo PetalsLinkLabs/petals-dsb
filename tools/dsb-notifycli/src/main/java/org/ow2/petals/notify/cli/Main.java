@@ -78,9 +78,13 @@ public class Main {
             nb = Integer.parseInt(args[4]) > 0 ? Integer.parseInt(args[4]) : 10;
         }
 
-        int delay = 1;
+        int delay = 100;
         if (args.length >= 6) {
-            delay = Integer.parseInt(args[5]) > 0 ? Integer.parseInt(args[5]) : 1;
+            delay = Integer.parseInt(args[5]) > 0 ? Integer.parseInt(args[5]) : 100;
+            if (delay < 100) {
+                delay = 100;
+                System.err.println("Set the delay at 100ms, less is not possible...");
+            }
         }
 
         QName topic = new QName(ns, name, prefix);
@@ -94,6 +98,8 @@ public class Main {
 
             String message = String.format("Message %d out of %d sent at %s", i + 1, nb,
                     System.currentTimeMillis());
+            
+            System.out.println("Sending message : " + message);
             try {
                 client.notify(XMLHelper.createDocumentFromString("<cli>" + message + "</cli>"),
                         topic);
@@ -102,7 +108,7 @@ public class Main {
             }
 
             try {
-                Thread.sleep(1000 * delay);
+                Thread.sleep(delay);
             } catch (InterruptedException e1) {
             }
         }

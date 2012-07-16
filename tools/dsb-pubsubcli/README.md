@@ -24,4 +24,7 @@ Once started, type 'start' to create the local server and send the subscribe mes
 ## Example
 
 > ./pubsub.sh localhost 8978 http://remotehost/foo/Service TopicA http://petals.ow2.org/topic ow2
- 
+
+Real example for local DSB providing default business topic:
+
+./pubsub.sh localhost 8978 http://localhsot:8084/petals/services/NotificationConsumerPortService BusinessIntegrationTopic http://www.petalslink.org/integration/test/1.0 itg 

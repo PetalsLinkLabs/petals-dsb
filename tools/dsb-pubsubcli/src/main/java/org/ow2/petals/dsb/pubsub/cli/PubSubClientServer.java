@@ -65,7 +65,7 @@ public class PubSubClientServer {
                 Stats.get().request(notify);
                 Document dom = Wsnb4ServUtils.getWsnbWriter().writeNotifyAsDOM(notify);
                 writer.println("++++++++++++++++++++++++++++++++++++++++++++++++");
-                writer.println("Got a notification");
+                writer.println("Got a notification #" + Stats.get().nb);
                 try {
                     writer.println(XMLHelper.createStringFromDOMDocument(dom));
                 } catch (TransformerException e) {
