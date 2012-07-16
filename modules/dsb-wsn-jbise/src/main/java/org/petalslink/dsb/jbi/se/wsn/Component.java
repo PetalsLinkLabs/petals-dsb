@@ -39,10 +39,15 @@ import org.ow2.petals.component.framework.util.ServiceEndpointKey;
 import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.notification.commons.PropertiesConfigurationProducer;
 import org.petalslink.dsb.notification.commons.api.ConfigurationProducer;
+import org.petalslink.dsb.service.client.Client;
+import org.petalslink.dsb.service.client.ClientException;
+import org.petalslink.dsb.service.client.Message;
 import org.w3c.dom.Document;
 
 import com.ebmwebsourcing.easycommons.xml.XMLHelper;
+import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.WsnbConstants;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Subscribe;
+import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.utils.WsnbException;
 import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
 
 /**
@@ -72,6 +77,8 @@ public class Component extends PetalsBindingComponent {
     private static final String SERVICE_NAME = "service";
 
     NotificationEngine engine;
+    
+    protected Client httpClient;
 
     private Map<ServiceEndpointKey, Wsdl> WSNEP;
 
@@ -110,7 +117,7 @@ public class Component extends PetalsBindingComponent {
 
         if (engine == null) {
             engine = new NotificationEngine(getLogger(), topics, tns, serviceName,
-                    interfaceName, endpointName, getJBIClient());
+                    interfaceName, endpointName, getClient());
         }
         this.engine.init();
     }
@@ -308,5 +315,15 @@ public class Component extends PetalsBindingComponent {
     private boolean isNotification(ServiceEndpoint endpoint) {
         return WSNEP.get(new ServiceEndpointKey(endpoint.getServiceName(), endpoint
                 .getEndpointName())) != null;
+    }
+    
+    protected synchronized Client getClient() {
+        // TODO : Set client by configuration
+        //Client client = getJBIClient();
+        
+        if (httpClient == null) {
+            httpClient = new org.petalslink.dsb.service.client.saaj.Client();
+        }
+        return httpClient;
     }
 }

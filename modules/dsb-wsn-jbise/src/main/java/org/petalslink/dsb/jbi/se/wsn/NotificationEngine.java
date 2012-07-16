@@ -69,6 +69,9 @@ public class NotificationEngine {
 
     Wsdl producerWSDL;
 
+    /**
+     * Client injected by the JBI component, generally a JBI-based client
+     */
     private Client client;
 
     private ServiceEngine serviceEngine;
@@ -90,68 +93,11 @@ public class NotificationEngine {
     public void init() {
         this.notificationManager = new NotificationManagerImpl(topicSet, topicNamespaces,
                 serviceName, interfaceName, endpointName);
-        this.internalNotificationSender = new AbstractNotificationSender(this
-                .getNotificationManager().getNotificationProducerEngine()) {
+        
+        // TODO : Set by configuration...
+        this.internalNotificationSender = getHTTPSender();
 
-            @Override
-            protected String getProducerAddress() {
-                return "jbi://" + endpointName;
-            }
-
-            @Override
-            protected void doNotify(Notify notify, String producerAddress,
-                    EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-                    String dialect) throws NotificationException {
-
-                if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
-                        || currentConsumerEdp.getAddress().getValue() == null) {
-                    // no address found...
-                    logger.fine("No address found, do not send notification");
-                    return;
-                }
-                
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Need to send the message to a subscriber which is : "
-                            + currentConsumerEdp.getAddress().getValue());
-                }
-
-                // we use a WSA endpoint to send the notification...
-                // extract data from address
-                URI uri = currentConsumerEdp.getAddress().getValue();
-                Message message = null;
-
-                if (EndpointHelper.isDSBService(uri)) {
-                    message = new MessageImpl();
-                    message.setEndpoint(EndpointHelper.getEndpoint(uri));
-                    message.setService(EndpointHelper.getService(uri));
-                    
-                } else if (AddressingHelper.isExternalService(uri)) {
-                    message = new WSAMessageImpl(uri.toString());
-                } else {
-                    System.out.println("Internal service : TODO NotificationEngine class!");
-                    return;
-                }
-
-                try {
-                    final Document payload = Wsnb4ServUtils.getWsnbWriter()
-                            .writeNotifyAsDOM(notify);
-
-                    message.setPayload(payload);
-                    message.setOperation(WsnbConstants.NOTIFY_QNAME);
-                    client.fireAndForget(message);
-                } catch (ClientException e) {
-                    e.printStackTrace();
-                } catch (WsnbException e) {
-                    e.printStackTrace();
-                }
-
-                // need to map between the address and the DSB endpoint to send
-                // the message to... then we may use some WS-Addressing thing to
-                // pass the initial address...
-            }
-        };
-
-        // The one which receives notifications from consumers, and forward them to the notification engine
+        // The one which receives notifications from consumers (external), and forward them to the notification engine
         this.notificationConsumerEngine = new AbsNotificationConsumerEngine(logger) {
 
             @Override
@@ -161,17 +107,16 @@ public class NotificationEngine {
                 // notification engine to forward the notification to all the
                 // interested parties.
                 if (logger.isLoggable(Level.FINE)) {
-
-                    logger.fine("--- Got a notify, forward to internal engine ---");
+                    StringBuffer trace = new StringBuffer("--- Got a notify, forward to internal engine ---\n");
                     try {
                         Document doc = Wsnb4ServUtils.getWsnbWriter().writeNotifyAsDOM(notify);
-                        logger.fine(XMLHelper.createStringFromDOMDocument(doc));
-                    } catch (WsnbException e) {
-                        e.printStackTrace();
-                    } catch (TransformerException e) {
-                        e.printStackTrace();
+                        trace.append(XMLHelper.createStringFromDOMDocument(doc));
+                    } catch (Exception e) {
+                        trace.append("Serialization problem : ");
+                        trace.append(e.getMessage());
                     }
-                    logger.fine("-------------------------");
+                    trace.append("\n-------------------------\n");
+                    logger.fine(trace.toString());
                 }
                 
                 try {
@@ -235,5 +180,133 @@ public class NotificationEngine {
 
     public ServiceEngine getServiceEngine() {
         return this.serviceEngine;
+    }
+    
+    protected AbstractNotificationSender getHTTPSender() {
+        return new AbstractNotificationSender(this
+                .getNotificationManager().getNotificationProducerEngine()) {
+
+            @Override
+            protected String getProducerAddress() {
+                return "petals://" + endpointName;
+            }
+
+            @Override
+            protected void doNotify(Notify notify, String producerAddress,
+                    EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
+                    String dialect) throws NotificationException {
+
+                if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
+                        || currentConsumerEdp.getAddress().getValue() == null) {
+                    // no address found...
+                    logger.fine("No address found, do not send notification");
+                    return;
+                }
+                
+                if (logger.isLoggable(Level.INFO)) {
+                    logger.info("Need to send the message to a subscriber which is : "
+                            + currentConsumerEdp.getAddress().getValue());
+                }
+                
+                // we restrict sending messages directly to the HTTP endpoint
+                
+                // we use a WSA endpoint to send the notification...
+                // extract data from address
+                URI uri = currentConsumerEdp.getAddress().getValue();
+                Message message = null;
+
+                if (EndpointHelper.isDSBService(uri)) {
+                    logger.warning("This client does not handle DSB services");
+                    return;
+                } else if (AddressingHelper.isExternalService(uri)) {
+                    message = new MessageImpl();
+                } else {
+                    logger.warning("This client does not handle internal services");
+                    return;
+                }
+
+                try {
+                    final Document payload = Wsnb4ServUtils.getWsnbWriter()
+                            .writeNotifyAsDOM(notify);
+                    message.setEndpoint(currentConsumerEdp.getAddress().getValue().toString());
+                    message.setPayload(payload);
+                    message.setOperation(WsnbConstants.NOTIFY_QNAME);
+                    
+                    // TODO : Fire and forget with thread executor
+                    client.sendReceive(message);
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                } catch (WsnbException e) {
+                    e.printStackTrace();
+                }
+
+                // need to map between the address and the DSB endpoint to send
+                // the message to... then we may use some WS-Addressing thing to
+                // pass the initial address...
+            }
+        };
+    }
+    
+    protected AbstractNotificationSender getDSBSender() {
+        return new AbstractNotificationSender(this
+                .getNotificationManager().getNotificationProducerEngine()) {
+
+            @Override
+            protected String getProducerAddress() {
+                return "jbi://" + endpointName;
+            }
+
+            @Override
+            protected void doNotify(Notify notify, String producerAddress,
+                    EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
+                    String dialect) throws NotificationException {
+
+                if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
+                        || currentConsumerEdp.getAddress().getValue() == null) {
+                    // no address found...
+                    logger.fine("No address found, do not send notification");
+                    return;
+                }
+                
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.fine("Need to send the message to a subscriber which is : "
+                            + currentConsumerEdp.getAddress().getValue());
+                }
+
+                // we use a WSA endpoint to send the notification...
+                // extract data from address
+                URI uri = currentConsumerEdp.getAddress().getValue();
+                Message message = null;
+
+                if (EndpointHelper.isDSBService(uri)) {
+                    message = new MessageImpl();
+                    message.setEndpoint(EndpointHelper.getEndpoint(uri));
+                    message.setService(EndpointHelper.getService(uri));
+                    
+                } else if (AddressingHelper.isExternalService(uri)) {
+                    message = new WSAMessageImpl(uri.toString());
+                } else {
+                    System.out.println("Internal service : TODO NotificationEngine class!");
+                    return;
+                }
+
+                try {
+                    final Document payload = Wsnb4ServUtils.getWsnbWriter()
+                            .writeNotifyAsDOM(notify);
+
+                    message.setPayload(payload);
+                    message.setOperation(WsnbConstants.NOTIFY_QNAME);
+                    client.fireAndForget(message);
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                } catch (WsnbException e) {
+                    e.printStackTrace();
+                }
+
+                // need to map between the address and the DSB endpoint to send
+                // the message to... then we may use some WS-Addressing thing to
+                // pass the initial address...
+            }
+        };
     }
 }
