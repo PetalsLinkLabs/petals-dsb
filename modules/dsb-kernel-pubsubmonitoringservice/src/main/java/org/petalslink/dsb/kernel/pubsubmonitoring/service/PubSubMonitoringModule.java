@@ -72,7 +72,10 @@ public class PubSubMonitoringModule implements SenderModule, ReceiverModule,
     private final Map<String, Integer> map = Collections
             .synchronizedMap(new HashMap<String, Integer>());
 
-    private AtomicBoolean state = new AtomicBoolean(true);
+    /**
+     * Monitoring is not active per default...
+     */
+    private AtomicBoolean state = new AtomicBoolean(false);
 
     @LifeCycle(on = LifeCycleType.START)
     protected void start() {
