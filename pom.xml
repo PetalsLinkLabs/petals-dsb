@@ -170,6 +170,7 @@
 		<!-- Removed stuff from Petals 3.0 to 3.2 -->
 		<module>modules/dsb-removed</module>	
 		
+		
   </modules>
 
   <scm>

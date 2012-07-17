@@ -27,4 +27,4 @@ Once started, type 'start' to create the local server and send the subscribe mes
 
 Real example for local DSB providing default business topic:
 
-./pubsub.sh localhost 8978 http://localhost:8084/petals/services/NotificationConsumerPortService BusinessIntegrationTopic http://www.petalslink.org/integration/test/1.0 itg 
+./pubsub.sh localhost 8978 http://localhost:8084/petals/services/NotificationProducerPortService BusinessIntegrationTopic http://www.petalslink.org/integration/test/1.0 itg 
