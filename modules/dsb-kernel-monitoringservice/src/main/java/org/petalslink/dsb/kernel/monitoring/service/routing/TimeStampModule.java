@@ -87,11 +87,11 @@ public class TimeStampModule implements SenderModule, ReceiverModule {
         if (MessageExchangeImpl.Role.CONSUMER.equals(exchange.getRole())) {
             if (TimeStamperHandler.getInstance().getTimeStamp(exchange).getDateClientIn() == 0L) {
                 TimeStamperHandler.getInstance().getTimeStamp(exchange).setDateClientIn(date);
-                System.out.println("SETTING T1 for " + exchange.getExchangeId());
+                log.debug("SETTING T1 for " + exchange.getExchangeId());
                 t = "t1: ";
             } else if (TimeStamperHandler.getInstance().getTimeStamp(exchange).getDateClientOut() == 0L) {
                 TimeStamperHandler.getInstance().getTimeStamp(exchange).setDateClientOut(date);
-                System.out.println("SETTING T4 for " + exchange.getExchangeId());
+                log.debug("SETTING T4 for " + exchange.getExchangeId());
 
                 t = "t4: ";
             }
@@ -100,12 +100,12 @@ public class TimeStampModule implements SenderModule, ReceiverModule {
         if (MessageExchangeImpl.Role.PROVIDER.equals(exchange.getRole())) {
             if (TimeStamperHandler.getInstance().getTimeStamp(exchange).getDateProviderIn() == 0L) {
                 TimeStamperHandler.getInstance().getTimeStamp(exchange).setDateProviderIn(date);
-                System.out.println("SETTING T2 for " + exchange.getExchangeId());
+                log.debug("SETTING T2 for " + exchange.getExchangeId());
 
                 t = "t2: ";
             } else if (TimeStamperHandler.getInstance().getTimeStamp(exchange).getDateProviderOut() == 0L) {
                 TimeStamperHandler.getInstance().getTimeStamp(exchange).setDateProviderOut(date);
-                System.out.println("SETTING T3 for " + exchange.getExchangeId());
+                log.debug("SETTING T3 for " + exchange.getExchangeId());
 
                 t = "t3: ";
             }
