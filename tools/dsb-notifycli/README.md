@@ -14,4 +14,4 @@ Once generated, launch it from the shell like
 	
 > Real sample for default business topic provided by the DSB, sends 1000 notify at 150 ms interval:
 
-	sh target/bin/notifycli http://localhsot:8084/petals/services/NotificationConsumerPortService BusinessIntegrationTopic http://www.petalslink.org/integration/test/1.0 itg 1000 150
+	sh target/bin/notifycli http://localhost:8084/petals/services/NotificationConsumerPortService BusinessIntegrationTopic http://www.petalslink.org/integration/test/1.0 itg 1000 150
