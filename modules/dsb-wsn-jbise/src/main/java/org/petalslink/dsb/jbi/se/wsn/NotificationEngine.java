@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.TransformerException;
 
 import org.ow2.easywsdl.wsdl.api.WSDLException;
 import org.ow2.petals.component.framework.AbstractComponent;
@@ -203,7 +202,7 @@ public class NotificationEngine {
                     return;
                 }
                 
-                if (logger.isLoggable(Level.INFO)) {
+                if (logger.isLoggable(Level.FINE)) {
                     logger.info("Need to send the message to a subscriber which is : "
                             + currentConsumerEdp.getAddress().getValue());
                 }
