@@ -30,7 +30,7 @@
 
 	<modules>
 		<module>dsb-distribution</module>
-		<!--<module>dsb-fulldistribution</module>-->
+		<module>dsb-fulldistribution</module>
   </modules>
 
 	<build>
