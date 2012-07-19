@@ -4,12 +4,13 @@
 		<maven>2.0.6</maven>
 	</prerequisites>
 
+<!--
 	<parent>
 		<groupId>org.ow2</groupId>
 		<artifactId>ow2</artifactId>
 		<version>1.1</version>
 	</parent>
-
+-->
 	<!-- ============== -->
 	<!-- Identification -->
 	<!-- ============== -->
@@ -18,7 +19,7 @@
 	<artifactId>petals-parent</artifactId>
 	<groupId>org.petalslink.dsb</groupId>
 	<packaging>pom</packaging>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2-SNAPSHOT</version>
 
 	<inceptionYear>2005</inceptionYear>
 	<description>The PEtALS Services Platform provides a distributed open source implementation of Java Business Integration (JBI) specification as a core element to build OW2 ESB solutions, leveraging existing Consortium's components.</description>
