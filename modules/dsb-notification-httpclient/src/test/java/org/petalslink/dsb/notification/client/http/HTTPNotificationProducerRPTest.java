@@ -35,7 +35,7 @@ public class HTTPNotificationProducerRPTest extends TestCase {
     
     public void testGetTopics() throws Exception {
         System.out.println("Creating client");
-        HTTPProducerRPClient client = new HTTPProducerRPClient("http://46.105.181.221:8084/petals/services/NotificationConsumerPortService");
+        HTTPProducerRPClient client = new HTTPProducerRPClient("http://46.105.181.221:8084/petals/services/NotificationProducerPortService");
         System.out.println("Getting topics");
         List<QName> topics = client.getTopics();
         
