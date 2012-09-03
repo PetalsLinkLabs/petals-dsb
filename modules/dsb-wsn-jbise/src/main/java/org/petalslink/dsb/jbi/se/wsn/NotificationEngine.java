@@ -204,7 +204,7 @@ public class NotificationEngine {
                 
                 if (logger.isLoggable(Level.FINE)) {
                     logger.info("Need to send the message to a subscriber which is : "
-                            + currentConsumerEdp.getAddress().getValue());
+                            + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
                 }
                 
                 // we restrict sending messages directly to the HTTP endpoint
@@ -234,10 +234,24 @@ public class NotificationEngine {
                     // TODO : Fire and forget with thread executor
                     client.sendReceive(message);
                 } catch (ClientException e) {
-                    e.printStackTrace();
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.log(Level.FINE, "Client got error while sending notification to "
+                                + currentConsumerEdp.getAddress().getValue() + " on topic " + topic, e);
+                    } else {
+                        logger.log(Level.INFO, "Client got error while sending notification to endpoint "
+                                + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
+                    }
                 } catch (WsnbException e) {
-                    e.printStackTrace();
-                }
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.log(Level.FINE,
+                                "WSN error while sending notification to "
+                                        + currentConsumerEdp.getAddress().getValue() + " on topic "
+                                        + topic, e);
+                    } else {
+                        logger.log(Level.INFO, "WSN error while sending notification to endpoint "
+                                + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
+                    }
+               }
 
                 // need to map between the address and the DSB endpoint to send
                 // the message to... then we may use some WS-Addressing thing to

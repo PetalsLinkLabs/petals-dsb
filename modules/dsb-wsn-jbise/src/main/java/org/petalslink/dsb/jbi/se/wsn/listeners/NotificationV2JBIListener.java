@@ -117,6 +117,7 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                     }
 
                     if (WsnbConstants.SUBSCRIBE_QNAME.getLocalPart().equals(exchange.getOperation().getLocalPart())) {
+                        
                         document = SourceUtil.createDocument(
                                 normalizedMessage.getContent());
 
@@ -131,7 +132,7 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                         Address consumerAddress = subscribe.getConsumerReference().getAddress();
                         URI value = consumerAddress.getValue();
                         getLogger()
-                                .log(Level.FINE, String.format("Initial address is '%s'", value));
+                                .log(Level.FINE, String.format("Subscribe with Initial address is '%s'", value));
 
                         // get the source component. It can be used if needed...
                         String component = exchange.getProperty(LOCATION_COMPONENT) != null ? exchange
@@ -197,6 +198,8 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                     } else if (WsnbConstants.NOTIFY_QNAME.getLocalPart().equals(exchange.getOperation()
                             .getLocalPart())) {
                         
+                        getLogger().fine("Got a notify message");
+                        
                         com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify notify = RefinedWsnbFactory
                                 .getInstance().getWsnbReader().readNotify(document);
                         
@@ -212,6 +215,9 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                         
                     } else if (WsnbConstants.UNSUBSCRIBE_NAME.equals(exchange.getOperation()
                             .getLocalPart())) {
+                        
+                        getLogger().log(Level.INFO, "Got an unsubscribe message");
+                        
                         document = SourceUtil.createDocument(
                                 normalizedMessage.getContent());
 
@@ -229,11 +235,15 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
 
                     } else if (WsnbConstants.GET_CURRENT_MESSAGE_QNAME.getLocalPart().equals(exchange
                             .getOperation().getLocalPart())) {
-                        System.out.println("TODO");
+                        getLogger().log(Level.WARNING, "GET_CURRENT_MESSAGE_QNAME not implemented");
+
                     } else if (WsnbConstants.RENEW_QNAME.getLocalPart().equals(exchange.getOperation()
                             .getLocalPart())) {
-                        System.out.println("TODO");
+                        getLogger().log(Level.WARNING, "RENEW_QNAME not implemented");
+                        
                     } else if ("GetResourceProperty".equals(exchange.getOperation().getLocalPart())) {
+                        getLogger().log(Level.INFO, "Got an GetResourceProperty message");
+
                         document = SourceUtil.createDocument(
                                 normalizedMessage.getContent());
 
