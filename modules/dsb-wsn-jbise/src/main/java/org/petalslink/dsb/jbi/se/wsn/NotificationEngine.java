@@ -202,7 +202,7 @@ public class NotificationEngine {
                     return;
                 }
                 
-                if (logger.isLoggable(Level.FINE)) {
+                if (logger.isLoggable(Level.INFO)) {
                     logger.info("Need to send the message to a subscriber which is : "
                             + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
                 }
