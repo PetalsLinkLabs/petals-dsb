@@ -145,6 +145,7 @@
 		<module>modules/dsb-notification-lightweight</module>
 		<module>modules/dsb-kernel-notificationservice</module>
 		<module>modules/dsb-notification-httpclient</module>
+		<module>modules/dsb-wsn-jbise-wsapi</module>
 		<module>modules/dsb-wsn-jbise</module>
 		<module>modules/dsb-wsnpoller-jbise</module>
 		<module>modules/dsb-kernel-wsnpoller</module>

@@ -32,22 +32,21 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
 
 import org.ow2.easywsdl.wsdl.api.Endpoint;
-import org.ow2.easywsdl.wsdl.api.WSDLException;
 import org.ow2.petals.component.framework.PetalsBindingComponent;
 import org.ow2.petals.component.framework.api.Wsdl;
 import org.ow2.petals.component.framework.util.ServiceEndpointKey;
 import org.ow2.petals.component.framework.util.WSDLUtilImpl;
+import org.petalslink.dsb.commons.service.api.Service;
+import org.petalslink.dsb.cxf.CXFHelper;
+import org.petalslink.dsb.jbi.se.wsn.api.StatsService;
+import org.petalslink.dsb.jbi.se.wsn.services.StatsServiceImpl;
 import org.petalslink.dsb.notification.commons.PropertiesConfigurationProducer;
 import org.petalslink.dsb.notification.commons.api.ConfigurationProducer;
 import org.petalslink.dsb.service.client.Client;
-import org.petalslink.dsb.service.client.ClientException;
-import org.petalslink.dsb.service.client.Message;
 import org.w3c.dom.Document;
 
 import com.ebmwebsourcing.easycommons.xml.XMLHelper;
-import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.WsnbConstants;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Subscribe;
-import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.utils.WsnbException;
 import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
 
 /**
@@ -77,10 +76,12 @@ public class Component extends PetalsBindingComponent {
     private static final String SERVICE_NAME = "service";
 
     NotificationEngine engine;
-    
+
     protected Client httpClient;
 
     private Map<ServiceEndpointKey, Wsdl> WSNEP;
+
+    private Service ws;
 
     /*
      * (non-Javadoc)
@@ -103,12 +104,14 @@ public class Component extends PetalsBindingComponent {
 
         URL topics = Component.class.getClassLoader().getResource(TOPICSET_FILE);
         if (topics == null) {
-            throw new JBIException("Can not find the notification topicnamespace configuration file");
+            throw new JBIException(
+                    "Can not find the notification topicnamespace configuration file");
         }
-        
+
         URL tns = Component.class.getClassLoader().getResource(TOPICS_NS_FILE);
         if (tns == null) {
-            throw new JBIException("Can not find the notification topicnamespace configuration file");
+            throw new JBIException(
+                    "Can not find the notification topicnamespace configuration file");
         }
 
         String endpointName = props.getProperty(ENDPOINT_NAME);
@@ -116,10 +119,11 @@ public class Component extends PetalsBindingComponent {
         QName serviceName = QName.valueOf(props.getProperty(SERVICE_NAME));
 
         if (engine == null) {
-            engine = new NotificationEngine(getLogger(), topics, tns, serviceName,
-                    interfaceName, endpointName, getClient());
+            engine = new NotificationEngine(getLogger(), topics, tns, serviceName, interfaceName,
+                    endpointName, getClient());
         }
         this.engine.init();
+
     }
 
     /*
@@ -132,6 +136,21 @@ public class Component extends PetalsBindingComponent {
         activateWSNEndpoints();
 
         createSubscribers();
+
+        getLogger().info("Starting Web services...");
+
+        this.getContext().getComponentName();
+
+        String port = this.getContainerConfiguration("http.port") == null ? "8079" : this
+                .getContainerConfiguration("http.port");
+        String host = this.getContainerConfiguration("http.host") == null ? "localhost" : this
+                .getContainerConfiguration("http.host");
+
+        ws = CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port + "/"
+                + this.getContext().getComponentName() + "/WSNStatsService", StatsService.class,
+                new StatsServiceImpl(getLogger()));
+        ws.start();
+        getLogger().info("Web services started");
     }
 
     /**
@@ -156,20 +175,20 @@ public class Component extends PetalsBindingComponent {
 
         if (subscriberProps != null) {
             ConfigurationProducer producers = new PropertiesConfigurationProducer(subscriberProps);
-            List <Subscribe> toSubscribe = producers.getSubscribes();
+            List<Subscribe> toSubscribe = producers.getSubscribes();
             for (Subscribe subscribe : toSubscribe) {
                 // let's subscribe...
                 try {
-                    
+
                     if (getLogger().isLoggable(Level.INFO)) {
                         getLogger().info("Subscribe request : ");
                         if (subscribe != null) {
-                            Document doc = Wsnb4ServUtils.getWsnbWriter()
-                                    .writeSubscribeAsDOM(subscribe);
+                            Document doc = Wsnb4ServUtils.getWsnbWriter().writeSubscribeAsDOM(
+                                    subscribe);
                             getLogger().info(XMLHelper.createStringFromDOMDocument(doc));
                         }
                     }
-                    
+
                     final com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse subscribeResponse = getNotificationEngine()
                             .getNotificationManager().getNotificationProducerEngine()
                             .subscribe(subscribe);
@@ -245,9 +264,8 @@ public class Component extends PetalsBindingComponent {
         // add it before since activate endpoint will call getDescription
         // locally
         this.WSNEP.put(new ServiceEndpointKey(serviceName, endpointName), wsdl);
-        ServiceEndpoint se = null;
         try {
-            se = this.context.activateEndpoint(serviceName, endpointName);
+            this.context.activateEndpoint(serviceName, endpointName);
         } catch (Exception e) {
             this.WSNEP.remove(new ServiceEndpointKey(serviceName, endpointName));
         }
@@ -260,6 +278,9 @@ public class Component extends PetalsBindingComponent {
      */
     @Override
     protected void doStop() throws JBIException {
+        if (ws != null) {
+            ws.stop();
+        }
     }
 
     /*
@@ -316,11 +337,11 @@ public class Component extends PetalsBindingComponent {
         return WSNEP.get(new ServiceEndpointKey(endpoint.getServiceName(), endpoint
                 .getEndpointName())) != null;
     }
-    
+
     protected synchronized Client getClient() {
         // TODO : Set client by configuration
-        //Client client = getJBIClient();
-        
+        // Client client = getJBIClient();
+
         if (httpClient == null) {
             httpClient = new org.petalslink.dsb.service.client.saaj.Client();
         }

@@ -53,6 +53,17 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+		    <groupId>org.petalslink.dsb</groupId>
+		    <artifactId>dsb-wsn-jbise-wsapi</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.petalslink.dsb</groupId>
+			<artifactId>dsb-cxfutils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.1</version>

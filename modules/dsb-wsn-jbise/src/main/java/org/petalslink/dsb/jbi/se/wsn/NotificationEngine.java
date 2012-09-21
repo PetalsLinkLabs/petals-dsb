@@ -233,6 +233,9 @@ public class NotificationEngine {
                     
                     // TODO : Fire and forget with thread executor
                     client.sendReceive(message);
+                    
+                    Stats.getInstance().newOutNotifyCall(topic);
+                    
                 } catch (ClientException e) {
                     if (logger.isLoggable(Level.FINE)) {
                         logger.log(Level.FINE, "Client got error while sending notification to "
