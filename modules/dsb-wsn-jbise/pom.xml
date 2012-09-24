@@ -23,7 +23,7 @@
 	<!-- ============== -->
 	<!-- Identification -->
 	<!-- ============== -->
-	<name>BC :: dsb-wsn-jbise</name>
+	<name>dsb-wsn-jbise</name>
 	<artifactId>dsb-wsn-jbise</artifactId>
 	<groupId>org.petalslink.dsb</groupId>
 	<packaging>jar</packaging>

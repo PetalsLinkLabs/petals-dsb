@@ -69,13 +69,13 @@ public class Component extends PetalsBindingComponent {
 
     public static final String TOPICSET_FILE = "topics/business-topicset.xml";
 
-    private static final String ENDPOINT_NAME = "endpoint";
+    public static final String ENDPOINT_NAME = "endpoint";
 
-    private static final String INTERFACE_NAME = "interface";
+    public static final String INTERFACE_NAME = "interface";
 
-    private static final String SERVICE_NAME = "service";
+    public static final String SERVICE_NAME = "service";
 
-    NotificationEngine engine;
+    protected NotificationEngine engine;
 
     protected Client httpClient;
 
