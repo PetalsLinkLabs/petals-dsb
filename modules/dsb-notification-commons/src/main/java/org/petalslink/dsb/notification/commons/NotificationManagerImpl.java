@@ -6,6 +6,7 @@ package org.petalslink.dsb.notification.commons;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -84,11 +85,30 @@ public class NotificationManagerImpl implements NotificationManager {
                 new WsnbModelFactoryImpl());
     }
 
+    /**
+     * 
+     * @param topicSet
+     * @param topicNamespaceRPUpdate
+     * @param serviceName
+     * @param interfaceName
+     * @param endpointName
+     */
+    public NotificationManagerImpl(Document topicSet, Document topicNamespaceRPUpdate,
+            QName serviceName, QName interfaceName, String endpointName) {
+        init(topicSet, topicNamespaceRPUpdate, serviceName, interfaceName, endpointName);
+    }
+
+    /**
+     * Build the manager using URLs for topic resources
+     * 
+     * @param topicSetXML
+     * @param topicNamespaceRPUpdate
+     * @param serviceName
+     * @param interfaceName
+     * @param endpointName
+     */
     public NotificationManagerImpl(URL topicSetXML, URL topicNamespaceRPUpdate, QName serviceName,
             QName interfaceName, String endpointName) {
-        this.endpointName = endpointName;
-        this.serviceName = serviceName;
-        this.interfaceName = interfaceName;
 
         Document topicSetDom = null;
         Document topicNSRPUpdateDom = null;
@@ -99,31 +119,48 @@ public class NotificationManagerImpl implements NotificationManager {
             topicNSRPUpdateDom = SOAUtil.getInstance().getDocumentBuilderFactory()
                     .newDocumentBuilder().parse(topicNamespaceRPUpdate.openStream());
 
+            init(topicSetDom, topicNSRPUpdateDom, serviceName, interfaceName, endpointName);
+
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Create all the needed resources
+     * 
+     * @param topicSet
+     * @param topicNamespaceRPUpdate
+     * @param serviceName
+     * @param interfaceName
+     * @param endpointName
+     */
+    protected void init(Document topicSet, Document topicNamespaceRPUpdate, QName serviceName,
+            QName interfaceName, String endpointName) {
+        
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Intializing the notification manager");
+        }
+
+        try {
             this.topicSet = RefinedWstopFactory.getInstance().getWstopReader()
-                    .readTopicSetType(topicSetDom);
+                    .readTopicSetType(topicSet);
 
             this.topicNamespace = RefinedWstopFactory.getInstance().getWstopReader()
-                    .readTopicNamespaceType(topicNSRPUpdateDom);
+                    .readTopicNamespaceType(topicNamespaceRPUpdate);
 
             final org.w3c.dom.Document out = RefinedWstopFactory.getInstance().getWstopWriter()
-                    .writeTopicSetTypeAsDOM(topicSet);
+                    .writeTopicSetTypeAsDOM(this.topicSet);
 
             final org.w3c.dom.Document out2 = RefinedWstopFactory.getInstance().getWstopWriter()
-                    .writeTopicNamespaceTypeAsDOM(topicNamespace);
+                    .writeTopicNamespaceTypeAsDOM(this.topicNamespace);
 
             System.out.println("TOPIC SET : " + XMLPrettyPrinter.prettyPrint(out));
             System.out.println("TOPIC NS RP Update : " + XMLPrettyPrinter.prettyPrint(out2));
-
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (WstopException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+        } catch (WstopException e1) {
+            e1.printStackTrace();
         }
 
         this.topicsManagerEngine = new TopicsManagerEngine();
