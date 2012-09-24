@@ -93,7 +93,16 @@ public class Component extends PetalsBindingComponent {
     protected void postDoInit() throws JBIException {
 
         this.WSNEP = new ConcurrentHashMap<ServiceEndpointKey, Wsdl>();
+        this.initializeNotificationEngine();
 
+    }
+    
+    /**
+     * Initialize based on local resources
+     * 
+     * @throws JBIException
+     */
+    protected void initializeNotificationEngine() throws JBIException {
         // get the configuration files...
         Properties props = new Properties();
         try {
@@ -123,7 +132,6 @@ public class Component extends PetalsBindingComponent {
                     endpointName, getClient());
         }
         this.engine.init();
-
     }
 
     /*
