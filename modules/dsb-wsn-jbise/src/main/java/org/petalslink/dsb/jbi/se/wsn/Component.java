@@ -128,10 +128,10 @@ public class Component extends PetalsBindingComponent {
         QName serviceName = QName.valueOf(props.getProperty(SERVICE_NAME));
 
         if (engine == null) {
-            engine = new NotificationEngine(getLogger(), topics, tns, serviceName, interfaceName,
+            engine = new NotificationEngine(getLogger(), serviceName, interfaceName,
                     endpointName, getClient());
         }
-        this.engine.init();
+        this.engine.init(topics, tns);
     }
 
     /*

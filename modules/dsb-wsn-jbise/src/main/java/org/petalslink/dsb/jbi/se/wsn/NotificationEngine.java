@@ -47,10 +47,6 @@ public class NotificationEngine {
 
     NotificationManager notificationManager;
 
-    private URL topicNamespaces;
-    
-    private URL topicSet;
-
     private QName serviceName;
 
     private QName interfaceName;
@@ -75,25 +71,43 @@ public class NotificationEngine {
 
     private ServiceEngine serviceEngine;
 
-    public NotificationEngine(Logger logger, URL topicSet, URL topicNamespaces, QName serviceName, QName interfaceName, String endpointName, Client client) {
+    public NotificationEngine(Logger logger, QName serviceName, QName interfaceName, String endpointName, Client client) {
         super();
         this.logger = logger;
-        this.topicNamespaces = topicNamespaces;
-        this.topicSet = topicSet;
         this.serviceName = serviceName;
         this.interfaceName = interfaceName;
         this.endpointName = endpointName;
         this.client = client;
     }
+    
+    /**
+     * Init from resources
+     * 
+     * @param topicSet
+     * @param topicNamespaces
+     */
+    public void init(URL topicSet, URL topicNamespaces) {
+        this.notificationManager = new NotificationManagerImpl(topicSet, topicNamespaces,
+                serviceName, interfaceName, endpointName);
+        this.init();
+    }
+    
+    /**
+     * Init from DOMs
+     * 
+     * @param topicSet
+     * @param topicNamespaces
+     */
+    public void init(Document topicSet, Document topicNamespaces) {
+        this.notificationManager = new NotificationManagerImpl(topicSet, topicNamespaces,
+                serviceName, interfaceName, endpointName);
+        this.init();
+    }
 
     /**
      * 
      */
-    public void init() {
-        this.notificationManager = new NotificationManagerImpl(topicSet, topicNamespaces,
-                serviceName, interfaceName, endpointName);
-        
-        // TODO : Set by configuration...
+    protected void init() {
         this.internalNotificationSender = getHTTPSender();
 
         // The one which receives notifications from consumers (external), and forward them to the notification engine
