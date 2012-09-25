@@ -143,6 +143,10 @@ public class NotificationManagerImpl implements NotificationManager {
             logger.fine("Intializing the notification manager");
         }
 
+        this.endpointName = endpointName;
+        this.serviceName = serviceName;
+        this.interfaceName = interfaceName;
+        
         try {
             this.topicSet = RefinedWstopFactory.getInstance().getWstopReader()
                     .readTopicSetType(topicSet);
