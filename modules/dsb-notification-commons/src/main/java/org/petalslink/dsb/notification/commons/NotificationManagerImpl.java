@@ -160,9 +160,10 @@ public class NotificationManagerImpl implements NotificationManager {
             final org.w3c.dom.Document out2 = RefinedWstopFactory.getInstance().getWstopWriter()
                     .writeTopicNamespaceTypeAsDOM(this.topicNamespace);
 
-            System.out.println("TOPIC SET : " + XMLPrettyPrinter.prettyPrint(out));
-            System.out.println("TOPIC NS RP Update : " + XMLPrettyPrinter.prettyPrint(out2));
-            
+            if (logger.isLoggable(Level.INFO)) {
+                logger.info("TopicSet : " + XMLPrettyPrinter.prettyPrint(out));
+                logger.info("Topic NS RP Update : " + XMLPrettyPrinter.prettyPrint(out2));
+            }
         } catch (WstopException e1) {
             e1.printStackTrace();
         }
