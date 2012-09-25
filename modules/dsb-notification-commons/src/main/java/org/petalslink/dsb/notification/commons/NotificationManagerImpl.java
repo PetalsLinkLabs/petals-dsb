@@ -154,13 +154,11 @@ public class NotificationManagerImpl implements NotificationManager {
             this.topicNamespace = RefinedWstopFactory.getInstance().getWstopReader()
                     .readTopicNamespaceType(topicNamespaceRPUpdate);
 
-            final org.w3c.dom.Document out = RefinedWstopFactory.getInstance().getWstopWriter()
-                    .writeTopicSetTypeAsDOM(this.topicSet);
-
-            final org.w3c.dom.Document out2 = RefinedWstopFactory.getInstance().getWstopWriter()
-                    .writeTopicNamespaceTypeAsDOM(this.topicNamespace);
-
             if (logger.isLoggable(Level.INFO)) {
+                final org.w3c.dom.Document out = RefinedWstopFactory.getInstance().getWstopWriter()
+                        .writeTopicSetTypeAsDOM(this.topicSet);
+                final org.w3c.dom.Document out2 = RefinedWstopFactory.getInstance().getWstopWriter()
+                        .writeTopicNamespaceTypeAsDOM(this.topicNamespace);
                 logger.info("TopicSet : " + XMLPrettyPrinter.prettyPrint(out));
                 logger.info("Topic NS RP Update : " + XMLPrettyPrinter.prettyPrint(out2));
             }
@@ -186,7 +184,7 @@ public class NotificationManagerImpl implements NotificationManager {
     }
 
     /**
-	 * 
+	 * @deprecated
 	 */
     public NotificationManagerImpl(URL topicNamespaces, List<String> supportedTopics,
             QName serviceName, QName interfaceName, String endpointName) {
