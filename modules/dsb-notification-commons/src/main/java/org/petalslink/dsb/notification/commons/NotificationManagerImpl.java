@@ -176,7 +176,7 @@ public class NotificationManagerImpl implements NotificationManager {
         // TODO : move to to a dedicated component?
         try {
             this.notificationProducerEngine = new NotificationProducerEngine(logger,
-                    getTopicsManagerEngine(), getSubscriptionManagerEngine(), true, getTopicSet(),
+                    getTopicsManagerEngine(), getSubscriptionManagerEngine(), false, getTopicSet(),
                     getTopicNamespace(), "wsn", null);
         } catch (WsnbException e) {
             e.printStackTrace();
