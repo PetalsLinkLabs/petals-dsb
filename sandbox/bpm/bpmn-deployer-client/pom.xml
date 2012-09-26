@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
+</project>d>org.ow2.petals.dsb</groupId>project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!-- POM file generated with GWT webAppCreator -->
@@ -21,8 +25,7 @@
 		<gwt.validateOnly>false</gwt.validateOnly>
 		<gwt.module>org.petalslink.dsb.petalsbpm.DSBPetalsBPMClient</gwt.module>
 		<gwt.draftCompile>true</gwt.draftCompile>
-		<gwt.style>DETAILED</gwt.style>
-		<petalsbpm.version>${maven.build.timestamp}</petalsbpm.version>
+	<groupId>org.ow2.petals.dsb</groupId>petalsbpm.version>${maven.build.timestamp}</petalsbpm.version>
 	</properties>
 
 	<dependencies>

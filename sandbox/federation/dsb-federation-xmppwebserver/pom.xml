@@ -4,20 +4,15 @@
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<!--<relativePath>../dsb-parent/pom.xml</relativePath>-->
+		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 	
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-federation-xmppwebserver</artifactId>
 	<name>dsb-federation-xmppwebserver</name>
 	<packaging>war</packaging>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-federation-xmppwebserver</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<description>A XMPP jabber bot as webapplication for Petals DSB federation</description>
 	<dependencies>
@@ -28,12 +23,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-federation-xmpp</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-federation-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -56,4 +51,9 @@
 			</plugin>
 		</plugins>
 	</build>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

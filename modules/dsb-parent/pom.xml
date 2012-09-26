@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	
 	<parent>
-		<artifactId>petals-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
-		<version>1.1</version>
+		<artifactId>ow2</artifactId>
+		<groupId>org.ow2</groupId>
+		<version>1.5</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -13,8 +13,9 @@
 	
 	<name>PEtALS DSB Parent</name>
 	<artifactId>dsb-parent</artifactId>
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<packaging>pom</packaging>
+	
 	<version>1.0-SNAPSHOT</version>
 	
 	<organization>
@@ -35,39 +36,11 @@
       		<archive>http://lists.petalslink.org/pipermail/petalsdsb/</archive>
     	</mailingList>
     </mailingLists>
-
-	<distributionManagement>
-	 <repository>
-	      <uniqueVersion>false</uniqueVersion>
-	      <id>petalslink-public.release</id>
-	      <name>PetalsLink Maven 2 Releases Public Repository</name>
-	      <url>http://maven.petalslink.com/public</url>
-	      <layout>default</layout>
-	    </repository>
-	    <snapshotRepository>
-	      <uniqueVersion>true</uniqueVersion>
-	      <id>petalslink-public.snapshot</id>
-	      <name>PetalsLink Maven 2 Snapshots Public Repository</name>
-	      <url>http://maven.petalslink.com/public-snapshot</url>
-	      <layout>default</layout>
-	    </snapshotRepository>
-		<site>
-			<id>labs.site.deployments</id>
-			<name>Labs Site deployments</name>
-			<url>scp://labs.petalslink.org:/home/www/labs/commons/dsb/sites/${project.version}/</url>
-		</site>
-	</distributionManagement>
 	
 	<ciManagement>
     	<system>Jenkins</system>
     	<url>http://hudson-master.petalslink.com/</url>
 	</ciManagement>
-	
-	<scm>
-    	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
-    	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
-    	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
-    </scm>
 
   	<issueManagement>
     	<url>http://jira.petalslink.com/browse/COMMONS</url>
@@ -145,16 +118,6 @@
 			      </releases>
 			    </repository>
 			    <repository>
-			      <id>ebmws-public.snapshot</id>
-			      <url>http://maven.petalslink.com/public-snapshot</url>
-			      <releases>
-			        <enabled>false</enabled>
-			      </releases>
-			      <snapshots>
-			        <enabled>true</enabled>
-			      </snapshots>
-			    </repository>
-			    <repository>
 			      <id>ebmws-public.research</id>
 			      <url>http://maven.petalslink.com/public-research</url>
 			      <releases>
@@ -196,6 +159,28 @@
 				        <enabled>true</enabled>
 				      </snapshots>
 				    </repository>
+					<repository>
+					      <id>ow2.release</id>
+					      <name>OW2 Repository</name>
+					      <url>http://repository.ow2.org/nexus/content/repositories/releases/</url>
+					      <releases>
+					        <enabled>true</enabled>
+					      </releases>
+					      <snapshots>
+					        <enabled>false</enabled>
+					      </snapshots>
+					  </repository>
+					<repository>
+					      <id>ow2.snapshot</id>
+					      <name>OW2 Snap Repository</name>
+					      <url>http://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+					      <releases>
+					        <enabled>false</enabled>
+					      </releases>
+					      <snapshots>
+					        <enabled>true</enabled>
+					      </snapshots>
+					    </repository>
          </repositories>
 		<pluginRepositories>
 		    <pluginRepository>
@@ -286,13 +271,6 @@
 				<artifactId>easywsdl-wsdl</artifactId>
 				<groupId>org.ow2.easywsdl</groupId>
 				<version>${easywsdl.version}</version>	
-			</dependency>
-			
-			<!-- Labs dependencies -->
-			<dependency>
-				<artifactId>wsn-b-services-impl</artifactId>
-				<groupId>com.ebmwebsourcing.deprecated.oasis-ws-basenotification</groupId>
-				<version>${labs.wsn.version}</version>
 			</dependency>
 
 			<dependency>			
@@ -393,4 +371,9 @@
 	      </plugin>
 	    </plugins>
 	  </reporting>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

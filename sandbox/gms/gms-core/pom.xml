@@ -4,9 +4,9 @@
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<!--<relativePath>../dsb-parent/pom.xml</relativePath>-->
+		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.petalslink.gms</groupId>
@@ -29,9 +29,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<scm>
-		<connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/gms-core</connection>
-		<developerConnection>${project.scm.connection}</developerConnection>
-	</scm>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

@@ -4,12 +4,12 @@
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<!--<relativePath>../dsb-parent/pom.xml</relativePath>-->
+		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-eaiserbsm-wsnconnector</artifactId>
 	<packaging>jar</packaging>
 
@@ -25,31 +25,32 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-monitoring-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-kernel</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
+			<!-- Provided scope make it fails when generating eclipse projects... -->
 		</dependency>
 
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-kernel-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-kernel-pubsubservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -57,13 +58,13 @@
 		<!-- FIXME : This dependency is temporary, we need to know which dependency 
 			to use for the rawreports since there are many... -->
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-monitoring-easierbsm-jaxws</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-jaxbutils</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -108,4 +109,9 @@
 			</plugin>
 		</plugins>
 	</build>
+	<scm>
+		<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+		<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+		<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+	</scm>
 </project>

@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<artifactId>dsb-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 		<relativePath>../modules/dsb-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-wsn</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -39,4 +39,9 @@
 			<version>2.4.0</version>
 		</dependency>
 	</dependencies>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

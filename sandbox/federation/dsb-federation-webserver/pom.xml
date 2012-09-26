@@ -4,20 +4,15 @@
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<!--<relativePath>../dsb-parent/pom.xml</relativePath>-->
+		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 	
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-federation-webserver</artifactId>
 	<name>dsb-federation-webserver</name>
 	<packaging>war</packaging>
-	
-	<scm>
-      <connection>scm:svn:https://svn.petalslink.com/svnroot/trunk/research/commons/dsb/modules/dsb-federation-webserver</connection>
-      <developerConnection>${project.scm.connection}</developerConnection>
-  	</scm>
 
 	<properties>
 		<spring.version>3.0.2.RELEASE</spring.version>
@@ -31,7 +26,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-federation-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -78,4 +73,9 @@
 
 		</plugins>
 	</build>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

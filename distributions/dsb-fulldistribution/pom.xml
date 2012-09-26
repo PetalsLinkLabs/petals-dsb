@@ -5,10 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-fulldistribution</artifactId>
 	<name>dsb-fulldistribution</name>
 	<properties>
@@ -16,39 +16,39 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-distribution</artifactId>
 			<version>${project.version}</version>
 			<type>zip</type>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>petals-bc-soap</artifactId>
 			<version>${project.version}</version>
 			<type>zip</type>
 		</dependency>
 		<!--<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-servicepoller-jbise</artifactId>
 			<version>${dsb.version}</version>
 			<type>zip</type>
 		</dependency>-->
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-wsn-jbise</artifactId>
 			<version>${project.version}</version>
 			<type>zip</type>
 		</dependency>
 		<!--
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-wsnpoller-jbise</artifactId>
 			<version>${project.version}</version>
 			<type>zip</type>
 		</dependency>
 		
 		<dependency>		
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-bpelgenerator-jbise</artifactId>
 			<version>${project.version}</version>
 			<type>zip</type>
@@ -95,4 +95,9 @@
 			</plugin>
 		</plugins>
 	</build>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

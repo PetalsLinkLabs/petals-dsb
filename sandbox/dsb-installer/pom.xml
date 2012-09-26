@@ -3,12 +3,12 @@
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
 		<relativePath>../../modules/dsb-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-installer</artifactId>
 	<packaging>jar</packaging>
 	<name>dsb-installer</name>
@@ -86,7 +86,7 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.petalslink.dsb</groupId>
+									<groupId>org.ow2.petals.dsb</groupId>
 									<artifactId>petals-bc-rest</artifactId>
 									<version>${project.version}</version>
 									<type>zip</type>
@@ -96,7 +96,7 @@
 									<destFileName>petals-bc-rest.zip</destFileName>
 								</artifactItem>
 								<artifactItem>
-									<groupId>org.petalslink.dsb</groupId>
+									<groupId>org.ow2.petals.dsb</groupId>
 									<artifactId>petals-bc-soap-proxy</artifactId>
 									<version>${project.version}</version>
 									<type>zip</type>
@@ -106,7 +106,7 @@
 									<destFileName>petals-bc-soapproxy.zip</destFileName>
 								</artifactItem>
 								<artifactItem>
-									<groupId>org.petalslink.dsb</groupId>
+									<groupId>org.ow2.petals.dsb</groupId>
 									<artifactId>petals-bc-soap</artifactId>
 									<version>${project.version}</version>
 									<type>zip</type>
@@ -196,4 +196,9 @@
 			</plugin>
 		</plugins>
 	</build>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

@@ -23,25 +23,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<artifactId>petals-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
-		<version>1.1</version>
+		<artifactId>dsb-parent</artifactId>
+		<groupId>org.ow2.petals.dsb</groupId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>modules/dsb-parent/pom.xml</relativePath>
 	</parent>
 	
 	<name>Petals Distributed Service Bus</name>
-	<artifactId>dsb-parent</artifactId>
-	<groupId>org.petalslink.dsb</groupId>
-	<version>1.0-SNAPSHOT</version>
+	<artifactId>dsb-builder</artifactId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<packaging>pom</packaging>
 
 	<modules>
 		<!--<module>modules/petals-parent</module>-->
+		<module>modules/dsb-parent</module>
 		
 		<!-- Commons -->
 		<module>modules/dsb-commons-serviceapi</module>
 		
 		<!-- DSB -->
-		<!--<module>modules/dsb-parent</module>-->
 		<module>modules/dsb-registry</module>
 		<module>modules/dsb-annotations</module>
 		<module>modules/dsb-api</module>
@@ -171,15 +171,7 @@
 		
 		<!-- Removed stuff from Petals 3.0 to 3.2 -->
 		<module>modules/dsb-removed</module>	
-		
-		
   </modules>
-
-  <scm>
-  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
-  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
-  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
-  </scm>
 
 	<licenses>
 		<license>
@@ -235,139 +227,6 @@
 		</profile>
 	</profiles>
 		
-	<distributionManagement>
-	 <repository>
-	      <uniqueVersion>false</uniqueVersion>
-	      <id>petalslink-public.release</id>
-	      <name>PetalsLink Maven 2 Releases Public Repository</name>
-	      <url>http://maven.petalslink.com/public</url>
-	      <layout>default</layout>
-	    </repository>
-	    <snapshotRepository>
-	      <uniqueVersion>true</uniqueVersion>
-	      <id>petalslink-public.snapshot</id>
-	      <name>PetalsLink Maven 2 Snapshots Public Repository</name>
-	      <url>http://maven.petalslink.com/public-snapshot</url>
-	      <layout>default</layout>
-	    </snapshotRepository>
-		<site>
-			<id>labs.site.deployments</id>
-			<name>Labs Site deployments</name>
-			<url>scp://labs.petalslink.org:/home/www/labs/commons/dsb/sites/${project.version}/</url>
-		</site>
-	</distributionManagement>
-	<repositories>
-			  <repository>
-			      <id>petalslink-public.release</id>
-			      <name>PetalsLink Public Repository</name>
-			      <url>http://maven.petalslink.com/public</url>
-			      <releases>
-			        <enabled>true</enabled>
-			      </releases>
-			      <snapshots>
-			        <enabled>false</enabled>
-			      </snapshots>
-			    </repository>
-			    <repository>
-			      <id>petalslink-public.snapshot</id>
-			      <name>PetalsLink Snapshot Public Repository</name>
-			      <url>http://maven.petalslink.com/public-snapshot</url>
-			      <snapshots>
-			        <enabled>true</enabled>
-			      </snapshots>
-			      <releases>
-			        <enabled>false</enabled>
-			      </releases>
-			    </repository>
-			    <repository>
-			      <id>ebmws-public.snapshot</id>
-			      <url>http://maven.petalslink.com/public-snapshot</url>
-			      <releases>
-			        <enabled>false</enabled>
-			      </releases>
-			      <snapshots>
-			        <enabled>true</enabled>
-			      </snapshots>
-			    </repository>
-			    <repository>
-			      <id>ebmws-public.research</id>
-			      <url>http://maven.petalslink.com/public-research</url>
-			      <releases>
-			        <enabled>true</enabled>
-			      </releases>
-			      <snapshots>
-			        <enabled>false</enabled>
-			      </snapshots>
-			    </repository>
-			    <repository>
-			      <id>petalslink-public.others</id>
-				<url>http://maven.petalslink.com/others</url>
-				<releases>
-					<enabled>true</enabled>
-				</releases>
-				<snapshots>
-					<enabled>false</enabled>
-				</snapshots>
-			    </repository>
-				<repository>
-				      <id>ow2-public.release</id>
-				      <name>OW2 Public Repository</name>
-				      <url>http://maven.ow2.org/maven2</url>
-				      <releases>
-				        <enabled>true</enabled>
-				      </releases>
-				      <snapshots>
-				        <enabled>false</enabled>
-				      </snapshots>
-				  </repository>
-				<repository>
-				      <id>ow2-public.snapshot</id>
-				      <name>OW2 Snapshot Repository</name>
-				      <url>http://maven.ow2.org/maven2-snapshot</url>
-				      <releases>
-				        <enabled>false</enabled>
-				      </releases>
-				      <snapshots>
-				        <enabled>true</enabled>
-				      </snapshots>
-				    </repository>
-         </repositories>
-		<pluginRepositories>
-		    <pluginRepository>
-		      <id>petalslink-public.snapshot.plugin</id>
-		      <name>PetalsLink plugin Repository</name>
-		      <url>http://maven.petalslink.com/public-snapshot</url>
-		      <releases>
-		        <enabled>false</enabled>
-		      </releases>
-		      <snapshots>
-		        <enabled>true</enabled>
-		      </snapshots>
-		    </pluginRepository>
-			  <pluginRepository>
-			      <id>petalslink-public.release.plugin</id>
-			      <name>PetalsLink plugin release Repository</name>
-			      <url>http://maven.petalslink.com/public</url>
-			      <releases>
-			        <enabled>true</enabled>
-			      </releases>
-			      <snapshots>
-			        <enabled>false</enabled>
-			      </snapshots>
-			    </pluginRepository>
-			  <pluginRepository>
-			      <id>petalslink-public.others.plugin</id>
-			      <name>PetalsLink plugin others Repository</name>
-			      <url>http://maven.petalslink.com/others</url>
-			      <releases>
-			        <enabled>true</enabled>
-			      </releases>
-			      <snapshots>
-			        <enabled>false</enabled>
-			      </snapshots>
-			    </pluginRepository>
-		  </pluginRepositories>
-		
 		<dependencies>
 			<dependency>
 				<groupId>findbugs</groupId>
@@ -377,9 +236,9 @@
 			</dependency>
 		</dependencies>
 
+		<!--
 		<dependencyManagement>
 			<dependencies>
-				<!-- DSB depends on Petals ESB Kernel (instead of an API...) -->
 				<dependency>
 					<groupId>org.ow2.petals</groupId>
 					<artifactId>petals-kernel</artifactId>
@@ -423,7 +282,6 @@
 					<version>${easywsdl.version}</version>	
 				</dependency>
 
-				<!-- Labs dependencies -->
 				<dependency>
 					<artifactId>wsn-b-services-impl</artifactId>
 					<groupId>com.ebmwebsourcing.deprecated.oasis-ws-basenotification</groupId>
@@ -436,7 +294,6 @@
 					<version>${labs.easyresources.version}</version>
 				</dependency>
 
-				<!-- External -->
 				<dependency>
 					<groupId>junit</groupId>
 					<artifactId>junit</artifactId>
@@ -482,9 +339,11 @@
 				</dependency>
 			</dependencies>
 		</dependencyManagement>
+		-->
 		<build>
 			<defaultGoal>install</defaultGoal>
 			
+			<!--
 			<pluginManagement>
 				<plugins>
 			        <plugin>
@@ -512,7 +371,10 @@
 					</configuration>
 				</plugin>
 			</plugins>
+			-->
 	  	</build>
+		
+		<!--
 		<reporting>
 		    <plugins>
 		      <plugin>
@@ -529,4 +391,10 @@
 		      </plugin>
 		    </plugins>
 		  </reporting>
+		  -->
+		  <scm>
+		  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+		  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+		  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+		  </scm>
 </project>

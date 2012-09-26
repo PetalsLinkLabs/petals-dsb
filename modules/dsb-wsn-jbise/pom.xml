@@ -15,9 +15,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<!--<relativePath>../dsb-parent/pom.xml</relativePath> -->
+		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 
 	<!-- ============== -->
@@ -25,7 +25,7 @@
 	<!-- ============== -->
 	<name>dsb-wsn-jbise</name>
 	<artifactId>dsb-wsn-jbise</artifactId>
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<packaging>jar</packaging>
 	
 	<description>dsb-wsn-jbise lib</description>
@@ -40,27 +40,27 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>petals-cdk</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-notification-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-service-saajclient</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.petalslink.dsb</groupId>
+		    <groupId>org.ow2.petals.dsb</groupId>
 		    <artifactId>dsb-wsn-jbise-wsapi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.petalslink.dsb</groupId>
+			<groupId>org.ow2.petals.dsb</groupId>
 			<artifactId>dsb-cxfutils</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -72,4 +72,9 @@
 		</dependency>
 	</dependencies>
 
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

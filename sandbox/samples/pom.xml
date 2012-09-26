@@ -25,7 +25,7 @@
 	
 	<name>Petals DSB Samples Builder</name>
 	<artifactId>petals-samples-builder</artifactId>
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<version>SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -40,4 +40,9 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 	</build>
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

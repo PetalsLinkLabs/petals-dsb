@@ -17,7 +17,7 @@
 
 	<name>PEtALS</name>
 	<artifactId>petals-parent</artifactId>
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<packaging>pom</packaging>
 	<version>1.2-SNAPSHOT</version>
 
@@ -879,4 +879,9 @@
 		<defaultGoal>install</defaultGoal>
 	</build>
 
+<scm>
+  	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+  	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+  	<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+  </scm>
 </project>

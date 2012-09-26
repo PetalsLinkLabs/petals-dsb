@@ -4,12 +4,12 @@
 
 	<parent>
 		<artifactId>dsb-parent</artifactId>
-		<groupId>org.petalslink.dsb</groupId>
+		<groupId>org.ow2.petals.dsb</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<!--<relativePath>../dsb-parent/pom.xml</relativePath>-->
+		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.petalslink.dsb</groupId>
+	<groupId>org.ow2.petals.dsb</groupId>
 	<artifactId>dsb-notification-commons</artifactId>
 	<packaging>jar</packaging>
 
@@ -26,38 +26,44 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<artifactId>wsn-b-services-impl</artifactId>
-			<groupId>com.ebmwebsourcing.deprecated.oasis-ws-basenotification</groupId>
+			<groupId>org.ow2.petals.wsstar.oasis-ws-basenotification</groupId>
+			<version>1.0.1</version>
 			<!-- Do not want to use bindled CXF version which is not useful here... -->
 			<exclusions>
-			 <exclusion>
-      			<groupId>org.apache.cxf</groupId>
-      			<artifactId>cxf-rt-transports-http-jetty</artifactId>
-			    </exclusion>
-			    <exclusion>
-			      <groupId>org.apache.cxf</groupId>
-			      <artifactId>cxf-rt-transports-http</artifactId>
-			    </exclusion>
-			    <exclusion>
-			      <groupId>org.apache.cxf</groupId>
-			      <artifactId>cxf-common-utilities</artifactId>
-			    </exclusion>
-			    <exclusion>
-			      <groupId>org.apache.cxf</groupId>
-			      <artifactId>cxf-api</artifactId>
-			    </exclusion>
-			    <exclusion>
-			      <groupId>org.apache.cxf</groupId>
-			      <artifactId>cxf-rt-core</artifactId>
-			    </exclusion>
-			    <exclusion>
-			      <groupId>org.apache.cxf</groupId>
-			      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-			    </exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-transports-http-jetty</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-transports-http</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-common-utilities</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-frontend-jaxws</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 	</dependencies>
+	<scm>
+		<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
+		<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
+		<url>http://github.com/PetalsLinkLabs/petals-dsb</url>
+	</scm>
 </project>
