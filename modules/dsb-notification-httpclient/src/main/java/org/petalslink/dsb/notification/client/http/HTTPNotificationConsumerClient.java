@@ -58,7 +58,7 @@ public class HTTPNotificationConsumerClient implements INotificationConsumer {
 
         Client client = new org.petalslink.dsb.service.client.saaj.Client();
         try {
-            client.sendReceive(new Message() {
+            Message out = client.sendReceive(new Message() {
 
                 public QName getService() {
                     return null;
@@ -123,6 +123,9 @@ public class HTTPNotificationConsumerClient implements INotificationConsumer {
                     
                 }
             });
+            
+            if (out != null) {
+            }
         } catch (ClientException e) {
             e.printStackTrace();
             throw new WsnbException(e.getMessage());
