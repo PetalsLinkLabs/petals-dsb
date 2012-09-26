@@ -27,6 +27,7 @@ import org.ow2.petals.jbi.descriptor.original.JBIDescriptorBuilder;
 import org.ow2.petals.jbi.descriptor.original.generated.Jbi;
 import org.ow2.petals.jbi.descriptor.original.generated.ServiceAssembly;
 import org.ow2.petals.jbi.management.admin.AdminService;
+import org.ow2.petals.tools.generator.commons.JBIUtils;
 import org.ow2.petals.util.oldies.LoggingUtil;
 import org.petalslink.dsb.ws.api.DSBWebServiceException;
 import org.petalslink.dsb.ws.api.jbi.ServiceArtefactsInformationService;
@@ -137,11 +138,13 @@ public class ServiceArtefactsInformationServiceImpl implements ServiceArtefactsI
         for (ServiceUnitLifeCycle serviceUnitLifeCycle : sus) {
             if (suName.equals(serviceUnitLifeCycle.getSuName())) {
                 Jbi descriptor = serviceUnitLifeCycle.getServiceUnitDescriptor();
-                try {
-                    result = JBIDescriptorBuilder.buildXmlStringJBIdescriptor(descriptor);
-                } catch (JBIDescriptorException e) {
-                    throw new DSBWebServiceException("Error while creating descriptor", e);
-                }
+                //try {
+                	// FIXME : This is no more available...
+                    // result = JBIDescriptorBuilder.buildXmlStringJBIdescriptor(descriptor);
+                //} catch (JBIDescriptorException e) {
+                 //   throw new DSBWebServiceException("Error while creating descriptor", e);
+                //}
+                result = "TODO, check org.petalslink.dsb.kernel.ws.jbi.ServiceArtefactsInformationServiceImpl";
             }
         }
         if (result == null) {
