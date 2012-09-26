@@ -5,6 +5,8 @@ package org.petalslink.dsb.jbi.se.wsn;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +20,7 @@ import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.api.util.EndpointHelper;
 import org.petalslink.dsb.notification.commons.AbstractNotificationSender;
 import org.petalslink.dsb.notification.commons.NotificationException;
+import org.petalslink.dsb.notification.commons.NotificationHelper;
 import org.petalslink.dsb.notification.commons.NotificationManagerImpl;
 import org.petalslink.dsb.notification.commons.api.NotificationManager;
 import org.petalslink.dsb.notification.service.NotificationProducerRPService;
@@ -27,13 +30,21 @@ import org.petalslink.dsb.service.client.Message;
 import org.petalslink.dsb.service.client.MessageImpl;
 import org.petalslink.dsb.service.client.WSAMessageImpl;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.ebmwebsourcing.easycommons.xml.XMLHelper;
 import com.ebmwebsourcing.wsaddressing10.api.type.EndpointReferenceType;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.WsnbConstants;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify;
+import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Subscribe;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.utils.WsnbException;
 import com.ebmwebsourcing.wsstar.resource.datatypes.api.WsrfrConstants;
+import com.ebmwebsourcing.wsstar.resourceproperties.datatypes.api.abstraction.UpdateResourceProperties;
+import com.ebmwebsourcing.wsstar.resourceproperties.datatypes.api.abstraction.UpdateResourcePropertiesResponse;
+import com.ebmwebsourcing.wsstar.resourceproperties.datatypes.api.abstraction.UpdateType;
+import com.ebmwebsourcing.wsstar.resourceproperties.datatypes.api.refinedabstraction.RefinedWsrfrpFactory;
+import com.ebmwebsourcing.wsstar.topics.datatypes.api.abstraction.TopicSetType;
+import com.ebmwebsourcing.wsstar.topics.datatypes.api.refinedabstraction.RefinedWstopFactory;
 import com.ebmwebsourcing.wsstar.wsnb.services.impl.engines.AbsNotificationConsumerEngine;
 import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
 
@@ -71,7 +82,8 @@ public class NotificationEngine {
 
     private ServiceEngine serviceEngine;
 
-    public NotificationEngine(Logger logger, QName serviceName, QName interfaceName, String endpointName, Client client) {
+    public NotificationEngine(Logger logger, QName serviceName, QName interfaceName,
+            String endpointName, Client client) {
         super();
         this.logger = logger;
         this.serviceName = serviceName;
@@ -79,7 +91,7 @@ public class NotificationEngine {
         this.endpointName = endpointName;
         this.client = client;
     }
-    
+
     /**
      * Init from resources
      * 
@@ -91,7 +103,7 @@ public class NotificationEngine {
                 serviceName, interfaceName, endpointName);
         this.init();
     }
-    
+
     /**
      * Init from DOMs
      * 
@@ -110,7 +122,8 @@ public class NotificationEngine {
     protected void init() {
         this.internalNotificationSender = getHTTPSender();
 
-        // The one which receives notifications from consumers (external), and forward them to the notification engine
+        // The one which receives notifications from consumers (external), and
+        // forward them to the notification engine
         this.notificationConsumerEngine = new AbsNotificationConsumerEngine(logger) {
 
             @Override
@@ -120,7 +133,8 @@ public class NotificationEngine {
                 // notification engine to forward the notification to all the
                 // interested parties.
                 if (logger.isLoggable(Level.FINE)) {
-                    StringBuffer trace = new StringBuffer("--- Got a notify, forward to internal engine ---\n");
+                    StringBuffer trace = new StringBuffer(
+                            "--- Got a notify, forward to internal engine ---\n");
                     try {
                         Document doc = Wsnb4ServUtils.getWsnbWriter().writeNotifyAsDOM(notify);
                         trace.append(XMLHelper.createStringFromDOMDocument(doc));
@@ -131,7 +145,7 @@ public class NotificationEngine {
                     trace.append("\n-------------------------\n");
                     logger.fine(trace.toString());
                 }
-                
+
                 try {
                     internalNotificationSender.notify(notify);
                 } catch (NotificationException e) {
@@ -156,7 +170,8 @@ public class NotificationEngine {
      */
     private Wsdl loadDocument(String string) {
         try {
-            return new ComponentWsdl(WSDLUtilImpl.createWsdlDescription(AbstractComponent.class.getResource("/" + string)));
+            return new ComponentWsdl(WSDLUtilImpl.createWsdlDescription(AbstractComponent.class
+                    .getResource("/" + string)));
         } catch (WSDLException e) {
             e.printStackTrace();
         }
@@ -194,10 +209,10 @@ public class NotificationEngine {
     public ServiceEngine getServiceEngine() {
         return this.serviceEngine;
     }
-    
+
     protected AbstractNotificationSender getHTTPSender() {
-        return new AbstractNotificationSender(this
-                .getNotificationManager().getNotificationProducerEngine()) {
+        return new AbstractNotificationSender(this.getNotificationManager()
+                .getNotificationProducerEngine()) {
 
             @Override
             protected String getProducerAddress() {
@@ -215,14 +230,14 @@ public class NotificationEngine {
                     logger.fine("No address found, do not send notification");
                     return;
                 }
-                
+
                 if (logger.isLoggable(Level.INFO)) {
                     logger.info("Need to send the message to a subscriber which is : "
                             + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
                 }
-                
+
                 // we restrict sending messages directly to the HTTP endpoint
-                
+
                 // we use a WSA endpoint to send the notification...
                 // extract data from address
                 URI uri = currentConsumerEdp.getAddress().getValue();
@@ -244,19 +259,23 @@ public class NotificationEngine {
                     message.setEndpoint(currentConsumerEdp.getAddress().getValue().toString());
                     message.setPayload(payload);
                     message.setOperation(WsnbConstants.NOTIFY_QNAME);
-                    
+
                     // TODO : Fire and forget with thread executor
                     client.sendReceive(message);
-                    
+
                     Stats.getInstance().newOutNotifyCall(topic);
-                    
+
                 } catch (ClientException e) {
                     if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE, "Client got error while sending notification to "
-                                + currentConsumerEdp.getAddress().getValue() + " on topic " + topic, e);
+                        logger.log(Level.FINE,
+                                "Client got error while sending notification to "
+                                        + currentConsumerEdp.getAddress().getValue() + " on topic "
+                                        + topic, e);
                     } else {
-                        logger.log(Level.INFO, "Client got error while sending notification to endpoint "
-                                + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
+                        logger.log(Level.INFO,
+                                "Client got error while sending notification to endpoint "
+                                        + currentConsumerEdp.getAddress().getValue() + " on topic "
+                                        + topic);
                     }
                 } catch (WsnbException e) {
                     if (logger.isLoggable(Level.FINE)) {
@@ -268,7 +287,7 @@ public class NotificationEngine {
                         logger.log(Level.INFO, "WSN error while sending notification to endpoint "
                                 + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
                     }
-               }
+                }
 
                 // need to map between the address and the DSB endpoint to send
                 // the message to... then we may use some WS-Addressing thing to
@@ -276,10 +295,10 @@ public class NotificationEngine {
             }
         };
     }
-    
+
     protected AbstractNotificationSender getDSBSender() {
-        return new AbstractNotificationSender(this
-                .getNotificationManager().getNotificationProducerEngine()) {
+        return new AbstractNotificationSender(this.getNotificationManager()
+                .getNotificationProducerEngine()) {
 
             @Override
             protected String getProducerAddress() {
@@ -297,7 +316,7 @@ public class NotificationEngine {
                     logger.fine("No address found, do not send notification");
                     return;
                 }
-                
+
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine("Need to send the message to a subscriber which is : "
                             + currentConsumerEdp.getAddress().getValue());
@@ -312,7 +331,7 @@ public class NotificationEngine {
                     message = new MessageImpl();
                     message.setEndpoint(EndpointHelper.getEndpoint(uri));
                     message.setService(EndpointHelper.getService(uri));
-                    
+
                 } else if (AddressingHelper.isExternalService(uri)) {
                     message = new WSAMessageImpl(uri.toString());
                 } else {
@@ -338,5 +357,86 @@ public class NotificationEngine {
                 // pass the initial address...
             }
         };
+    }
+
+    /**
+     * Subscribe to a topic.
+     * 
+     * @param topic
+     *            the topic to subscribe to
+     * @param subscriber
+     *            the subscriber endpoint
+     * @return the subscription UUID
+     */
+    public String subscribe(QName topic, String subscriber) {
+        String result = null;
+        try {
+            Subscribe subscribe = NotificationHelper.createSubscribe(subscriber, topic);
+            final com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse response = this
+                    .getNotificationManager().getNotificationProducerEngine().subscribe(subscribe);
+            if (response != null && response.getSubscriptionReference() != null
+                    && response.getSubscriptionReference().getReferenceParameters() != null) {
+                result = Wsnb4ServUtils.getSubscriptionIdFromReferenceParams(response
+                        .getSubscriptionReference().getReferenceParameters());
+
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            logger.warning(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * Send a notify to the engine. Note : Should be async
+     * 
+     * @param topic
+     *            the topic to send the notification to
+     * @param payload
+     *            the business message
+     */
+    public void notify(QName topic, Document payload) {
+        try {
+            Notify notify = NotificationHelper.createNotification(null, null, null, topic,
+                    "http://www.w3.org/TR/1999/REC-xpath-19991116", payload);
+            this.notificationConsumerEngine.notify(notify);
+        } catch (NotificationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Set a new topic set with the DOM content. Note that it will ne nice to
+     * synchronize this of to add a flag somewhere to pause current
+     * notifications beacuse nothing is synchronized...
+     */
+    public void updateTopicSet(Document topicSet) {
+        if (topicSet == null) {
+            logger.warning("Can not set a null topicset");
+            return;
+        }
+
+        try {
+            TopicSetType newTopicSetRP = Wsnb4ServUtils.getWstopReader().readTopicSetType(topicSet);
+            Document topicSetAsDOM = RefinedWstopFactory.getInstance().getWstopWriter()
+                    .writeTopicSetTypeAsDOM(newTopicSetRP);
+
+            List<Element> properties = new ArrayList<Element>();
+            properties.add(topicSetAsDOM.getDocumentElement());
+
+            UpdateType content = RefinedWsrfrpFactory.getInstance().createUpdateType(properties);
+            UpdateResourceProperties update = RefinedWsrfrpFactory.getInstance()
+                    .createUpdateResourceProperties(content);
+            UpdateResourcePropertiesResponse response = this.notificationManager
+                    .getNotificationProducerEngine().updateResourceProperties(update);
+            
+        } catch (Exception e) {
+            if (logger.isLoggable(Level.FINE)) {
+                logger.log(Level.WARNING, "Can not update the resources", e);
+            } else {
+                logger.log(Level.WARNING, "Can not update the resources : " + e.getMessage());
+            }
+        }
+        logger.info("Topics has been updated");
     }
 }

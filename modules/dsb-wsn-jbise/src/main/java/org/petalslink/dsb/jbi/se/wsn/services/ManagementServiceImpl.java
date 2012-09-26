@@ -17,41 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA 
  *
  */
-package org.petalslink.dsb.jbi.se.wsn.api;
+package org.petalslink.dsb.jbi.se.wsn.services;
 
 import java.util.List;
 
 import javax.jws.WebMethod;
-import javax.jws.WebService;
+
+import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
+import org.petalslink.dsb.jbi.se.wsn.api.Topic;
 
 /**
  * @author chamerling
  *
  */
-@WebService
-public interface ManagementService {
+public class ManagementServiceImpl implements ManagementService {
+    
+    public ManagementServiceImpl() {
+    }
 
-    /**
-     * Add a topic to the supported topic list
-     * 
-     * @param topic
-     */
-    @WebMethod
-    void add(Topic topic);
-    
-    /**
-     * 
-     * @param topic
-     * @return
-     */
-    @WebMethod
-    boolean delete(Topic topic);
-    
-    /**
-     * Get the current topic list
-     * 
-     * @return
-     */
-    @WebMethod
-    List<Topic> getTopics();
+    public void add(Topic topic) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public boolean delete(Topic topic) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public List<Topic> getTopics() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
 }
