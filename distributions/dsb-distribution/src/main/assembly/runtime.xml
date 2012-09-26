@@ -25,9 +25,9 @@
 		<dependencySet>
 		<excludes>				
 				<exclude>
-					org.petalslink.dsb:dsb-webapp
+					org.ow2.petals.dsb:dsb-webapp
 				</exclude>
-				<exclude>org.petalslink.dsb:dsb-bundle-bpelgenerator</exclude>
+				<exclude>org.ow2.petals.dsb:dsb-bundle-bpelgenerator</exclude>
 				<exclude>xml-apis:xml-apis</exclude>
 				<exclude>xerces:xmlParserAPIs</exclude>				
 			</excludes>
@@ -38,7 +38,7 @@
 		<dependencySet>
 			<includes>
 				<include>
-					org.petalslink.dsb:dsb-webapp
+					org.ow2.petals.dsb:dsb-webapp
 				</include>
 			</includes>
 			<outputFileNameMapping>dsb-webapp.war</outputFileNameMapping>
@@ -48,7 +48,7 @@
 		<dependencySet>
 			<includes>
 				<include>
-					org.petalslink.dsb:dsb-bundle-bpelgenerator
+					org.ow2.petals.dsb:dsb-bundle-bpelgenerator
 				</include>
 			</includes>
 			<unpack>true</unpack>

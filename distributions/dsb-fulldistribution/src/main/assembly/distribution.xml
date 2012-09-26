@@ -11,7 +11,7 @@
 			<outputDirectory>/</outputDirectory>
 			<fileMode>644</fileMode>
 			<includes>
-				<include>org.petalslink.dsb:dsb-distribution</include>
+				<include>org.ow2.petals.dsb:dsb-distribution</include>
 			</includes>
 			<unpack>true</unpack>
 		</dependencySet>
@@ -19,11 +19,11 @@
 			<outputDirectory>/dsb-distribution-1.0-SNAPSHOT/artifacts/components</outputDirectory>
 			<fileMode>644</fileMode>
 			<includes>
-				<include>org.petalslink.dsb:*:zip</include>
+				<include>org.ow2.petals.dsb:*:zip</include>
 				<include>org.petalslink.research.petals:*:zip</include>
 			</includes>
 			<excludes>
-				<exclude>org.petalslink.dsb:dsb-distribution:zip</exclude>
+				<exclude>org.ow2.petals.dsb:dsb-distribution:zip</exclude>
 			</excludes>
 		</dependencySet>
 	</dependencySets>

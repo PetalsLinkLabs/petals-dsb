@@ -25,7 +25,7 @@
 		<dependencySet>
 			<includes>
 				<include>
-					org.ow2.petals:petals-bc-soap
+					org.ow2.petals.dsb:petals-bc-soap
 				</include>
 			</includes>
 			<scope>provided</scope>

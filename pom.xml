@@ -29,13 +29,12 @@
 		<relativePath>modules/dsb-parent/pom.xml</relativePath>
 	</parent>
 	
-	<name>Petals Distributed Service Bus</name>
+	<name>OW2 Petals Distributed Service Bus</name>
 	<artifactId>dsb-builder</artifactId>
 	<groupId>org.ow2.petals.dsb</groupId>
 	<packaging>pom</packaging>
 
 	<modules>
-		<!--<module>modules/petals-parent</module>-->
 		<module>modules/dsb-parent</module>
 		
 		<!-- Commons -->
