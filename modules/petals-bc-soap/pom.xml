@@ -12,7 +12,7 @@
   <name>petals-bc-soap</name>
   <artifactId>petals-bc-soap</artifactId>
   <groupId>org.ow2.petals.dsb</groupId>
-  <version>1.0.0</version>
+  <version>1.1-SNAPSHOT</version>
   
   <properties>
 	  <ow2DistMgmtSnapshotsUrl>
