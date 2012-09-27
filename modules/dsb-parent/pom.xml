@@ -407,6 +407,55 @@
 	      </plugin>
 	    </plugins>
 	  </reporting>
+	  
+	  <profiles>
+	  	  <profile>
+	  		<id>dev</id>
+	  		<activation>
+	  			<activeByDefault>true</activeByDefault>
+	  		</activation>
+	  		<properties>
+	  			<java.compiler.showWarnings>true</java.compiler.showWarnings>
+	  			<java.compiler.debug>true</java.compiler.debug>
+	  			<java.compiler.optimize>false</java.compiler.optimize>
+	  		</properties>
+	  	  </profile>
+	      <profile>
+	         <id>release</id>
+	         <activation>
+			   <!-- Automatically activated by the release plugin -->
+	           <property>
+	             <name>performRelease</name>
+	             <value>true</value>
+	           </property>
+	         </activation>
+	 		 <properties>
+	 			<java.compiler.showWarnings>
+	 				false
+	 			</java.compiler.showWarnings>
+	 			<java.compiler.debug>false</java.compiler.debug>
+	 			<java.compiler.optimize>true</java.compiler.optimize>
+	 		 </properties>
+	         <build>
+	           <plugins>
+	             <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-gpg-plugin</artifactId>
+	               <version>1.4</version>
+	               <executions>
+	                 <execution>
+	                   <id>sign-artifacts</id>
+	                   <phase>verify</phase>
+	                   <goals>
+	                     <goal>sign</goal>
+	                   </goals>
+	                 </execution>
+	               </executions>
+	             </plugin>
+	           </plugins>
+	         </build>
+	       </profile>
+	  </profiles>
 <scm>
   	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
   	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>
