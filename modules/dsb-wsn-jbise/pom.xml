@@ -10,12 +10,13 @@
 	License along with this library; if not, write to the Free Software Foundation, 
 	Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA. Initial developer(s): 
 	EBM WebSourcing -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>dsb-parent</artifactId>
 		<groupId>org.ow2.petals.dsb</groupId>
-		<version>1.0.0</version>
+		<version>1.0-SNAPSHOT</version>
 		<relativePath>../dsb-parent/pom.xml</relativePath>
 	</parent>
 
