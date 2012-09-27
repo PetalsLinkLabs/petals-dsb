@@ -54,7 +54,7 @@ public class LocalRegistryImpl extends NullLifeCycle implements Registry {
     public Set<Endpoint> lookup(Map<String, String> query) {
         // TODO : Add a list of endpoint resolvers which are going through the
         // registry. With this feature, you can add resolvers by configuration
-        // for specific needs...vVc =ççgùkvuù,n h
+        // for specific needs...vVc =√ß√ßg√πkvu√π,n h
         Set<Endpoint> result = new HashSet<Endpoint>();
         String key = query.get(ENDPOINT_NAME);
         if (key != null) {
