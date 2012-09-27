@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>petals-components-sls-parent</artifactId>
-    <groupId>org.ow2.petals</groupId>
-    <relativePath>../parent/pom.xml</relativePath>
-    <version>5.0.0</version>
-  </parent>
+      <artifactId>petals-components-sls-parent</artifactId>
+     <groupId>org.ow2.petals</groupId>
+     <relativePath>../parent/pom.xml</relativePath>
+     <version>5.0.0</version>
+   </parent>
   
   <name>petals-bc-soap</name>
   <artifactId>petals-bc-soap</artifactId>
   <groupId>org.ow2.petals.dsb</groupId>
+  <version>1.0-SNAPSHOT</version>
+  
+  <properties>
+	  <ow2DistMgmtSnapshotsUrl>
+	  http://repository.ow2.org/nexus/content/repositories/snapshots
+	  </ow2DistMgmtSnapshotsUrl>
+	  <ow2DistMgmtReleasesUrl>
+	  http://repository.ow2.org/nexus/service/local/staging/deploy/maven2
+	  </ow2DistMgmtReleasesUrl>
+	  <ow2SourceAssemblyDescriptorRef>source-release</ow2SourceAssemblyDescriptorRef>
+	  <ow2ReleaseProfiles>ow2-release</ow2ReleaseProfiles>
+	  <maven-source-assemblies.version>1.0.1</maven-source-assemblies.version>
+  </properties>
   <!-- Based on PETALS BC SOAP 4.1.0 -->
   
   <packaging>jbi-component</packaging>
@@ -103,8 +117,8 @@
     <dependency>
       <groupId>org.apache.axis2</groupId>
       <artifactId>addressing</artifactId>
+	  <version>1.5.6</version>
       <type>mar</type>
-      <version>1.5.6</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xerces</groupId>
@@ -119,8 +133,8 @@
     <dependency>
       <groupId>org.apache.rampart</groupId>
       <artifactId>rampart</artifactId>
+	  <version>1.5.2</version>
       <type>mar</type>
-      <version>1.5.2</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xerces</groupId>
@@ -137,7 +151,7 @@
     <dependency>
       <groupId>org.ow2.petals.dsb</groupId>
       <artifactId>petals-cdk</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${project.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.geronimo.specs</groupId>
@@ -227,6 +241,7 @@
   </build>
   <repositories>
 	  
+	  <!--
     <repository>
       <id>bouncy</id>
       <url>http://dist.wso2.org/maven2/</url>
@@ -237,7 +252,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-
+	-->
 	<!--	
     <repository>
       <id>shibboleth</id>
@@ -285,6 +300,72 @@
       </snapshots>
     </repository>
   </repositories>
+  
+  <!-- DSB : Added for release since we do not want to change the parent here... -->
+  <profiles>
+  	  <profile>
+  		<id>dev</id>
+  		<activation>
+  			<activeByDefault>true</activeByDefault>
+  		</activation>
+  		<properties>
+  			<java.compiler.showWarnings>true</java.compiler.showWarnings>
+  			<java.compiler.debug>true</java.compiler.debug>
+  			<java.compiler.optimize>false</java.compiler.optimize>
+  		</properties>
+  	  </profile>
+      <profile>
+         <id>release</id>
+         <activation>
+		   <!-- Automatically activated by the release plugin -->
+           <property>
+             <name>performRelease</name>
+             <value>true</value>
+           </property>
+         </activation>
+ 		 <properties>
+ 			<java.compiler.showWarnings>
+ 				false
+ 			</java.compiler.showWarnings>
+ 			<java.compiler.debug>false</java.compiler.debug>
+ 			<java.compiler.optimize>true</java.compiler.optimize>
+ 		 </properties>
+         <build>
+           <plugins>
+             <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-gpg-plugin</artifactId>
+               <version>1.4</version>
+               <executions>
+                 <execution>
+                   <id>sign-artifacts</id>
+                   <phase>verify</phase>
+                   <goals>
+                     <goal>sign</goal>
+                   </goals>
+                 </execution>
+               </executions>
+             </plugin>
+           </plugins>
+         </build>
+       </profile>
+  </profiles>
+  
+  <distributionManagement>
+  	<repository>
+  		<id>ow2.release</id>
+  		<name>OW2 Maven Releases Repository</name>
+  		<url>${ow2DistMgmtReleasesUrl}</url>
+  	</repository>
+
+	<snapshotRepository>
+  		<id>ow2.snapshot</id>
+  		<name>OW2 Maven Snapshots Repository</name>
+  		<url>${ow2DistMgmtSnapshotsUrl}</url>
+  	</snapshotRepository>
+  </distributionManagement>
+  
+  
 <scm>
   	<connection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</connection>
   	<developerConnection>scm:git:git@github.com:PetalsLinkLabs/petals-dsb.git</developerConnection>

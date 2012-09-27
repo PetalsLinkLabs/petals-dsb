@@ -36,6 +36,25 @@
 			<groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>
 			<artifactId>management-model</artifactId>
 			<version>v2012-02-13</version>
+			<!-- Other version imported by notification-commons -->
+			<exclusions>
+				<exclusion>
+					<groupId>com.ebmwebsourcing.deprecated.oasis-ws-basenotification</groupId>
+					<artifactId>wsn-b-datatypes-jaxbimpl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.ebmwebsourcing.deprecated.oasis-ws-topics</groupId>
+					<artifactId>wstop-datatypes-jaxbimpl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.ebmwebsourcing.deprecated.oasis-ws-resource</groupId>
+					<artifactId>wsrf-r-datatypes-jaxbimpl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.ebmwebsourcing.deprecated.oasis-ws-resourceproperties</groupId>
+					<artifactId>wsrf-rp-datatypes-jaxbimpl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
