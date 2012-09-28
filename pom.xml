@@ -30,8 +30,11 @@
 	</parent>
 	
 	<name>OW2 Petals Distributed Service Bus</name>
-	<artifactId>dsb-builder</artifactId>
+	<artifactId>petals-dsb</artifactId>
 	<groupId>org.ow2.petals.dsb</groupId>
+	
+	<description>The DSB is an extension of the Petals ESB project which provides Internet-compliant features.</description>
+	
 	<packaging>pom</packaging>
 
 	<modules>
