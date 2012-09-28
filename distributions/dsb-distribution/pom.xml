@@ -191,9 +191,14 @@
 		</profile>
 		<profile>
 			<id>release</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
+         	<activation>
+		  		<!-- Automatically activated by the release plugin -->
+           		<property>
+            		<name>performRelease</name>
+            		<value>true</value>
+           		</property>
+         	</activation>
+
 			<build>
 				<plugins>
 					<plugin>
