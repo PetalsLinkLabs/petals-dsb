@@ -62,8 +62,6 @@ public class NotificationManagerImpl implements NotificationManager {
 
     private TopicNamespaceType topicNamespace;
 
-    private TopicSetType topicSet;
-
     private TopicsManagerEngine topicsManagerEngine;
 
     private SubscriptionManagerEngine subscriptionManagerEngine;
@@ -147,8 +145,10 @@ public class NotificationManagerImpl implements NotificationManager {
         this.serviceName = serviceName;
         this.interfaceName = interfaceName;
         
+        TopicSetType topicSetType = null;
+        
         try {
-            this.topicSet = RefinedWstopFactory.getInstance().getWstopReader()
+            topicSetType = RefinedWstopFactory.getInstance().getWstopReader()
                     .readTopicSetType(topicSet);
 
             this.topicNamespace = RefinedWstopFactory.getInstance().getWstopReader()
@@ -156,7 +156,7 @@ public class NotificationManagerImpl implements NotificationManager {
 
             if (logger.isLoggable(Level.INFO)) {
                 final org.w3c.dom.Document out = RefinedWstopFactory.getInstance().getWstopWriter()
-                        .writeTopicSetTypeAsDOM(this.topicSet);
+                        .writeTopicSetTypeAsDOM(topicSetType);
                 final org.w3c.dom.Document out2 = RefinedWstopFactory.getInstance().getWstopWriter()
                         .writeTopicNamespaceTypeAsDOM(this.topicNamespace);
                 logger.info("TopicSet : " + XMLPrettyPrinter.prettyPrint(out));
@@ -176,7 +176,7 @@ public class NotificationManagerImpl implements NotificationManager {
         // TODO : move to to a dedicated component?
         try {
             this.notificationProducerEngine = new NotificationProducerEngine(logger,
-                    getTopicsManagerEngine(), getSubscriptionManagerEngine(), false, getTopicSet(),
+                    getTopicsManagerEngine(), getSubscriptionManagerEngine(), false, topicSetType,
                     getTopicNamespace(), "wsn", null);
         } catch (WsnbException e) {
             e.printStackTrace();
@@ -193,6 +193,7 @@ public class NotificationManagerImpl implements NotificationManager {
         this.interfaceName = interfaceName;
 
         Document docTopicNs = null;
+        TopicSetType topicSetType = null;
         try {
             docTopicNs = SOAUtil.getInstance().getDocumentBuilderFactory().newDocumentBuilder()
                     .parse(topicNamespaces.openStream());
@@ -200,10 +201,10 @@ public class NotificationManagerImpl implements NotificationManager {
             this.supportedTopics = supportedTopics;
             this.topicNamespace = RefinedWstopFactory.getInstance().getWstopReader()
                     .readTopicNamespaceType(docTopicNs);
-            this.topicSet = this.createTopicSetFromTopicNamespace(topicNamespace, supportedTopics);
+            topicSetType = this.createTopicSetFromTopicNamespace(topicNamespace, supportedTopics);
 
             final org.w3c.dom.Document topicSetDom = RefinedWstopFactory.getInstance()
-                    .getWstopWriter().writeTopicSetTypeAsDOM(topicSet);
+                    .getWstopWriter().writeTopicSetTypeAsDOM(topicSetType);
 
             System.out.println("topicSetDom = " + XMLPrettyPrinter.prettyPrint(topicSetDom));
 
@@ -234,7 +235,7 @@ public class NotificationManagerImpl implements NotificationManager {
         // TODO : move to to a dedicated component?
         try {
             this.notificationProducerEngine = new NotificationProducerEngine(logger,
-                    getTopicsManagerEngine(), getSubscriptionManagerEngine(), true, getTopicSet(),
+                    getTopicsManagerEngine(), getSubscriptionManagerEngine(), true, topicSetType,
                     getTopicNamespace(), "wsn", null);
         } catch (WsnbException e) {
             // TODO Auto-generated catch block
@@ -415,7 +416,7 @@ public class NotificationManagerImpl implements NotificationManager {
      * org.petalslink.dsb.notification.commons.NotificationManager#getTopicSet()
      */
     public TopicSetType getTopicSet() {
-        return topicSet;
+    	return this.notificationProducerEngine.getActorAsRP().getTopicSet();
     }
 
     /*
