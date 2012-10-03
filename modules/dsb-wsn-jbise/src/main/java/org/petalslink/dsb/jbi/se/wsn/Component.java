@@ -20,6 +20,7 @@ package org.petalslink.dsb.jbi.se.wsn;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,9 @@ import org.ow2.petals.component.framework.util.ServiceEndpointKey;
 import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.commons.service.api.Service;
 import org.petalslink.dsb.cxf.CXFHelper;
+import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
 import org.petalslink.dsb.jbi.se.wsn.api.StatsService;
+import org.petalslink.dsb.jbi.se.wsn.services.ManagementServiceImpl;
 import org.petalslink.dsb.jbi.se.wsn.services.StatsServiceImpl;
 import org.petalslink.dsb.notification.commons.PropertiesConfigurationProducer;
 import org.petalslink.dsb.notification.commons.api.ConfigurationProducer;
@@ -81,7 +84,7 @@ public class Component extends PetalsBindingComponent {
 
     private Map<ServiceEndpointKey, Wsdl> WSNEP;
 
-    private Service ws;
+    private List<Service> ws;
 
     /*
      * (non-Javadoc)
@@ -92,6 +95,7 @@ public class Component extends PetalsBindingComponent {
     @Override
     protected void postDoInit() throws JBIException {
 
+    	this.ws = new ArrayList<Service>();
         this.WSNEP = new ConcurrentHashMap<ServiceEndpointKey, Wsdl>();
         this.initializeNotificationEngine();
 
@@ -149,17 +153,34 @@ public class Component extends PetalsBindingComponent {
 
         this.getContext().getComponentName();
 
+        // TODO : Push in CDK
         String port = this.getContainerConfiguration("http.port") == null ? "8079" : this
                 .getContainerConfiguration("http.port");
         String host = this.getContainerConfiguration("http.host") == null ? "localhost" : this
                 .getContainerConfiguration("http.host");
 
-        ws = CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port + "/"
-                + this.getContext().getComponentName() + "/WSNStatsService", StatsService.class,
-                new StatsServiceImpl(getLogger()));
-        ws.start();
-        getLogger().info("Web services started");
+        ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port + "/"
+                + this.getContext().getComponentName() + "/StatsService", StatsService.class,
+                new StatsServiceImpl(getLogger())));
+        ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port + "/"
+                + this.getContext().getComponentName() + "/ManagementService", ManagementService.class,
+                new ManagementServiceImpl(this.engine, getLogger())));
+        
+        startWebServices();
     }
+    
+	protected void startWebServices() {
+		if (ws != null) {
+			for (Service service : ws) {
+				try {
+					service.start();
+				} catch (Exception e) {
+					getLogger().warning(e.getMessage());
+				}
+			}
+		}
+        getLogger().info("Web services started");
+	}
 
     /**
      * 
@@ -287,7 +308,13 @@ public class Component extends PetalsBindingComponent {
     @Override
     protected void doStop() throws JBIException {
         if (ws != null) {
-            ws.stop();
+        	for (Service service : ws) {
+				try {
+					service.stop();
+				} catch (Exception e) {
+					getLogger().warning(e.getMessage());
+				}
+			}
         }
     }
 

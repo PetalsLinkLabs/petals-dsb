@@ -74,4 +74,10 @@ public class Topic {
             return false;
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "Topic [name=" + name + ", ns=" + ns + ", prefix=" + prefix
+				+ "]";
+	}
 }

@@ -54,4 +54,12 @@ public interface ManagementService {
      */
     @WebMethod
     List<Topic> getTopics();
+    
+    /**
+     * Set the topics. Will remove all the other ones which are already active.
+     * 
+     * @param topics
+     */
+    @WebMethod
+    void setTopics(List<Topic> topics);
 }

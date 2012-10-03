@@ -83,6 +83,8 @@ public class WSNTest extends TestCase {
         final QName oldtopic = new QName("http://www.petalslink.org/integration/test/1.0",
                 "RemoveMe", "itg");
         
+        engine.getTopics();
+        
         String subscriber = address;
         String id1 = engine.subscribe(topic, subscriber);
         System.out.println("BusinessIntegrationTopic subscription ID = " + id1);

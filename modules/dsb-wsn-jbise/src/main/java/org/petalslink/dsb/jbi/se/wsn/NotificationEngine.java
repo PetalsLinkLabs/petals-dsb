@@ -18,6 +18,7 @@ import org.ow2.petals.component.framework.ComponentWsdl;
 import org.ow2.petals.component.framework.api.Wsdl;
 import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.api.util.EndpointHelper;
+import org.petalslink.dsb.jbi.se.wsn.api.Topic;
 import org.petalslink.dsb.notification.commons.AbstractNotificationSender;
 import org.petalslink.dsb.notification.commons.NotificationException;
 import org.petalslink.dsb.notification.commons.NotificationHelper;
@@ -404,6 +405,18 @@ public class NotificationEngine {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Update the engine with the given topic list
+     * 
+     * @param topicSet
+     */
+    public void updateTopicSet(List<Topic> topicSet) {
+    	if (topicSet == null) {
+    		return;
+    	}
+    	this.updateTopicSet(TopicSetHelper.getWSNDocument(topicSet));
+    }
 
     /**
      * Set a new topic set with the DOM content. Note that it will ne nice to
@@ -430,6 +443,20 @@ public class NotificationEngine {
             UpdateResourcePropertiesResponse response = this.notificationManager
                     .getNotificationProducerEngine().updateResourceProperties(update);
             
+			if (logger.isLoggable(Level.INFO)) {
+				if (response == null) {
+					logger.fine("No response returned from the engine in update topicset");
+				} else {
+					logger.info("Topicset update response "
+							+ XMLHelper
+									.createStringFromDOMDocument(RefinedWsrfrpFactory
+											.getInstance()
+											.getWsrfrpWriter()
+											.writeUpdateResourcePropertiesResponseAsDOM(
+													response)));
+				}
+			}
+            
         } catch (Exception e) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.WARNING, "Can not update the resources", e);
@@ -439,4 +466,47 @@ public class NotificationEngine {
         }
         logger.info("Topics has been updated");
     }
+
+	/**
+	 * Get the current topics deployed in the component
+	 * 
+	 * @return
+	 */
+	public List<Topic> getTopics() {
+		List<Topic> topics = new ArrayList<Topic>();
+
+		// get them from the runtime...
+		// TODO : We can cache them here instead of making a call...
+
+		TopicSetType tst = this.notificationManager.getTopicSet();
+		if (logger.isLoggable(Level.FINE)) {
+			try {
+				logger.fine("Current topicset "
+						+ XMLHelper.createStringFromDOMDocument(Wsnb4ServUtils
+								.getWstopWriter().writeTopicSetTypeAsDOM(tst)));
+			} catch (Exception e1) {
+				logger.warning(e1.getMessage());
+			}
+		}
+
+		for (Element e : tst.getTopicsTrees()) {
+			String nodeName = e.getNodeName();
+			String prefix = null;
+			if (nodeName.contains(":")) {
+				prefix = nodeName.substring(0, nodeName.lastIndexOf(':'));
+				nodeName = nodeName.substring(nodeName.lastIndexOf(':') + 1);
+			}
+			String ns = e.getAttribute("xmlns:" + prefix);
+			Topic t = new Topic();
+			t.name = nodeName;
+			t.prefix = prefix;
+			t.ns = ns;
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("Topic " + t);
+			}
+			topics.add(t);
+		}		
+
+		return topics;
+	}
 }

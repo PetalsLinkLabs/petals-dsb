@@ -19,36 +19,107 @@
  */
 package org.petalslink.dsb.jbi.se.wsn.services;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.jws.WebMethod;
-
+import org.petalslink.dsb.jbi.se.wsn.NotificationEngine;
 import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
 import org.petalslink.dsb.jbi.se.wsn.api.Topic;
 
 /**
  * @author chamerling
- *
+ * 
  */
 public class ManagementServiceImpl implements ManagementService {
-    
-    public ManagementServiceImpl() {
-    }
 
-    public void add(Topic topic) {
-        // TODO Auto-generated method stub
-        
-    }
+	private NotificationEngine engine;
 
-    public boolean delete(Topic topic) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	private Logger logger;
+	
+	final Object lock = new Object();
 
-    public List<Topic> getTopics() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public ManagementServiceImpl(NotificationEngine engine, Logger logger) {
+		this.engine = engine;
+		this.logger = logger;
+	}
 
+	public void add(Topic topic) {
+		if (logger.isLoggable(Level.INFO)) {
+			logger.info("Adding topic " + topic);
+		}
+		
+		List<Topic> topics = getTopics();
+		if (topics == null) {
+			return;
+		}
+		if (topics.contains(topic)) {
+			if (logger.isLoggable(Level.INFO)) {
+				logger.info("Topic is already in the list " + topic);
+			}
+			return;
+		}
+		
+		// Bad Hack, remove the RPUpdate topic from the list. This one is
+		// malformed!
+		Iterator<Topic> iter = topics.iterator();
+		while (iter.hasNext()) {
+			Topic t = iter.next();
+			if ("RPUpdate".equals(t.name)) {
+				iter.remove();
+			}
+		}
+		
+		topics.add(topic);
+		
+		synchronized (lock) {
+			logger.fine("Updating topics for add");
+			this.engine.updateTopicSet(topics);
+		}
+	}
 
+	public boolean delete(Topic topic) {
+		if (logger.isLoggable(Level.INFO)) {
+			logger.info("Deleting topic " + topic);
+		}
+		
+		List<Topic> topics = getTopics();
+		if (topics == null) {
+			return false;
+		}
+		// Bad Hack, remove the RPUpdate topic from the list. This one is
+		// malformed!
+		Iterator<Topic> iter = topics.iterator();
+		while (iter.hasNext()) {
+			Topic t = iter.next();
+			if ("RPUpdate".equals(t.name)) {
+				iter.remove();
+			}
+		}
+		
+		topics.remove(topic);
+		
+		synchronized (lock) {
+			logger.info("Updating topics for delete");
+			this.engine.updateTopicSet(topics);
+		}
+		return true;
+	}
+
+	public List<Topic> getTopics() {
+		return this.engine.getTopics();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.petalslink.dsb.jbi.se.wsn.api.ManagementService#setTopics(java.util.List)
+	 */
+	@Override
+	public void setTopics(List<Topic> topics) {
+		if (topics == null || topics.size() == 0) {
+			logger.warning("Can not update with null topics...");
+			return;
+		}
+		this.engine.updateTopicSet(topics);
+	}
 }
