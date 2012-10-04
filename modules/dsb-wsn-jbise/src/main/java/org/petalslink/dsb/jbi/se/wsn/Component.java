@@ -87,6 +87,10 @@ public class Component extends PetalsBindingComponent {
 
 	private List<Service> ws;
 
+	protected StatsService stats;
+
+	private ManagementServiceImpl managementService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -99,7 +103,42 @@ public class Component extends PetalsBindingComponent {
 		this.ws = new ArrayList<Service>();
 		this.WSNEP = new ConcurrentHashMap<ServiceEndpointKey, Wsdl>();
 		this.initializeNotificationEngine();
+		this.addServices();
+	}
+	
+	/**
+	 * 
+	 */
+	protected void addServices() {
+		this.stats = new StatsServiceImpl(getLogger());
+		ws.add(getService(StatsService.class, stats, "StatsService"));
 
+		this.managementService = new ManagementServiceImpl(this.engine,
+				getLogger());
+		ws.add(getService(ManagementService.class, managementService,
+				"ManagementService"));
+	
+		doAddServices();
+	}
+	
+	/**
+	 * 
+	 */
+	protected void doAddServices() {
+		// To be overrided, check #addServices
+	}
+	
+	protected Service getService(Class<?> clazz, Object bean, String serviceName) {
+		// TODO : Push in CDK
+		String port = this.getContainerConfiguration("http.port") == null ? "8079"
+				: this.getContainerConfiguration("http.port");
+		String host = this.getContainerConfiguration("http.host") == null ? "localhost"
+				: this.getContainerConfiguration("http.host");
+		
+		return CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port
+				+ "/" + this.getContext().getComponentName() + "/" + serviceName,
+				clazz, bean);
+		
 	}
 
 	/**
@@ -150,27 +189,7 @@ public class Component extends PetalsBindingComponent {
 	@Override
 	protected void doStart() throws JBIException {
 		activateWSNEndpoints();
-
 		createSubscribers();
-
-		getLogger().info("Starting Web services...");
-
-		this.getContext().getComponentName();
-
-		// TODO : Push in CDK
-		String port = this.getContainerConfiguration("http.port") == null ? "8079"
-				: this.getContainerConfiguration("http.port");
-		String host = this.getContainerConfiguration("http.host") == null ? "localhost"
-				: this.getContainerConfiguration("http.host");
-
-		ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port
-				+ "/" + this.getContext().getComponentName() + "/StatsService",
-				StatsService.class, new StatsServiceImpl(getLogger())));
-		ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port
-				+ "/" + this.getContext().getComponentName()
-				+ "/ManagementService", ManagementService.class,
-				new ManagementServiceImpl(this.engine, getLogger())));
-
 		startWebServices();
 	}
 
