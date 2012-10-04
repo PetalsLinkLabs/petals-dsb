@@ -33,6 +33,7 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
 
 import org.ow2.easywsdl.wsdl.api.Endpoint;
+import org.ow2.petals.component.framework.ComponentInformation;
 import org.ow2.petals.component.framework.PetalsBindingComponent;
 import org.ow2.petals.component.framework.api.Wsdl;
 import org.ow2.petals.component.framework.util.ServiceEndpointKey;
@@ -66,320 +67,341 @@ import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
  */
 public class Component extends PetalsBindingComponent {
 
-    public static final String FILE_CFG = "notification.cfg";
+	public static final String FILE_CFG = "notification.cfg";
 
-    public static final String TOPICS_NS_FILE = "topics/business-topicns-rpupdate.xml";
+	public static final String TOPICS_NS_FILE = "topics/business-topicns-rpupdate.xml";
 
-    public static final String TOPICSET_FILE = "topics/business-topicset.xml";
+	public static final String TOPICSET_FILE = "topics/business-topicset.xml";
 
-    public static final String ENDPOINT_NAME = "endpoint";
+	public static final String ENDPOINT_NAME = "endpoint";
 
-    public static final String INTERFACE_NAME = "interface";
+	public static final String INTERFACE_NAME = "interface";
 
-    public static final String SERVICE_NAME = "service";
+	public static final String SERVICE_NAME = "service";
 
-    protected NotificationEngine engine;
+	protected NotificationEngine engine;
 
-    protected Client httpClient;
+	protected Client httpClient;
 
-    private Map<ServiceEndpointKey, Wsdl> WSNEP;
+	private Map<ServiceEndpointKey, Wsdl> WSNEP;
 
-    private List<Service> ws;
+	private List<Service> ws;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.ow2.petals.component.framework.PetalsBindingComponent#postDoInit()
-     */
-    @Override
-    protected void postDoInit() throws JBIException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.ow2.petals.component.framework.PetalsBindingComponent#postDoInit()
+	 */
+	@Override
+	protected void postDoInit() throws JBIException {
 
-    	this.ws = new ArrayList<Service>();
-        this.WSNEP = new ConcurrentHashMap<ServiceEndpointKey, Wsdl>();
-        this.initializeNotificationEngine();
+		this.ws = new ArrayList<Service>();
+		this.WSNEP = new ConcurrentHashMap<ServiceEndpointKey, Wsdl>();
+		this.initializeNotificationEngine();
 
-    }
-    
-    /**
-     * Initialize based on local resources
-     * 
-     * @throws JBIException
-     */
-    protected void initializeNotificationEngine() throws JBIException {
-        // get the configuration files...
-        Properties props = new Properties();
-        try {
-            props.load(Component.class.getClassLoader().getResourceAsStream("notification.cfg"));
-        } catch (IOException e) {
-            throw new JBIException("Can not find the notification configuration file");
-        }
+	}
 
-        URL topics = Component.class.getClassLoader().getResource(TOPICSET_FILE);
-        if (topics == null) {
-            throw new JBIException(
-                    "Can not find the notification topicnamespace configuration file");
-        }
+	/**
+	 * Initialize based on local resources
+	 * 
+	 * @throws JBIException
+	 */
+	protected void initializeNotificationEngine() throws JBIException {
+		// get the configuration files...
+		Properties props = new Properties();
+		try {
+			props.load(Component.class.getClassLoader().getResourceAsStream(
+					"notification.cfg"));
+		} catch (IOException e) {
+			throw new JBIException(
+					"Can not find the notification configuration file");
+		}
 
-        URL tns = Component.class.getClassLoader().getResource(TOPICS_NS_FILE);
-        if (tns == null) {
-            throw new JBIException(
-                    "Can not find the notification topicnamespace configuration file");
-        }
+		URL topics = Component.class.getClassLoader()
+				.getResource(TOPICSET_FILE);
+		if (topics == null) {
+			throw new JBIException(
+					"Can not find the notification topicnamespace configuration file");
+		}
 
-        String endpointName = props.getProperty(ENDPOINT_NAME);
-        QName interfaceName = QName.valueOf(props.getProperty(INTERFACE_NAME));
-        QName serviceName = QName.valueOf(props.getProperty(SERVICE_NAME));
+		URL tns = Component.class.getClassLoader().getResource(TOPICS_NS_FILE);
+		if (tns == null) {
+			throw new JBIException(
+					"Can not find the notification topicnamespace configuration file");
+		}
 
-        if (engine == null) {
-            engine = new NotificationEngine(getLogger(), serviceName, interfaceName,
-                    endpointName, getClient());
-        }
-        this.engine.init(topics, tns);
-    }
+		String endpointName = props.getProperty(ENDPOINT_NAME);
+		QName interfaceName = QName.valueOf(props.getProperty(INTERFACE_NAME));
+		QName serviceName = QName.valueOf(props.getProperty(SERVICE_NAME));
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent
-     */
-    @Override
-    protected void doStart() throws JBIException {
-        activateWSNEndpoints();
+		if (engine == null) {
+			engine = new NotificationEngine(getLogger(), serviceName,
+					interfaceName, endpointName, getClient());
+		}
+		this.engine.init(topics, tns);
+	}
 
-        createSubscribers();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.ow2.petals.component.framework.AbstractComponent
+	 */
+	@Override
+	protected void doStart() throws JBIException {
+		activateWSNEndpoints();
 
-        getLogger().info("Starting Web services...");
+		createSubscribers();
 
-        this.getContext().getComponentName();
+		getLogger().info("Starting Web services...");
 
-        // TODO : Push in CDK
-        String port = this.getContainerConfiguration("http.port") == null ? "8079" : this
-                .getContainerConfiguration("http.port");
-        String host = this.getContainerConfiguration("http.host") == null ? "localhost" : this
-                .getContainerConfiguration("http.host");
+		this.getContext().getComponentName();
 
-        ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port + "/"
-                + this.getContext().getComponentName() + "/StatsService", StatsService.class,
-                new StatsServiceImpl(getLogger())));
-        ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port + "/"
-                + this.getContext().getComponentName() + "/ManagementService", ManagementService.class,
-                new ManagementServiceImpl(this.engine, getLogger())));
-        
-        startWebServices();
-    }
-    
+		// TODO : Push in CDK
+		String port = this.getContainerConfiguration("http.port") == null ? "8079"
+				: this.getContainerConfiguration("http.port");
+		String host = this.getContainerConfiguration("http.host") == null ? "localhost"
+				: this.getContainerConfiguration("http.host");
+
+		ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port
+				+ "/" + this.getContext().getComponentName() + "/StatsService",
+				StatsService.class, new StatsServiceImpl(getLogger())));
+		ws.add(CXFHelper.getServiceFromFinalURL("http://" + host + ":" + port
+				+ "/" + this.getContext().getComponentName()
+				+ "/ManagementService", ManagementService.class,
+				new ManagementServiceImpl(this.engine, getLogger())));
+
+		startWebServices();
+	}
+
 	protected void startWebServices() {
 		if (ws != null) {
+			int i = 0;
 			for (Service service : ws) {
 				try {
+					getLogger().info("Starting service at " + service.getURL());
 					service.start();
+					ComponentInformation info = getPlugin(ComponentInformation.class);
+					if (info != null) {
+						info.addProperty(this.getContext().getComponentName()
+								+ "-managementws-" + i++, service.getURL());
+					}
 				} catch (Exception e) {
 					getLogger().warning(e.getMessage());
 				}
 			}
 		}
-        getLogger().info("Web services started");
+		getLogger().info("Web services started");
 	}
 
-    /**
+	/**
      * 
      */
-    protected void createSubscribers() {
-        // create default subscribers, ie automatically subscribe to myself for
-        // others...
-        // look if we have some configuration about subscribers...
-        URL subscribers = Component.class.getClassLoader().getResource("subscribers.cfg");
+	protected void createSubscribers() {
+		// create default subscribers, ie automatically subscribe to myself for
+		// others...
+		// look if we have some configuration about subscribers...
+		URL subscribers = Component.class.getClassLoader().getResource(
+				"subscribers.cfg");
 
-        Properties subscriberProps = null;
-        if (subscribers != null) {
-            subscriberProps = new Properties();
-            try {
-                subscriberProps.load(Component.class.getClassLoader().getResourceAsStream(
-                        "subscribers.cfg"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+		Properties subscriberProps = null;
+		if (subscribers != null) {
+			subscriberProps = new Properties();
+			try {
+				subscriberProps.load(Component.class.getClassLoader()
+						.getResourceAsStream("subscribers.cfg"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-        if (subscriberProps != null) {
-            ConfigurationProducer producers = new PropertiesConfigurationProducer(subscriberProps);
-            List<Subscribe> toSubscribe = producers.getSubscribes();
-            for (Subscribe subscribe : toSubscribe) {
-                // let's subscribe...
-                try {
+		if (subscriberProps != null) {
+			ConfigurationProducer producers = new PropertiesConfigurationProducer(
+					subscriberProps);
+			List<Subscribe> toSubscribe = producers.getSubscribes();
+			for (Subscribe subscribe : toSubscribe) {
+				// let's subscribe...
+				try {
 
-                    if (getLogger().isLoggable(Level.INFO)) {
-                        getLogger().info("Subscribe request : ");
-                        if (subscribe != null) {
-                            Document doc = Wsnb4ServUtils.getWsnbWriter().writeSubscribeAsDOM(
-                                    subscribe);
-                            getLogger().info(XMLHelper.createStringFromDOMDocument(doc));
-                        }
-                    }
+					if (getLogger().isLoggable(Level.INFO)) {
+						getLogger().info("Subscribe request : ");
+						if (subscribe != null) {
+							Document doc = Wsnb4ServUtils.getWsnbWriter()
+									.writeSubscribeAsDOM(subscribe);
+							getLogger().info(
+									XMLHelper.createStringFromDOMDocument(doc));
+						}
+					}
 
-                    final com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse subscribeResponse = getNotificationEngine()
-                            .getNotificationManager().getNotificationProducerEngine()
-                            .subscribe(subscribe);
+					final com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse subscribeResponse = getNotificationEngine()
+							.getNotificationManager()
+							.getNotificationProducerEngine()
+							.subscribe(subscribe);
 
-                    if (getLogger().isLoggable(Level.INFO)) {
-                        getLogger().info("Subscribe response");
-                        if (subscribeResponse != null) {
-                            Document doc = Wsnb4ServUtils.getWsnbWriter()
-                                    .writeSubscribeResponseAsDOM(subscribeResponse);
-                            getLogger().info(XMLHelper.createStringFromDOMDocument(doc));
-                        } else {
-                            getLogger().info("No response...");
-                        }
-                    }
-                } catch (Exception e) {
-                    if (getLogger().isLoggable(Level.FINE)) {
-                        getLogger().log(Level.INFO, "Problem while subscribing", e);
-                    }
-                }
-            }
-        }
-    }
+					if (getLogger().isLoggable(Level.INFO)) {
+						getLogger().info("Subscribe response");
+						if (subscribeResponse != null) {
+							Document doc = Wsnb4ServUtils.getWsnbWriter()
+									.writeSubscribeResponseAsDOM(
+											subscribeResponse);
+							getLogger().info(
+									XMLHelper.createStringFromDOMDocument(doc));
+						} else {
+							getLogger().info("No response...");
+						}
+					}
+				} catch (Exception e) {
+					if (getLogger().isLoggable(Level.FINE)) {
+						getLogger().log(Level.INFO,
+								"Problem while subscribing", e);
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * @throws JBIException
-     * 
-     */
-    private void activateWSNEndpoints() throws JBIException {
-        List<Endpoint> endpointList = null;
-        QName serviceName = null;
-        String endpointName = null;
+	/**
+	 * @throws JBIException
+	 * 
+	 */
+	private void activateWSNEndpoints() throws JBIException {
+		List<Endpoint> endpointList = null;
+		QName serviceName = null;
+		String endpointName = null;
 
-        endpointList = WSDLUtilImpl.getEndpointList(this.engine.getProducerWSDL().getDescription());
-        if (endpointList != null) {
-            final Iterator<Endpoint> iterator = endpointList.iterator();
-            if (iterator != null) {
-                while (iterator.hasNext()) {
-                    final Endpoint endpoint = iterator.next();
-                    if (endpoint != null) {
-                        serviceName = endpoint.getService().getQName();
-                        endpointName = endpoint.getName();
-                        this.activateWSNEndpoint(serviceName, endpointName,
-                                this.engine.getProducerWSDL());
-                    }
-                }
-            }
-        }
+		endpointList = WSDLUtilImpl.getEndpointList(this.engine
+				.getProducerWSDL().getDescription());
+		if (endpointList != null) {
+			final Iterator<Endpoint> iterator = endpointList.iterator();
+			if (iterator != null) {
+				while (iterator.hasNext()) {
+					final Endpoint endpoint = iterator.next();
+					if (endpoint != null) {
+						serviceName = endpoint.getService().getQName();
+						endpointName = endpoint.getName();
+						this.activateWSNEndpoint(serviceName, endpointName,
+								this.engine.getProducerWSDL());
+					}
+				}
+			}
+		}
 
-        endpointList = WSDLUtilImpl.getEndpointList(this.engine.getConsumerWSDL().getDescription());
-        if (endpointList != null) {
-            final Iterator<Endpoint> iterator = endpointList.iterator();
-            if (iterator != null) {
-                while (iterator.hasNext()) {
-                    final Endpoint endpoint = iterator.next();
-                    if (endpoint != null) {
-                        serviceName = endpoint.getService().getQName();
-                        endpointName = endpoint.getName();
-                        this.activateWSNEndpoint(serviceName, endpointName,
-                                this.engine.getConsumerWSDL());
-                    }
-                }
-            }
-        }
+		endpointList = WSDLUtilImpl.getEndpointList(this.engine
+				.getConsumerWSDL().getDescription());
+		if (endpointList != null) {
+			final Iterator<Endpoint> iterator = endpointList.iterator();
+			if (iterator != null) {
+				while (iterator.hasNext()) {
+					final Endpoint endpoint = iterator.next();
+					if (endpoint != null) {
+						serviceName = endpoint.getService().getQName();
+						endpointName = endpoint.getName();
+						this.activateWSNEndpoint(serviceName, endpointName,
+								this.engine.getConsumerWSDL());
+					}
+				}
+			}
+		}
 
-    }
+	}
 
-    /**
-     * @param serviceName
-     * @param endpointName
-     */
-    private void activateWSNEndpoint(final QName serviceName, final String endpointName, Wsdl wsdl)
-            throws JBIException {
-        // add it before since activate endpoint will call getDescription
-        // locally
-        this.WSNEP.put(new ServiceEndpointKey(serviceName, endpointName), wsdl);
-        try {
-            this.context.activateEndpoint(serviceName, endpointName);
-        } catch (Exception e) {
-            this.WSNEP.remove(new ServiceEndpointKey(serviceName, endpointName));
-        }
-    }
+	/**
+	 * @param serviceName
+	 * @param endpointName
+	 */
+	private void activateWSNEndpoint(final QName serviceName,
+			final String endpointName, Wsdl wsdl) throws JBIException {
+		// add it before since activate endpoint will call getDescription
+		// locally
+		this.WSNEP.put(new ServiceEndpointKey(serviceName, endpointName), wsdl);
+		try {
+			this.context.activateEndpoint(serviceName, endpointName);
+		} catch (Exception e) {
+			this.WSNEP
+					.remove(new ServiceEndpointKey(serviceName, endpointName));
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent
-     */
-    @Override
-    protected void doStop() throws JBIException {
-        if (ws != null) {
-        	for (Service service : ws) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.ow2.petals.component.framework.AbstractComponent
+	 */
+	@Override
+	protected void doStop() throws JBIException {
+		if (ws != null) {
+			for (Service service : ws) {
 				try {
 					service.stop();
 				} catch (Exception e) {
 					getLogger().warning(e.getMessage());
 				}
 			}
-        }
-    }
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent
-     */
-    @Override
-    protected void doShutdown() throws JBIException {
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.ow2.petals.component.framework.AbstractComponent
+	 */
+	@Override
+	protected void doShutdown() throws JBIException {
+	}
 
-    // override some deprecated stuff...
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.ow2.petals.component.framework.AbstractComponent#getServiceDescription
-     * (javax.jbi.servicedesc.ServiceEndpoint)
-     */
-    @Override
-    public Document getServiceDescription(ServiceEndpoint endpoint) {
-        if (endpoint == null) {
-            return null;
-        }
+	// override some deprecated stuff...
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.ow2.petals.component.framework.AbstractComponent#getServiceDescription
+	 * (javax.jbi.servicedesc.ServiceEndpoint)
+	 */
+	@Override
+	public Document getServiceDescription(ServiceEndpoint endpoint) {
+		if (endpoint == null) {
+			return null;
+		}
 
-        if (isNotification(endpoint)) {
-            return getWSNDescription(endpoint);
-        }
-        return super.getServiceDescription(endpoint);
-    }
+		if (isNotification(endpoint)) {
+			return getWSNDescription(endpoint);
+		}
+		return super.getServiceDescription(endpoint);
+	}
 
-    /**
-     * @param endpoint
-     * @return
-     */
-    private Document getWSNDescription(ServiceEndpoint endpoint) {
-        Wsdl desc = WSNEP.get(new ServiceEndpointKey(endpoint.getServiceName(), endpoint
-                .getEndpointName()));
-        if (desc != null) {
-            return desc.getDocument();
-        }
-        return null;
-    }
+	/**
+	 * @param endpoint
+	 * @return
+	 */
+	private Document getWSNDescription(ServiceEndpoint endpoint) {
+		Wsdl desc = WSNEP.get(new ServiceEndpointKey(endpoint.getServiceName(),
+				endpoint.getEndpointName()));
+		if (desc != null) {
+			return desc.getDocument();
+		}
+		return null;
+	}
 
-    public NotificationEngine getNotificationEngine() {
-        return engine;
-    }
+	public NotificationEngine getNotificationEngine() {
+		return engine;
+	}
 
-    /**
-     * @param endpoint
-     * @return
-     */
-    private boolean isNotification(ServiceEndpoint endpoint) {
-        return WSNEP.get(new ServiceEndpointKey(endpoint.getServiceName(), endpoint
-                .getEndpointName())) != null;
-    }
+	/**
+	 * @param endpoint
+	 * @return
+	 */
+	private boolean isNotification(ServiceEndpoint endpoint) {
+		return WSNEP.get(new ServiceEndpointKey(endpoint.getServiceName(),
+				endpoint.getEndpointName())) != null;
+	}
 
-    protected synchronized Client getClient() {
-        // TODO : Set client by configuration
-        // Client client = getJBIClient();
+	protected synchronized Client getClient() {
+		// TODO : Set client by configuration
+		// Client client = getJBIClient();
 
-        if (httpClient == null) {
-            httpClient = new org.petalslink.dsb.service.client.saaj.Client();
-        }
-        return httpClient;
-    }
+		if (httpClient == null) {
+			httpClient = new org.petalslink.dsb.service.client.saaj.Client();
+		}
+		return httpClient;
+	}
 }
