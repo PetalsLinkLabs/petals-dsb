@@ -41,9 +41,13 @@ import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.commons.service.api.Service;
 import org.petalslink.dsb.cxf.CXFHelper;
 import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
+import org.petalslink.dsb.jbi.se.wsn.api.NotificationService;
 import org.petalslink.dsb.jbi.se.wsn.api.StatsService;
+import org.petalslink.dsb.jbi.se.wsn.api.SubscriptionService;
 import org.petalslink.dsb.jbi.se.wsn.services.ManagementServiceImpl;
+import org.petalslink.dsb.jbi.se.wsn.services.NotificationServiceImpl;
 import org.petalslink.dsb.jbi.se.wsn.services.StatsServiceImpl;
+import org.petalslink.dsb.jbi.se.wsn.services.SubscriptionServiceImpl;
 import org.petalslink.dsb.notification.commons.PropertiesConfigurationProducer;
 import org.petalslink.dsb.notification.commons.api.ConfigurationProducer;
 import org.petalslink.dsb.service.client.Client;
@@ -85,11 +89,15 @@ public class Component extends PetalsBindingComponent {
 
 	private Map<ServiceEndpointKey, Wsdl> WSNEP;
 
-	private List<Service> ws;
+	protected List<Service> ws;
 
 	protected StatsService stats;
 
-	private ManagementServiceImpl managementService;
+	protected ManagementService managementService;
+	
+	protected SubscriptionService subscriptionService;
+	
+	protected NotificationService notificationService;
 
 	/*
 	 * (non-Javadoc)
@@ -117,6 +125,12 @@ public class Component extends PetalsBindingComponent {
 				getLogger());
 		ws.add(getService(ManagementService.class, managementService,
 				"ManagementService"));
+		
+		this.subscriptionService = new SubscriptionServiceImpl(this.engine, getLogger());
+		ws.add(getService(SubscriptionService.class, this.subscriptionService, "SubscriptionService"));
+		
+		this.notificationService = new NotificationServiceImpl(this.engine, getLogger());
+		ws.add(getService(NotificationService.class, this.notificationService, "NotificationService"));
 	
 		doAddServices();
 	}

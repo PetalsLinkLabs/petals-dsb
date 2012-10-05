@@ -111,10 +111,6 @@ public class ManagementServiceImpl implements ManagementService {
 		return this.engine.getTopics();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.petalslink.dsb.jbi.se.wsn.api.ManagementService#setTopics(java.util.List)
-	 */
-	@Override
 	public void setTopics(List<Topic> topics) {
 		if (topics == null || topics.size() == 0) {
 			logger.warning("Can not update with null topics...");
