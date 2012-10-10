@@ -10,7 +10,7 @@
 	</parent>
 
 
-	<groupId>org.ow2.petals.dsb</groupId>
+	<groupId>org.ow2.petals.dsb.distribution</groupId>
 	<artifactId>dsb-distribution</artifactId>
 	<name>dsb-distribution</name>
 
