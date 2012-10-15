@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.namespace.QName;
+
 import org.petalslink.dsb.jbi.se.wsn.NotificationEngine;
 import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
 import org.petalslink.dsb.jbi.se.wsn.api.Topic;
@@ -103,6 +105,13 @@ public class ManagementServiceImpl implements ManagementService {
 		synchronized (lock) {
 			logger.info("Updating topics for delete");
 			this.engine.updateTopicSet(topics);
+			// let's remove all things related to the topic
+			// HACK since it is buggy on the WSN side...
+			this.engine
+					.getNotificationManager()
+					.getSubscriptionManagerEngine()
+					.deleteAllForTopic(
+							new QName(topic.ns, topic.name, topic.ns));
 		}
 		return true;
 	}
