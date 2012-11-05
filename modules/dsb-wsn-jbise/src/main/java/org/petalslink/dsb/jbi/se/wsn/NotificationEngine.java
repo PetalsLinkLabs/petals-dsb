@@ -18,7 +18,9 @@ import org.ow2.petals.component.framework.ComponentWsdl;
 import org.ow2.petals.component.framework.api.Wsdl;
 import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.api.util.EndpointHelper;
+import org.petalslink.dsb.jbi.se.wsn.api.MonitoringService;
 import org.petalslink.dsb.jbi.se.wsn.api.Topic;
+import org.petalslink.dsb.jbi.se.wsn.api.WSNException;
 import org.petalslink.dsb.notification.commons.AbstractNotificationSender;
 import org.petalslink.dsb.notification.commons.NotificationException;
 import org.petalslink.dsb.notification.commons.NotificationHelper;
@@ -83,14 +85,17 @@ public class NotificationEngine {
 
     private ServiceEngine serviceEngine;
 
+	private MonitoringService monitoring;
+
     public NotificationEngine(Logger logger, QName serviceName, QName interfaceName,
-            String endpointName, Client client) {
+            String endpointName, Client client, MonitoringService monitoringService) {
         super();
         this.logger = logger;
         this.serviceName = serviceName;
         this.interfaceName = interfaceName;
         this.endpointName = endpointName;
         this.client = client;
+        this.monitoring = monitoringService;
     }
 
     /**
@@ -219,11 +224,35 @@ public class NotificationEngine {
             protected String getProducerAddress() {
                 return "petals://" + endpointName;
             }
+            
+			@Override
+			protected void preNotify(Document payload, QName topic,
+					String dialect, String uuid) {
+				if (getMonitoringService() != null) {
+					try {
+						getMonitoringService().newInNotifyInput(uuid, payload, getTopic(topic),
+								System.currentTimeMillis());
+					} catch (WSNException e) {
+					}
+				}
+			}
+
+			@Override
+			protected void postNotify(Document payload, QName topic,
+					String dialect, String uuid) {
+				if (getMonitoringService() != null) {
+					try {
+						getMonitoringService().newInNotifyOutput(uuid, payload, getTopic(topic),
+								System.currentTimeMillis());
+					} catch (WSNException e) {
+					}
+				}
+			}
 
             @Override
             protected void doNotify(Notify notify, String producerAddress,
                     EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-                    String dialect) throws NotificationException {
+                    String dialect, String uuid) throws NotificationException {
 
                 if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
                         || currentConsumerEdp.getAddress().getValue() == null) {
@@ -236,6 +265,11 @@ public class NotificationEngine {
                     logger.info("Need to send the message to a subscriber which is : "
                             + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
                 }
+                
+                Topic t = new Topic();
+            	t.name = topic.getLocalPart();
+            	t.ns = topic.getNamespaceURI();
+            	t.prefix = topic.getPrefix();
 
                 // we restrict sending messages directly to the HTTP endpoint
 
@@ -263,10 +297,32 @@ public class NotificationEngine {
 
                     // TODO : Fire and forget with thread executor
                     client.sendReceive(message);
+                    
+                    if (getMonitoringService() != null) {
+						try {
+							getMonitoringService().newOutNotify(
+									uuid, payload,
+									currentConsumerEdp.getAddress().getValue()
+											.toString(), t,
+									System.currentTimeMillis());
+						} catch (WSNException e) {
+						}
+                    }
 
                     Stats.getInstance().newOutNotifyCall(topic);
 
                 } catch (ClientException e) {
+                	if (getMonitoringService() != null) {
+						try {
+							getMonitoringService().newOutNotifyError(
+									uuid, null,
+									currentConsumerEdp.getAddress().getValue()
+											.toString(), t,
+									System.currentTimeMillis(), e);
+						} catch (WSNException e1) {
+						}
+                    }
+                	
                     if (logger.isLoggable(Level.FINE)) {
                         logger.log(Level.FINE,
                                 "Client got error while sending notification to "
@@ -279,6 +335,16 @@ public class NotificationEngine {
                                         + topic);
                     }
                 } catch (WsnbException e) {
+                	if (getMonitoringService() != null) {
+						try {
+							getMonitoringService().newOutNotifyError(
+									uuid, null,
+									currentConsumerEdp.getAddress().getValue()
+											.toString(), t,
+									System.currentTimeMillis(), e);
+						} catch (WSNException e1) {
+						}
+                    }
                     if (logger.isLoggable(Level.FINE)) {
                         logger.log(Level.FINE,
                                 "WSN error while sending notification to "
@@ -309,7 +375,7 @@ public class NotificationEngine {
             @Override
             protected void doNotify(Notify notify, String producerAddress,
                     EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-                    String dialect) throws NotificationException {
+                    String dialect, String uuid) throws NotificationException {
 
                 if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
                         || currentConsumerEdp.getAddress().getValue() == null) {
@@ -508,5 +574,20 @@ public class NotificationEngine {
 		}		
 
 		return topics;
+	}
+	
+	protected MonitoringService getMonitoringService() {
+		return this.monitoring;
+	}
+	
+	public Topic getTopic(QName topic) {
+		if (topic == null) {
+			return new Topic();			
+		}
+		Topic t = new Topic();
+     	t.name = topic.getLocalPart();
+     	t.ns = topic.getNamespaceURI();
+     	t.prefix = topic.getPrefix();
+     	return t;
 	}
 }

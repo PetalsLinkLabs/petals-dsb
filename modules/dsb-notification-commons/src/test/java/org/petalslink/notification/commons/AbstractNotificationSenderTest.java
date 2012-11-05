@@ -132,7 +132,7 @@ public class AbstractNotificationSenderTest extends TestCase {
             @Override
             protected void doNotify(Notify notify, String producerAddress,
                     EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-                    String dialect) throws NotificationException {
+                    String dialect, String uuid) throws NotificationException {
                 System.out.println("Got a notify...");
                 System.out.println("Topic : " + topic);
                 System.out.println("Dialect : " + dialect);

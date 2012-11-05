@@ -5,18 +5,17 @@ package org.petalslink.dsb.notification.commons;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerException;
 
 import org.petalslink.dsb.notification.commons.api.NotificationSender;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.ebmwebsourcing.easycommons.xml.XMLHelper;
 import com.ebmwebsourcing.wsaddressing10.api.type.EndpointReferenceType;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.NotificationMessageHolderType;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify;
@@ -95,6 +94,10 @@ public abstract class AbstractNotificationSender implements NotificationSender {
 
     public void notify(Document payload, final QName topic, final String dialect)
             throws NotificationException {
+    	// generate a UUID so we can track in and out if needed
+    	String uuid = generateUUID();
+    	preNotify(payload, topic, dialect, uuid);
+    	
         String endpointNameAddress = null;
         try {
             final List<String> uuids = producer.getSubsMgr().getStoredSubscriptionUuids();
@@ -153,7 +156,7 @@ public abstract class AbstractNotificationSender implements NotificationSender {
                                     }
                                     try {
                                         doNotify(notify, producerAddress, currentConsumerEdp,
-                                                subscriptionId, topic, dialect);
+                                                subscriptionId, topic, dialect, uuid);
                                     } catch (NotificationException e) {
                                         e.printStackTrace();
                                     }
@@ -177,6 +180,7 @@ public abstract class AbstractNotificationSender implements NotificationSender {
             log.severe("Impossible to send notification to " + endpointNameAddress + " : "
                     + e.getMessage());
         }
+    	postNotify(payload, topic, dialect, uuid);
     }
 
     /**
@@ -186,7 +190,7 @@ public abstract class AbstractNotificationSender implements NotificationSender {
      */
     protected abstract void doNotify(Notify notify, String producerAddress,
             EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-            String dialect) throws NotificationException;
+            String dialect, String uuid) throws NotificationException;
 
     /**
      * This will be used in the notification message to say who am I.
@@ -194,5 +198,32 @@ public abstract class AbstractNotificationSender implements NotificationSender {
      * @return
      */
     protected abstract String getProducerAddress();
+    
+    /**
+     * To be overrided...
+     * 
+     * @param payload
+     * @param topic
+     * @param dialect
+     * @param uuid
+     */
+    protected void preNotify(Document payload, QName topic, String dialect, String uuid) {
+    	
+    }
+    
+    /**
+     * 
+     * @param payload
+     * @param topic
+     * @param dialect
+     * @param uuid
+     */
+    protected void postNotify(Document payload, QName topic, String dialect, String uuid) {
+    	
+    }
+    
+    protected String generateUUID() {
+    	return UUID.randomUUID().toString();
+    }
 
 }

@@ -41,6 +41,7 @@ import org.ow2.petals.component.framework.util.WSDLUtilImpl;
 import org.petalslink.dsb.commons.service.api.Service;
 import org.petalslink.dsb.cxf.CXFHelper;
 import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
+import org.petalslink.dsb.jbi.se.wsn.api.MonitoringService;
 import org.petalslink.dsb.jbi.se.wsn.api.NotificationService;
 import org.petalslink.dsb.jbi.se.wsn.api.StatsService;
 import org.petalslink.dsb.jbi.se.wsn.api.SubscriptionService;
@@ -98,6 +99,8 @@ public class Component extends PetalsBindingComponent {
 	protected SubscriptionService subscriptionService;
 	
 	protected NotificationService notificationService;
+	
+	protected MonitoringService monitoringService;
 
 	/*
 	 * (non-Javadoc)
@@ -190,7 +193,7 @@ public class Component extends PetalsBindingComponent {
 
 		if (engine == null) {
 			engine = new NotificationEngine(getLogger(), serviceName,
-					interfaceName, endpointName, getClient());
+					interfaceName, endpointName, getClient(), getMonitoringService());
 		}
 		this.engine.init(topics, tns);
 	}
@@ -436,5 +439,14 @@ public class Component extends PetalsBindingComponent {
 			httpClient = new org.petalslink.dsb.service.client.saaj.Client();
 		}
 		return httpClient;
+	}
+	
+	/**
+	 * To be overrided
+	 * 
+	 * @return
+	 */
+	protected synchronized MonitoringService getMonitoringService() {
+		return null;
 	}
 }

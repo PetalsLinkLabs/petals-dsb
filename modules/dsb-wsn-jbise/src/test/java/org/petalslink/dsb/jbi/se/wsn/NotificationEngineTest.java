@@ -63,7 +63,7 @@ public class NotificationEngineTest extends TestCase {
 		final NotificationEngine engine = new NotificationEngine(logger,
 				QName.valueOf("{http://petals.ow2.org}/Service"),
 				QName.valueOf("{http://petals.ow2.org}/Interface"), "Endpoint",
-				new org.petalslink.dsb.service.client.saaj.Client());
+				new org.petalslink.dsb.service.client.saaj.Client(), null);
 
 		URL topicSet = WSNTest.class.getResource("/topicset.xml");
 		URL tns = WSNTest.class.getResource("/tns.xml");
@@ -107,7 +107,7 @@ public class NotificationEngineTest extends TestCase {
 		final NotificationEngine engine = new NotificationEngine(logger,
 				QName.valueOf("{http://petals.ow2.org}/Service"),
 				QName.valueOf("{http://petals.ow2.org}/Interface"), "Endpoint",
-				new org.petalslink.dsb.service.client.saaj.Client());
+				new org.petalslink.dsb.service.client.saaj.Client(), null);
 
 		URL topicSet = WSNTest.class.getResource("/topicset.xml");
 		URL tns = WSNTest.class.getResource("/tns.xml");

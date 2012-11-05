@@ -57,7 +57,7 @@ public class DSBNotificationSender extends AbstractNotificationSender {
     @Override
     protected final void doNotify(Notify notify, String producerAddress,
             EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-            String dialect) throws NotificationException {
+            String dialect, String uuid) throws NotificationException {
 
         if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
                 || currentConsumerEdp.getAddress().getValue() == null) {
