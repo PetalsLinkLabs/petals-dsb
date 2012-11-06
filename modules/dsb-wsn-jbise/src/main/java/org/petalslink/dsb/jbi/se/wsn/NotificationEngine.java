@@ -31,6 +31,7 @@ import org.petalslink.dsb.service.client.Client;
 import org.petalslink.dsb.service.client.ClientException;
 import org.petalslink.dsb.service.client.Message;
 import org.petalslink.dsb.service.client.MessageImpl;
+import org.petalslink.dsb.service.client.MessageListener;
 import org.petalslink.dsb.service.client.WSAMessageImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -250,9 +251,9 @@ public class NotificationEngine {
 			}
 
             @Override
-            protected void doNotify(Notify notify, String producerAddress,
-                    EndpointReferenceType currentConsumerEdp, String subscriptionId, QName topic,
-                    String dialect, String uuid) throws NotificationException {
+            protected void doNotify(final Notify notify, String producerAddress,
+                    final EndpointReferenceType currentConsumerEdp, String subscriptionId, final QName topic,
+                    String dialect, final String uuid) throws NotificationException {
 
                 if (currentConsumerEdp == null || currentConsumerEdp.getAddress() == null
                         || currentConsumerEdp.getAddress().getValue() == null) {
@@ -266,7 +267,7 @@ public class NotificationEngine {
                             + currentConsumerEdp.getAddress().getValue() + " on topic " + topic);
                 }
                 
-                Topic t = new Topic();
+                final Topic t = new Topic();
             	t.name = topic.getLocalPart();
             	t.ns = topic.getNamespaceURI();
             	t.prefix = topic.getPrefix();
@@ -295,22 +296,40 @@ public class NotificationEngine {
                     message.setPayload(payload);
                     message.setOperation(WsnbConstants.NOTIFY_QNAME);
 
-                    // TODO : Fire and forget with thread executor
-                    client.sendReceive(message);
-                    
-                    if (getMonitoringService() != null) {
-						try {
-							getMonitoringService().newOutNotify(
-									uuid, payload,
-									currentConsumerEdp.getAddress().getValue()
-											.toString(), t,
-									System.currentTimeMillis());
-						} catch (WSNException e) {
+                    // should do it async to get stats
+                    client.sendAsync(message, new MessageListener() {
+						
+						public Message onMessage(Message message) {
+							System.out.println("Got a response for UUID " + uuid);
+		                    Stats.getInstance().newOutNotifyCall(topic);
+
+							 if (getMonitoringService() != null) {
+									try {
+										getMonitoringService().newOutNotify(
+												uuid, payload,
+												currentConsumerEdp.getAddress().getValue()
+														.toString(), t,
+												System.currentTimeMillis());
+									} catch (WSNException e) {
+									}
+			                    }
+							return null;
 						}
-                    }
-
-                    Stats.getInstance().newOutNotifyCall(topic);
-
+						
+						public void onError(Throwable th) {
+							if (getMonitoringService() != null) {
+								try {
+									getMonitoringService().newOutNotifyError(
+											uuid, null,
+											currentConsumerEdp.getAddress().getValue()
+													.toString(), t,
+											System.currentTimeMillis(), new Exception(th.getMessage()));
+								} catch (WSNException e1) {
+								}
+		                    }	
+						}
+					});
+                    
                 } catch (ClientException e) {
                 	if (getMonitoringService() != null) {
 						try {

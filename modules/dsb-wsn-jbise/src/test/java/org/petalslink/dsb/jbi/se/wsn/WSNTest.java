@@ -21,6 +21,7 @@ package org.petalslink.dsb.jbi.se.wsn;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,8 +33,8 @@ import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
+import org.ow2.petals.dsb.service.client.asynchttp.Client;
 import org.petalslink.dsb.commons.service.api.Service;
-import org.petalslink.dsb.notification.commons.NotificationException;
 import org.petalslink.dsb.notification.commons.SOAUtil;
 import org.petalslink.dsb.notification.service.NotificationConsumerService;
 import org.petalslink.dsb.soap.CXFExposer;
@@ -41,7 +42,6 @@ import org.petalslink.dsb.soap.api.Exposer;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.ebmwebsourcing.easycommons.xml.SourceHelper;
 import com.ebmwebsourcing.easycommons.xml.XMLHelper;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Notify;
 import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.utils.WsnbException;
@@ -54,149 +54,231 @@ import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
  */
 public class WSNTest extends TestCase {
 
-    Logger logger = Logger.getLogger(WSNTest.class.getName());
+	Logger logger = Logger.getLogger(WSNTest.class.getName());
 
-    static String address = "http://localhost:8878/petals/services/NotificationConsumerPortService";
+	static String address = "http://localhost:8878/petals/services/NotificationConsumerPortService";
 
-    final static AtomicLong calls = new AtomicLong(0);
+	static AtomicLong calls = new AtomicLong(0);
 
-    public void testAddTopicAtRuntime() throws Exception {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		calls = new AtomicLong(0);
+	}
 
-        final NotificationEngine engine = new NotificationEngine(logger,
-                QName.valueOf("{http://petals.ow2.org}/Service"),
-                QName.valueOf("{http://petals.ow2.org}/Interface"), "Endpoint",
-                new org.petalslink.dsb.service.client.saaj.Client(), null);
+	public void testAddTopicAtRuntime() throws Exception {
 
-        URL topicSet = WSNTest.class.getResource("/topicset.xml");
-        URL tns = WSNTest.class.getResource("/tns.xml");
-        engine.init(topicSet, tns);
+		final NotificationEngine engine = new NotificationEngine(logger,
+				QName.valueOf("{http://petals.ow2.org}/Service"),
+				QName.valueOf("{http://petals.ow2.org}/Interface"), "Endpoint",
+				new Client(), null);
 
-        System.out.println("starting");
-        // start a service which will be in charge of receiving notifications
-        startServer();
+		URL topicSet = WSNTest.class.getResource("/topicset.xml");
+		URL tns = WSNTest.class.getResource("/tns.xml");
+		engine.init(topicSet, tns);
 
-        System.out.println("started");
+		System.out.println("starting");
+		// start a service which will be in charge of receiving notifications
+		startServer(-1L, null);
 
-        // create a subscription
-        final QName topic = new QName("http://www.petalslink.org/integration/test/1.0",
-                "BusinessIntegrationTopic", "itg");
-        final QName oldtopic = new QName("http://www.petalslink.org/integration/test/1.0",
-                "RemoveMe", "itg");
-        
-        engine.getTopics();
-        
-        String subscriber = address;
-        String id1 = engine.subscribe(topic, subscriber);
-        System.out.println("BusinessIntegrationTopic subscription ID = " + id1);
+		System.out.println("started");
 
-        String id2 = engine.subscribe(oldtopic, subscriber);
-        System.out.println("RemoveMe subscription ID = " + id2);
+		// create a subscription
+		final QName topic = new QName(
+				"http://www.petalslink.org/integration/test/1.0",
+				"BusinessIntegrationTopic", "itg");
+		final QName oldtopic = new QName(
+				"http://www.petalslink.org/integration/test/1.0", "RemoveMe",
+				"itg");
 
-        // send notifications and check that we receive them
-        engine.notify(topic, XMLHelper.createDocumentFromString("<foo>bar</foo>"));
-        
-        Thread.sleep(2000L);
-        
-        assertEquals(1, calls.get());
+		engine.getTopics();
 
-        
-        ScheduledExecutorService executors = Executors.newScheduledThreadPool(1);
-        executors.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                System.out.println("Sending notification to a good topic");
-                try {
-                    engine.notify(topic, XMLHelper.createDocumentFromString("<foo>bar</foo>"));
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 0L, 100L, TimeUnit.MILLISECONDS);
-        
-        
-      
-        ScheduledExecutorService executorsOld = Executors.newScheduledThreadPool(1);
-        executorsOld.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                System.out.println("### Sending notification to a topic which will be deleted");
-                try {
-                    engine.notify(oldtopic, XMLHelper.createDocumentFromString("<foo>bar</foo>"));
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 0L, 50L, TimeUnit.MILLISECONDS);
-        
-        Thread.sleep(1000L);
+		String subscriber = address;
+		String id1 = engine.subscribe(topic, subscriber);
+		System.out.println("BusinessIntegrationTopic subscription ID = " + id1);
 
-        System.out.println("########################### Update Topics ###########################");
-        // adding topics
-        engine.updateTopicSet(SOAUtil.getInstance().getDocumentBuilderFactory()
-                .newDocumentBuilder().parse(WSNTest.class.getResourceAsStream("/topicset1.xml")));
-        System.out.println("########################### Topics Updated ###########################");
+		String id2 = engine.subscribe(oldtopic, subscriber);
+		System.out.println("RemoveMe subscription ID = " + id2);
 
+		// send notifications and check that we receive them
+		engine.notify(topic,
+				XMLHelper.createDocumentFromString("<foo>bar</foo>"));
 
-        Thread.sleep(10000L);
-        //assertEquals(2, calls.get());
-        
-        System.out.println(calls);
-        
-        assertNotNull(id1);
-        assertNotNull(id2);
+		Thread.sleep(2000L);
 
-        // send notifications
+		assertEquals(1, calls.get());
 
-        // same in multihreaded mode...
+		ScheduledExecutorService executors = Executors
+				.newScheduledThreadPool(1);
+		executors.scheduleAtFixedRate(new Runnable() {
+			public void run() {
+				System.out.println("Sending notification to a good topic");
+				try {
+					engine.notify(topic, XMLHelper
+							.createDocumentFromString("<foo>bar</foo>"));
+				} catch (SAXException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 0L, 100L, TimeUnit.MILLISECONDS);
 
-    }
+		ScheduledExecutorService executorsOld = Executors
+				.newScheduledThreadPool(1);
+		executorsOld.scheduleAtFixedRate(new Runnable() {
+			public void run() {
+				System.out
+						.println("### Sending notification to a topic which will be deleted");
+				try {
+					engine.notify(oldtopic, XMLHelper
+							.createDocumentFromString("<foo>bar</foo>"));
+				} catch (SAXException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 0L, 50L, TimeUnit.MILLISECONDS);
 
-    private static void startServer() {
-        System.out.println("****** CREATING LOCAL SERVER ******");
+		Thread.sleep(1000L);
 
-        // local address which will receive notifications
-        System.out
-                .println("Creating service which will receive notification messages from the DSB...");
+		System.out
+				.println("########################### Update Topics ###########################");
+		// adding topics
+		engine.updateTopicSet(SOAUtil.getInstance().getDocumentBuilderFactory()
+				.newDocumentBuilder()
+				.parse(WSNTest.class.getResourceAsStream("/topicset1.xml")));
+		System.out
+				.println("########################### Topics Updated ###########################");
 
-        Service server = null;
-        QName interfaceName = new QName("http://docs.oasis-open.org/wsn/bw-2",
-                "NotificationConsumer");
-        QName serviceName = new QName("http://docs.oasis-open.org/wsn/bw-2",
-                "NotificationConsumerService");
-        QName endpointName = new QName("http://docs.oasis-open.org/wsn/bw-2",
-                "NotificationConsumerPort");
-        // expose the service
-        INotificationConsumer consumer = new INotificationConsumer() {
-            public void notify(Notify notify) throws WsnbException {
-                System.out
-                        .println(String
-                                .format("Got a notify on HTTP service #%s, this notification comes from the DSB itself...",
-                                        calls.incrementAndGet()));
+		Thread.sleep(10000L);
+		// assertEquals(2, calls.get());
 
-                Document dom = Wsnb4ServUtils.getWsnbWriter().writeNotifyAsDOM(notify);
-                System.out.println("==============================");
-                try {
-                    XMLHelper.writeDocument(dom, System.out);
-                } catch (TransformerException e) {
-                }
-                System.out.println("==============================");
-            }
-        };
-        NotificationConsumerService service = new NotificationConsumerService(interfaceName,
-                serviceName, endpointName, "NotificationConsumerService.wsdl", address, consumer);
+		System.out.println(calls);
 
-        Exposer exposer = new CXFExposer();
-        try {
-            server = exposer.expose(service);
-            server.start();
-            System.out.println("Local server is started and is ready to receive notifications");
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
+		assertNotNull(id1);
+		assertNotNull(id2);
 
-    }
+		// send notifications
+
+		// same in multihreaded mode...
+
+	}
+
+	/**
+	 * Check that we return before sleep is over
+	 * 
+	 * @throws Exception
+	 */
+	public void testAsyncCalls() throws Exception {
+		final NotificationEngine engine = new NotificationEngine(logger,
+				QName.valueOf("{http://petals.ow2.org}/Service"),
+				QName.valueOf("{http://petals.ow2.org}/Interface"), "Endpoint",
+				new Client(), null);
+
+		URL topicSet = WSNTest.class.getResource("/topicset.xml");
+		URL tns = WSNTest.class.getResource("/tns.xml");
+		engine.init(topicSet, tns);
+
+		System.out.println("starting");
+		// start a service which will be in charge of receiving notifications
+		final CountDownLatch latch = new CountDownLatch(6);
+		startServer(1000, latch);
+
+		System.out.println("started");
+
+		// create a subscription
+		final QName topic = new QName(
+				"http://www.petalslink.org/integration/test/1.0",
+				"BusinessIntegrationTopic", "itg");
+
+		String subscriber = address;
+		String id1 = engine.subscribe(topic, subscriber);
+		System.out.println("BusinessIntegrationTopic subscription ID = " + id1);
+		String id2 = engine.subscribe(topic, subscriber);
+		System.out.println("BusinessIntegrationTopic subscription ID = " + id2);
+
+		// send notifications and check that we receive them
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 3; i++) {
+			engine.notify(topic,
+					XMLHelper.createDocumentFromString("<foo>" + i + "</foo>"));
+		}
+		long diff = System.currentTimeMillis() - start;
+
+		System.out.println("Messages sent, waiting...");
+		latch.await(10, TimeUnit.SECONDS);
+		long allDelivered = System.currentTimeMillis() - start;
+		
+		System.out.println("DELIVERED IN " + diff);
+		System.out.println("ALL NOTIFIED IN " + allDelivered);
+		
+	}
+
+	private static void startServer(final long wait, final CountDownLatch latch) {
+		System.out.println("****** CREATING LOCAL SERVER ******");
+
+		// local address which will receive notifications
+		System.out
+				.println("Creating service which will receive notification messages from the DSB...");
+
+		Service server = null;
+		QName interfaceName = new QName("http://docs.oasis-open.org/wsn/bw-2",
+				"NotificationConsumer");
+		QName serviceName = new QName("http://docs.oasis-open.org/wsn/bw-2",
+				"NotificationConsumerService");
+		QName endpointName = new QName("http://docs.oasis-open.org/wsn/bw-2",
+				"NotificationConsumerPort");
+		// expose the service
+		INotificationConsumer consumer = new INotificationConsumer() {
+			public void notify(Notify notify) throws WsnbException {
+				System.out
+						.println(String
+								.format("Got a notify on HTTP service #%s, this notification comes from the DSB itself...",
+										calls.incrementAndGet()));
+
+				Document dom = Wsnb4ServUtils.getWsnbWriter().writeNotifyAsDOM(
+						notify);
+				System.out.println("==============================");
+				try {
+					XMLHelper.writeDocument(dom, System.out);
+				} catch (TransformerException e) {
+				}
+				System.out.println("==============================");
+
+				if (wait > 0) {
+					try {
+						Thread.sleep(wait);
+						System.out.println("End sleep...");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				if (latch != null) {
+					latch.countDown();
+				}
+			}
+		};
+		NotificationConsumerService service = new NotificationConsumerService(
+				interfaceName, serviceName, endpointName,
+				"NotificationConsumerService.wsdl", address, consumer);
+
+		Exposer exposer = new CXFExposer();
+		try {
+			server = exposer.expose(service);
+			server.start();
+			System.out
+					.println("Local server is started and is ready to receive notifications");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+	}
 
 }

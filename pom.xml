@@ -65,6 +65,7 @@
 		
    		<!--<module>modules/dsb-monitoring</module>-->
    		<module>modules/dsb-service-client</module>
+   		<module>modules/dsb-service-asynchttpclient</module>
 
 		<!-- Service Polling -->
    		<module>modules/dsb-servicepoller</module>

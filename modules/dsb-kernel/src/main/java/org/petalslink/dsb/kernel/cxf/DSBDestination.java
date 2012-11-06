@@ -219,6 +219,9 @@ public class DSBDestination extends AbstractDestination implements MessageListen
         }
         return result;
     }
+    
+    public void onError(Throwable t) {
+    }
 
     /**
      * Let's be able to notify server that a response is available from the CXF
@@ -243,6 +246,9 @@ public class DSBDestination extends AbstractDestination implements MessageListen
 
             // don't care about the response since there is no response...
             return null;
+        }
+        
+        public void onError(Throwable t) {
         }
     }
 }

@@ -37,6 +37,10 @@ public class IOImpl implements IO {
     public Message onMessage(Message message) {
         return this.listener.onMessage(message);
     }
+    
+    public void onError(Throwable t) {
+    	this.listener.onError(t);
+    }
 
     public void sendAsync(Message message, MessageListener listener) throws ClientException {
         this.client.sendAsync(message, listener);

@@ -49,9 +49,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.ow2.petals.dsb</groupId>
-			<artifactId>dsb-service-saajclient</artifactId>
-			<version>${project.version}</version>
+		  	<groupId>org.ow2.petals.dsb</groupId>
+  			<artifactId>dsb-service-asynchttpclient</artifactId>
+  			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.ow2.petals.dsb</groupId>

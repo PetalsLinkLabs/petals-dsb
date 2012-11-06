@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.ow2.petals.dsb.service.client.asynchttp.Client;
 import org.petalslink.dsb.jbi.se.wsn.NotificationEngine;
 import org.petalslink.dsb.jbi.se.wsn.WSNTest;
 import org.petalslink.dsb.jbi.se.wsn.api.Topic;
@@ -58,7 +59,7 @@ public class ManagementServiceImplTest extends TestCase {
 		final NotificationEngine engine = new NotificationEngine(logger,
 				QName.valueOf("{http://petals.ow2.org}/Service"),
 				QName.valueOf("{http://petals.ow2.org}/Interface"), "Endpoint",
-				new org.petalslink.dsb.service.client.saaj.Client(), null);
+				new Client(), null);
 
 		URL topicSet = WSNTest.class.getResource("/topicset.xml");
 		URL tns = WSNTest.class.getResource("/tns.xml");

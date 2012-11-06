@@ -436,7 +436,7 @@ public class Component extends PetalsBindingComponent {
 		// Client client = getJBIClient();
 
 		if (httpClient == null) {
-			httpClient = new org.petalslink.dsb.service.client.saaj.Client();
+			httpClient = new org.ow2.petals.dsb.service.client.asynchttp.Client();
 		}
 		return httpClient;
 	}

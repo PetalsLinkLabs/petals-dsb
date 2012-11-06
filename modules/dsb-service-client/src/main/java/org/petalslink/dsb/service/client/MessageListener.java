@@ -19,5 +19,11 @@ public interface MessageListener {
      * @return a message if any available or null on inonly invocation
      */
     Message onMessage(Message message);
+    
+    /**
+     * 
+     * @param t
+     */
+    void onError(Throwable t);
 
 }
