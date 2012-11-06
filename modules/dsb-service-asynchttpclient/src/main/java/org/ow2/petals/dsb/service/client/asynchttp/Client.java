@@ -56,8 +56,6 @@ public class Client implements org.petalslink.dsb.service.client.Client {
 						@Override
 						public Response onCompleted(Response response)
 								throws Exception {
-							System.out.println("Message has been sent to "
-									+ message.getEndpoint());
 							return response;
 						}
 
@@ -99,7 +97,6 @@ public class Client implements org.petalslink.dsb.service.client.Client {
 									.createSOAPMessageFromBodyContent(message
 											.getPayload()))).execute();
 			String out = future.get().getResponseBody();
-			System.out.println(out);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,8 +135,6 @@ public class Client implements org.petalslink.dsb.service.client.Client {
 						@Override
 						public Response onCompleted(Response response)
 								throws Exception {
-							System.out.println("Message has been sent to "
-									+ message.getEndpoint());
 							if (listener != null) {
 								// TODO
 								listener.onMessage(null);
