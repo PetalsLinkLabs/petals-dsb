@@ -29,38 +29,26 @@ import javax.jws.WebService;
  *
  */
 @WebService
-public interface ManagementService {
-
-    /**
-     * Add a topic to the supported topic list
-     * 
-     * @param topic
-     */
-    @WebMethod
-    void add(Topic topic);
-    
-    /**
-     * 
-     * @param topic
-     * @return
-     */
-    @WebMethod
-    boolean delete(Topic topic);
-    
-    /**
-     * Get the current topic list
-     * 
-     * @return
-     */
-    @WebMethod
-    List<Topic> getTopics();
-    
-    /**
-     * Set the topics. Will remove all the other ones which are already active.
-     * 
-     * @param topics
-     */
-    @WebMethod
-    void setTopics(List<Topic> topics);
-    
+public interface SubscriptionManagementService {
+	
+	/**
+	 * Get all the subscriptions for the given topic
+	 * 
+	 * @param topic
+	 * @return
+	 * @throws WSNException
+	 */
+	@WebMethod
+	List<Subscription> getSubscriptionsForTopic(Topic topic) throws WSNException;
+	
+	/**
+	 * Get all the subscriptions
+	 * 
+	 * @return
+	 * @throws WSNException
+	 */
+	@WebMethod
+	List<Subscription> getSubscriptions() throws WSNException;
+	
 }
+

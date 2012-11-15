@@ -16,6 +16,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<petals.wsstar.version>1.1-SNAPSHOT</petals.wsstar.version>
 	</properties>
 
 	<dependencies>
@@ -29,7 +30,7 @@
 		<dependency>
 			<artifactId>wsn-b-services-impl</artifactId>
 			<groupId>org.ow2.petals.wsstar.oasis-ws-basenotification</groupId>
-			<version>1.0.2</version>
+			<version>${petals.wsstar.version}</version>
 			<!-- Do not want to use bindled CXF version which is not useful here... -->
 			<exclusions>
 				<exclusion>

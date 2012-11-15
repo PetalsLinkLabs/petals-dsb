@@ -19,48 +19,24 @@
  */
 package org.petalslink.dsb.jbi.se.wsn.api;
 
-import java.util.List;
-
-import javax.jws.WebMethod;
-import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author chamerling
  *
  */
-@WebService
-public interface ManagementService {
+@XmlRootElement
+public class Subscription {
 
-    /**
-     * Add a topic to the supported topic list
-     * 
-     * @param topic
-     */
-    @WebMethod
-    void add(Topic topic);
-    
-    /**
-     * 
-     * @param topic
-     * @return
-     */
-    @WebMethod
-    boolean delete(Topic topic);
-    
-    /**
-     * Get the current topic list
-     * 
-     * @return
-     */
-    @WebMethod
-    List<Topic> getTopics();
-    
-    /**
-     * Set the topics. Will remove all the other ones which are already active.
-     * 
-     * @param topics
-     */
-    @WebMethod
-    void setTopics(List<Topic> topics);
-    
+	public String uuid;
+	
+	public String subscriber;
+	
+	public Topic topic;
+
+	/**
+	 * 
+	 */
+	public Subscription() {
+	}
 }

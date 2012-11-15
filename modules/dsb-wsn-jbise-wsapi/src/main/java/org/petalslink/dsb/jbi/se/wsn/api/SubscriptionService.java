@@ -19,6 +19,8 @@
  */
 package org.petalslink.dsb.jbi.se.wsn.api;
 
+import java.util.List;
+
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -51,4 +53,5 @@ public interface SubscriptionService {
 	 */
 	@WebMethod
 	boolean unsubscribe(String uuid) throws WSNException;
+	
 }

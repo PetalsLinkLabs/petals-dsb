@@ -19,6 +19,7 @@
  */
 package org.petalslink.dsb.jbi.se.wsn.api;
 
+import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.w3c.dom.Document;
@@ -88,5 +89,47 @@ public interface MonitoringService {
 	 */
 	void newOutNotifyError(String uuid, Document payload, String to, Topic topic, long timestamp,
 			Exception error) throws WSNException;
+	
+	/**
+	 * Got a new subscribe request
+	 * 
+	 * @param uuid
+	 * @param subscriber
+	 * @param topic
+	 * @throws WSNException
+	 */
+	@WebMethod
+	void newSubscribeRequest(String uuid, String subscriber, Topic topic) throws WSNException;
+
+	/**
+	 * 
+	 * @param uuid
+	 * @param subscriber
+	 * @param topic
+	 * @throws WSNException
+	 */
+	@WebMethod
+	void newSubscribeResponse(String uuid, String subscriptionID) throws WSNException;
+
+	/**
+	 * 
+	 * @param uuid
+	 * @param subscriber
+	 * @param topic
+	 * @throws WSNException
+	 */
+	@WebMethod
+	void newUnsubscribeRequest(String uuid, String subscriptionID) throws WSNException;
+
+	/**
+	 * 
+	 * @param uuid
+	 * @param topic
+	 * @throws WSNException
+	 */
+	@WebMethod
+	void newUnsubscribeResponse(String uuid) throws WSNException;
+
+
 
 }

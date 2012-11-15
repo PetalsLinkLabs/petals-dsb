@@ -44,10 +44,12 @@ import org.petalslink.dsb.jbi.se.wsn.api.ManagementService;
 import org.petalslink.dsb.jbi.se.wsn.api.MonitoringService;
 import org.petalslink.dsb.jbi.se.wsn.api.NotificationService;
 import org.petalslink.dsb.jbi.se.wsn.api.StatsService;
+import org.petalslink.dsb.jbi.se.wsn.api.SubscriptionManagementService;
 import org.petalslink.dsb.jbi.se.wsn.api.SubscriptionService;
 import org.petalslink.dsb.jbi.se.wsn.services.ManagementServiceImpl;
 import org.petalslink.dsb.jbi.se.wsn.services.NotificationServiceImpl;
 import org.petalslink.dsb.jbi.se.wsn.services.StatsServiceImpl;
+import org.petalslink.dsb.jbi.se.wsn.services.SubscriptionManagementServiceImpl;
 import org.petalslink.dsb.jbi.se.wsn.services.SubscriptionServiceImpl;
 import org.petalslink.dsb.notification.commons.PropertiesConfigurationProducer;
 import org.petalslink.dsb.notification.commons.api.ConfigurationProducer;
@@ -101,6 +103,8 @@ public class Component extends PetalsBindingComponent {
 	protected NotificationService notificationService;
 	
 	protected MonitoringService monitoringService;
+	
+	protected SubscriptionManagementService subscriptionManagementService;
 
 	/*
 	 * (non-Javadoc)
@@ -134,6 +138,11 @@ public class Component extends PetalsBindingComponent {
 		
 		this.notificationService = new NotificationServiceImpl(this.engine, getLogger());
 		ws.add(getService(NotificationService.class, this.notificationService, "NotificationService"));
+		
+		this.subscriptionManagementService = new SubscriptionManagementServiceImpl(this.engine,  getLogger());
+		ws.add(getService(SubscriptionManagementService.class,
+				this.subscriptionManagementService,
+				"SubscriptionManagementService"));
 	
 		doAddServices();
 	}
@@ -446,7 +455,7 @@ public class Component extends PetalsBindingComponent {
 	 * 
 	 * @return
 	 */
-	protected synchronized MonitoringService getMonitoringService() {
+	public synchronized MonitoringService getMonitoringService() {
 		return null;
 	}
 }

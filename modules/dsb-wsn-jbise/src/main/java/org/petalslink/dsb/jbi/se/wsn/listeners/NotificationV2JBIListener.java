@@ -5,6 +5,7 @@ package org.petalslink.dsb.jbi.se.wsn.listeners;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import javax.jbi.messaging.MessagingException;
@@ -20,6 +21,10 @@ import org.petalslink.dsb.jbi.se.wsn.AddressingHelper;
 import org.petalslink.dsb.jbi.se.wsn.Component;
 import org.petalslink.dsb.jbi.se.wsn.Constants;
 import org.petalslink.dsb.jbi.se.wsn.NotificationEngine;
+import org.petalslink.dsb.jbi.se.wsn.api.MonitoringService;
+import org.petalslink.dsb.jbi.se.wsn.api.WSNException;
+import org.petalslink.dsb.notification.commons.NotificationException;
+import org.petalslink.dsb.notification.commons.NotificationHelper;
 import org.w3c.dom.Document;
 
 import com.ebmwebsourcing.wsaddressing10.api.element.Address;
@@ -63,11 +68,14 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
         }
 
         NotificationEngine engine = getNotificationEngine();
+        // can be null...
+        MonitoringService monitoring = getWSNComponent().getMonitoringService();
 
         boolean response = true;
         NormalizedMessage normalizedMessage = null;
         Document document = null;
         Address address = null;
+        String uuid = UUID.randomUUID().toString();
 
         try {
             if (this.getLogger().isLoggable(Level.FINE)) {
@@ -182,6 +190,14 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                             } catch (TransformerException e) {
                             }
                         }
+                        
+                        if (monitoring != null) {
+                        	try {
+								monitoring.newSubscribeRequest(uuid, consumerAddress.getValue().toString(), null);
+							} catch (WSNException e) {
+								getLogger().warning("Can not send subscribe monitoring " + e.getMessage());
+							}
+                        }
 
                         // call the producer
                         final com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.SubscribeResponse subscribeResponse = engine
@@ -190,6 +206,22 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                         // set the response
                         document = RefinedWsnbFactory.getInstance().getWsnbWriter()
                                 .writeSubscribeResponseAsDOM(subscribeResponse);
+                        
+                        if (monitoring != null) {
+                        	try {
+                        		String responseId = "";
+                        		try {
+									responseId = NotificationHelper.getSubscriptionID(subscribeResponse);
+								} catch (NotificationException e) {
+									getLogger().warning(e.getMessage());
+									responseId = "?";
+								}
+								monitoring.newSubscribeResponse(uuid, responseId);
+							} catch (WSNException e) {
+								getLogger().warning("Can not send subscribe monitoring " + e.getMessage());
+							}
+                        }
+                        
                         normalizedMessage = exchange.getOutMessage();
                         normalizedMessage.setContent(SourceUtil
                                 .createStreamSource(document));
@@ -216,7 +248,7 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                     } else if (WsnbConstants.UNSUBSCRIBE_NAME.equals(exchange.getOperation()
                             .getLocalPart())) {
                         
-                        getLogger().log(Level.INFO, "Got an unsubscribe message");
+                        getLogger().log(Level.FINE, "Got an unsubscribe message");
                         
                         document = SourceUtil.createDocument(
                                 normalizedMessage.getContent());
@@ -224,9 +256,30 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
                         com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.Unsubscribe unsubscribe = RefinedWsnbFactory
                                 .getInstance().getWsnbReader().readUnsubscribe(document);
 
+						if (monitoring != null) {
+							try {
+								monitoring.newUnsubscribeRequest(uuid, "TODO");
+							} catch (WSNException e) {
+								getLogger().warning(
+										"Can not send unsubscribe request monitoring "
+												+ e.getMessage());
+							}
+						}
+                        
                         final com.ebmwebsourcing.wsstar.basenotification.datatypes.api.abstraction.UnsubscribeResponse unsubscribeResponse = engine
                                 .getNotificationManager().getSubscriptionManagerEngine()
                                 .unsubscribe(unsubscribe);
+                        
+						if (monitoring != null) {
+							try {
+								monitoring.newUnsubscribeResponse(uuid);
+							} catch (WSNException e) {
+								getLogger().warning(
+										"Can not send unsubscribe response monitoring "
+												+ e.getMessage());
+							}
+						}
+                        
                         document = RefinedWsnbFactory.getInstance().getWsnbWriter()
                                 .writeUnsubscribeResponseAsDOM(unsubscribeResponse);
                         normalizedMessage = exchange.getOutMessage();
@@ -316,5 +369,9 @@ public class NotificationV2JBIListener extends AbstractJBIListener {
 
     NotificationEngine getNotificationEngine() {
         return ((Component) getComponent()).getNotificationEngine();
+    }
+    
+    Component getWSNComponent() {
+        return ((Component) getComponent());
     }
 }
