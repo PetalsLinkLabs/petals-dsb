@@ -1,5 +1,8 @@
 package org.ow2.petals.dsb.service.client.asynchttp;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.xml.namespace.QName;
 
 import org.petalslink.dsb.saaj.utils.SOAPMessageUtils;
@@ -20,6 +23,8 @@ import com.ning.http.client.Response;
 public class Client implements org.petalslink.dsb.service.client.Client {
 
 	private AsyncHttpClient client;
+	
+	private static Logger logger = Logger.getLogger(Client.class.getName());
 
 	/**
      * 
@@ -61,8 +66,10 @@ public class Client implements org.petalslink.dsb.service.client.Client {
 
 						@Override
 						public void onThrowable(Throwable t) {
-							System.out.println("Failto send message to "
+							if (logger.isLoggable(Level.WARNING)) {
+								logger.warning("Fail to send message to "
 									+ message.getEndpoint());
+							}
 						}
 					});
 		} catch (Exception e) {
@@ -144,8 +151,10 @@ public class Client implements org.petalslink.dsb.service.client.Client {
 
 						@Override
 						public void onThrowable(Throwable t) {
-							System.out.println("Failto send message to "
+							if (logger.isLoggable(Level.WARNING)) {
+								logger.warning("Fail to send message to "
 									+ message.getEndpoint());
+							}
 							if (listener != null) {
 								listener.onError(t);
 							}
