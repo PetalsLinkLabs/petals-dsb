@@ -49,5 +49,4 @@ public class HTTPSubscriptionManagerClient implements SubscriptionManagerClient 
         }
         return result;
     }
-
 }

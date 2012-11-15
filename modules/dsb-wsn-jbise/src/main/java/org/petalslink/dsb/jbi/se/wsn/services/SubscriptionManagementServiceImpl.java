@@ -31,6 +31,7 @@ import org.petalslink.dsb.jbi.se.wsn.api.SubscriptionManagementService;
 import org.petalslink.dsb.jbi.se.wsn.api.Topic;
 import org.petalslink.dsb.jbi.se.wsn.api.WSNException;
 
+import com.ebmwebsourcing.wsstar.basenotification.datatypes.api.utils.WsnbException;
 import com.ebmwebsourcing.wsstar.wsnb.services.impl.util.Wsnb4ServUtils;
 import com.ebmwebsourcing.wsstar.wsnb.services.impl.wsresources.WsnSubscription;
 
@@ -56,16 +57,14 @@ public class SubscriptionManagementServiceImpl implements
 
 	public List<Subscription> getSubscriptionsForTopic(Topic topic)
 			throws WSNException {
-		
 		logger.info("DSB WSB SE : Get subscriptions for topic " + topic);
 
 		List<Subscription> result = new ArrayList<Subscription>();
-
 		List<WsnSubscription> subscriptions = this.engine
 				.getNotificationManager()
 				.getSubscriptionManagerEngine()
 				.getSubscriptions(new QName(topic.ns, topic.name, topic.prefix));
-
+		
 		if (subscriptions != null) {
 			for (WsnSubscription wsnSubscription : subscriptions) {
 				Subscription s = toSubscription(wsnSubscription);
@@ -97,17 +96,21 @@ public class SubscriptionManagementServiceImpl implements
 	 * @param wsnSubscription
 	 * @return
 	 */
-	public static Subscription toSubscription(WsnSubscription wsnSubscription) {
+	private Subscription toSubscription(WsnSubscription wsnSubscription) {
 		Subscription result = new Subscription();
 
 		if (wsnSubscription == null) {
 			return result;
 		}
 
-		if (wsnSubscription.getSubscriptionReference() != null
-				&& wsnSubscription.getSubscriptionReference().getAddress() != null) {
-			result.subscriber = wsnSubscription.getSubscriptionReference()
-					.getAddress().getValue().toString();
+		try {
+			if (wsnSubscription.getConsumerEdpRef() != null
+					&& wsnSubscription.getConsumerEdpRef().getAddress() != null) {
+				result.subscriber = wsnSubscription.getConsumerEdpRef()
+						.getAddress().getValue().toString();
+			}
+		} catch (WsnbException e) {
+			logger.warning(e.getMessage());
 		}
 
 		result.uuid = Wsnb4ServUtils
@@ -116,5 +119,4 @@ public class SubscriptionManagementServiceImpl implements
 
 		return result;
 	}
-
 }
