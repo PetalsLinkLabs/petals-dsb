@@ -88,6 +88,7 @@
 
 		<easywsdl.version>2.4</easywsdl.version>
 		<cxf.version>2.5.0</cxf.version>
+        <asynchttp.version>1.7.19</asynchttp.version>
 		
 		<labs.wsn.version>v2012-02-13</labs.wsn.version>
 		<labs.easyresources.version>v2011-10-18</labs.easyresources.version>
@@ -324,6 +325,11 @@
 				<artifactId>cxf-bundle-minimal</artifactId>
 				<version>${cxf.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>com.ning</groupId>
+                <artifactId>async-http-client</artifactId>
+                <version>${asynchttp.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 

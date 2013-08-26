@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<topology xmlns="http://petals.ow2.org/topology">
+	<domain name="PEtALS" mode="dynamic">
+		<description>The cloud domain configuration</description>
+		<sub-domain name="subdomain1" mode="master-slave">
+			<description>description of the subdomain</description>
+			<container type="master" name="0">
+				<description>No description</description>
+				<host>localhost</host>
+				<user>cloud</user>
+				<password>cloud</password>
+				<jmx-service>
+					<rmi-port>7700</rmi-port>
+				</jmx-service>
+				<transport-service>
+					<tcp-port>7800</tcp-port>
+				</transport-service>
+				<registry-service>
+					<port>7900</port>
+				</registry-service>
+				<webservice-service>
+					<port>7600</port>
+					<prefix>petals/ws</prefix>
+				</webservice-service>
+			</container>
+		</sub-domain>
+	</domain>
+</topology>

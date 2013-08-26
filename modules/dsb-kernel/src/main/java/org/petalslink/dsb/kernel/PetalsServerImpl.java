@@ -23,11 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import javax.jbi.management.AdminServiceMBean;
 import javax.management.MBeanServer;
@@ -75,6 +71,8 @@ import org.ow2.petals.tools.ws.WebServiceException;
 import org.ow2.petals.tools.ws.WebServiceManager;
 import org.ow2.petals.transport.Transporter;
 import org.ow2.petals.util.JNDIUtil;
+import org.petalslink.dsb.api.BootService;
+import org.petalslink.dsb.api.DSBException;
 import org.petalslink.dsb.kernel.api.listener.LifeCycleManager;
 
 import static org.ow2.petals.kernel.server.FractalHelper.AUTOLOADER_COMPONENT;
@@ -181,6 +179,8 @@ public class PetalsServerImpl extends org.ow2.petals.kernel.server.PetalsServerI
     public void start() throws PetalsException {
 
         try {
+            preStart();
+
             // start PEtALS Fractal composite
             this.startPetalsComposite();
 
@@ -218,6 +218,31 @@ public class PetalsServerImpl extends org.ow2.petals.kernel.server.PetalsServerI
         System.out.println("### The Petals Distributed Service Bus is started at " + new Date()
                 + " ###");
         System.out.println("");
+    }
+
+    /**
+     * Get all the services to invoke before to start the container.
+     * These services are available in the classpath via the serviceloader.
+     */
+    protected void preStart() throws PetalsException {
+        System.out.println("Launching boot services...");
+        ServiceLoader<BootService> loader = ServiceLoader.load(BootService.class);
+        for (BootService service : loader) {
+            try {
+                System.out.println("Executing boot service " + service.getClass());
+                service.execute();
+            } catch (DSBException e) {
+                System.err.println("Boot service " + service.getClass().getName() + " raised exception : " + e.getMessage());
+                if (service.shouldAbortBoot(e)) {
+                    System.err.println("Error is aborting the container boot...");
+                    e.printStackTrace(System.err);
+                    throw new PetalsException(e);
+                } else {
+                    // NOP for now
+                    System.out.println("Exception is bypassed...");
+                }
+            }
+        }
     }
 
     private void launchStartActions() {

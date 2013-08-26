@@ -177,6 +177,41 @@
 										<descriptor>
 											src/main/assembly/dev.xml
 										</descriptor>
+                    <descriptor>
+                      src/main/assembly/full.xml
+                    </descriptor>
+									</descriptors>
+								</configuration>
+								<phase>package</phase>
+								<goals>
+									<goal>attached</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>package</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>dev-assembly</id>
+								<configuration>
+									<appendAssemblyId>false</appendAssemblyId>
+									<attach>true</attach>
+									<descriptors>
+                    <descriptor>
+                      src/main/assembly/full.xml
+                    </descriptor>
 									</descriptors>
 								</configuration>
 								<phase>package</phase>

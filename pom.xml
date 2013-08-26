@@ -169,13 +169,13 @@
 		<module>modules/dsb-jaxbutils</module>
 		<module>modules/dsb-logger-jbise</module>
 		
-		<!-- Cloud -->
-		<!--
-		<module>modules/dsb-cloud-kernel</module>
-		-->
-		
 		<!-- Removed stuff from Petals 3.0 to 3.2 -->
-		<module>modules/dsb-removed</module>	
+		<module>modules/dsb-removed</module>
+    
+    <!-- Cloud -->
+    <module>modules/petals-cloudinit</module>
+    <module>modules/dsb-cloud-services</module>
+    <module>modules/dsb-cloud-init</module>
   </modules>
 
 	<licenses>
@@ -228,6 +228,16 @@
 			<id>distribution</id>
 			<modules>
 				<module>distributions/dsb-distribution</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>cloud</id>
+			<modules>
+        <module>modules/petals-cloudinit</module>
+        <module>modules/dsb-cloud-services</module>
+        <module>modules/dsb-cloud-init</module>
+				<module>distributions/dsb-distribution</module>
+				<module>distributions/cloud-distribution</module>
 			</modules>
 		</profile>
 	</profiles>
